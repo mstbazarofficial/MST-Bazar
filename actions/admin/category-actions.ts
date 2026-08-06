@@ -1,0 +1,29 @@
+"use server";
+
+import { requireAdmin } from "@/lib/admin-auth";
+import { prisma } from "@/lib/prisma";
+
+export async function getAdminCategories(search?: string) {
+  await requireAdmin();
+
+  return prisma.category.findMany({
+    where: search
+      ? { name: { contains: search, mode: "insensitive" } }
+      : undefined,
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      image: true,
+      _count: { select: { products: true } },
+    },
+    orderBy: { name: "asc" },
+  });
+}
+
+export async function getAdminCategoryById(id: string) {
+  await requireAdmin();
+  return prisma.category.findUnique({
+    where: { id },
+  });
+}

@@ -1,6 +1,5 @@
 "use client";
 
-import { FilterState } from "@/components/catalog/types";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -12,6 +11,7 @@ import {
 import { SlidersHorizontal, X } from "lucide-react";
 import { useState } from "react";
 import FilterContent from "./products-filter-content";
+import { FilterState } from "./products-page-client";
 
 interface ProductsFilterMobileProps {
   filters: FilterState;

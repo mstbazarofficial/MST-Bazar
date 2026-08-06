@@ -26,10 +26,12 @@ const methodConfig: Record<
   PaymentMethod,
   { label: string; icon: ElementType }
 > = {
-  CASH: { label: "Cash", icon: Banknote },
+  CASH_ON_DELIVERY: { label: "Cash on Delivery", icon: Banknote },
   BANK_TRANSFER: { label: "Bank Transfer", icon: CreditCard },
   CARD: { label: "Card", icon: CreditCard },
-  MOBILE_BANKING: { label: "Mobile Banking", icon: Smartphone },
+  BKASH: { label: "BKASH", icon: Smartphone },
+  NAGAD: { label: "NAGAD", icon: Smartphone },
+  ROCKET: { label: "ROCKET", icon: Smartphone },
   OTHER: { label: "Other", icon: HelpCircle },
 };
 

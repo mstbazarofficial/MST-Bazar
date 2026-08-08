@@ -50,7 +50,7 @@ export function UserMenu() {
   if (!user) {
     return (
       <Link
-        href="/sign-in"
+        href="/login"
         className="hidden flex-col items-center gap-0.5 px-1 text-foreground transition-colors hover:text-primary sm:flex"
       >
         <UserIcon className="h-5 w-5" />

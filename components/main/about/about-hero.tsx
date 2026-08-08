@@ -52,7 +52,7 @@ export function AboutHero() {
             <div className="flex flex-wrap items-center gap-4 pt-2">
               <Link
                 href="/shop"
-                className="inline-flex items-center gap-2.5 bg-[#0B5D2A] hover:bg-[#084820] text-white text-sm font-semibold px-6 py-3.5 rounded-lg transition-all shadow-sm active:scale-95"
+                className="inline-flex items-center gap-2.5 bg-primary-dark hover:bg-[#084820] text-white text-sm font-semibold px-6 py-3.5 rounded-lg transition-all shadow-sm active:scale-95"
               >
                 <span>Shop Now</span>
                 <ArrowRight className="w-4 h-4 stroke-[2.5]" />
@@ -60,9 +60,9 @@ export function AboutHero() {
 
               <Link
                 href="#our-story"
-                className="inline-flex items-center gap-2 bg-white hover:bg-emerald-50/50 border border-[#0B5D2A] text-[#0B5D2A] text-sm font-semibold px-6 py-3.5 rounded-lg transition-all active:scale-95"
+                className="inline-flex items-center gap-2 bg-white hover:bg-emerald-50/50 border border-[#0B5D2A] text-primary-dark text-sm font-semibold px-6 py-3.5 rounded-lg transition-all active:scale-95"
               >
-                <Sprout className="w-4 h-4 text-[#0B5D2A]" />
+                <Sprout className="w-4 h-4 text-primary-dark" />
                 <span>Our Story</span>
               </Link>
             </div>

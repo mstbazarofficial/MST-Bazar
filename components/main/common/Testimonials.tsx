@@ -1,5 +1,6 @@
 import { Quote, Star } from "lucide-react";
 import Image from "next/image";
+import HeadingStyle2 from "./HeadingStyle2";
 
 const TESTIMONIALS = [
   {
@@ -37,16 +38,14 @@ const TESTIMONIALS = [
 const Testimonials = () => {
   return (
     <section className="site-container section-y">
-      <div className="flex items-center justify-between mb-8">
-        <h2 className="text-xl sm:text-2xl font-extrabold text-foreground">
-          What Our Customers Say
-        </h2>
-        <a
-          href="/reviews"
-          className="text-xs sm:text-sm font-bold text-emerald-700 hover:text-emerald-800 hover:underline transition-all"
-        >
-          View All
-        </a>
+      <div className="mb-8">
+        <HeadingStyle2
+          firstTitle="What Our"
+          secondTitle="Customers Say"
+          className="mb-5"
+          link="/reviews"
+          position={5}
+        />
       </div>
 
       {/* Reviews Grid */}

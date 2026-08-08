@@ -5,6 +5,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import HeadingStyle2 from "../common/HeadingStyle2";
 
 interface FaqItem {
   id: string;
@@ -53,7 +54,7 @@ const FAQ_ITEMS: FaqItem[] = [
 
 export default function FaqSection() {
   return (
-    <section className="w-full site-container section-y">
+    <section id="faq" className="w-full site-container section-y">
       <div className=" space-y-8">
         {/* Header Title */}
         <div className="text-center space-y-2">
@@ -61,9 +62,13 @@ export default function FaqSection() {
             <HelpCircle className="w-4 h-4" />
             <span>Have Questions?</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
-            Frequently Asked Questions
-          </h2>
+          <HeadingStyle2
+            firstTitle="Frequently"
+            secondTitle="Asked Questions"
+            className="mt-3 mb-8"
+            isUnderLine={false}
+            titleAlignX="center"
+          />
           <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto">
             Find quick answers to common questions about shopping, shipping, and
             payments at MST Bazar.

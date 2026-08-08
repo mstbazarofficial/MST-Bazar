@@ -78,7 +78,6 @@ export function AddToCartButton({
 
   return (
     <Button
-      variant="outline"
       onClick={handleAddToCart}
       aria-live="polite"
       className={[
@@ -87,7 +86,7 @@ export function AddToCartButton({
           ? "border-destructive/60 bg-destructive/10 text-destructive hover:bg-destructive/10 hover:text-destructive"
           : isAdded
             ? "border-emerald-600/60 bg-emerald-50 text-emerald-700 hover:bg-emerald-50 hover:text-emerald-700"
-            : "border-primary/60 text-primary hover:bg-primary hover:text-primary-foreground",
+            : "border-primary/60 text-primary-foreground hover:bg-primary-dark hover:text-primary-foreground",
       ].join(" ")}
     >
       {isError ? (

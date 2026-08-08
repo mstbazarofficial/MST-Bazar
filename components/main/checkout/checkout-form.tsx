@@ -181,7 +181,7 @@ export function CheckoutForm() {
       <form onSubmit={onSubmit} noValidate className="space-y-6">
         <div className="grid grid-cols-1 gap-6 items-start lg:grid-cols-3">
           {/* Mobile Order Summary (order-1 on mobile, order-2 on lg sidebar) */}
-          <div className="order-1 lg:order-2 lg:col-span-1 lg:sticky lg:top-6">
+          <div className="order-1 lg:order-2 lg:col-span-1 lg:sticky lg:top-28">
             <OrderSummary
               items={items}
               isSelected={isSelected}

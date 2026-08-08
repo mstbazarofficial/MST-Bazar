@@ -195,3 +195,49 @@
   margin: 1rem 0 !important; /* '0' aligns images to the left */
   display: block;
 }
+
+/* Heading styles */
+.category-title {
+  font-family: "Georgia", "Times New Roman", serif;
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+
+  /* Complex gradient to replicate the textured, varied greens of the original text */
+  background: linear-gradient(
+    90deg,
+    #1b5413 0%,
+    #1b5814 12%,
+    #256f19 25%,
+    #175411 40%,
+    #1e6b15 55%,
+    #217a17 70%,
+    #55ab20 85%,
+    #6abc27 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  z-index: 2;
+}
+
+.bg-green-gradient {
+  background: linear-gradient(
+    90deg,
+    #1b5413 0%,
+    #1b5814 12%,
+    #256f19 25%,
+    #175411 40%,
+    #1e6b15 55%,
+    #217a17 70%,
+    #55ab20 85%,
+    #6abc27 100%
+  );
+}
+
+html {
+  scroll-behavior: smooth;
+}

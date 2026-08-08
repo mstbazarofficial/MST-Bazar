@@ -1,5 +1,6 @@
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -26,7 +27,7 @@ export function HeroSection() {
                 height={600}
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 priority
-                quality={100}
+                quality={75}
                 className="object-contain drop-shadow-xl"
               />
             </div>
@@ -52,22 +53,22 @@ export function HeroSection() {
             <div className="mt-6 flex w-full max-w-xs flex-col gap-3 sm:max-w-none sm:w-auto sm:flex-row">
               <Link
                 href="/shop"
-                className={cn(buttonVariants({ size: "lg" }), "rounded-md")}
+                className={cn(
+                  "inline-flex items-center gap-2.5 bg-primary-dark hover:bg-[#084820] text-white text-sm font-semibold px-6 py-3.5 rounded-md transition-all shadow-sm active:scale-95",
+                )}
               >
-                Shop Now
+                <span>Shop Now</span>
+                <ArrowRight className="w-4 h-4 stroke-[2.5]" />
               </Link>
 
               <Link
                 href="/offers"
                 className={cn(
-                  buttonVariants({
-                    variant: "outline",
-                    size: "lg",
-                  }),
-                  "rounded-md border-primary text-primary hover:bg-accent hover:text-accent-foreground",
+                  "inline-flex items-center gap-2 bg-white hover:bg-emerald-50/50 border border-[#0B5D2A] text-[#0B5D2A] text-sm font-semibold px-6 py-3.5 rounded-md transition-all active:scale-95",
                 )}
               >
-                View Offers
+                <span>View Offers</span>
+                <ArrowRight className="w-4 h-4 stroke-[2.5]" />
               </Link>
             </div>
           </div>

@@ -3,8 +3,8 @@ import { FaFacebook, FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-linear-to-r from-primary/15 via-accent/15 to-secondary/15 border-t border-border text-foreground pt-12 ">
-      <div className="site-container section-y">
+    <footer className="w-full bg-primary-dark border-t border-border text-white pt-12 ">
+      <div className="site-container section-y ">
         {/* Main Footer Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 lg:gap-6">
           {/* Column 1: Brand Info & Socials */}
@@ -12,18 +12,18 @@ export default function Footer() {
             {/* Brand Logo */}
 
             {/* Description */}
-            <p className="text-xs text-muted-foreground font-medium leading-relaxed max-w-xs">
+            <p className="text-xs text-primary-foreground font-medium leading-relaxed max-w-xs">
               Your trusted online grocery store in Bangladesh. Fresh, natural
               and healthy products delivered to your doorstep.
             </p>
 
             {/* Social Icons */}
-            <div className="flex items-center gap-2 pt-1">
+            <div className="flex items-center gap-2 pt-1 ">
               <Link
                 href="https://facebook.com"
                 target="_blank"
                 rel="noreferrer"
-                className="w-8 h-8 rounded-full bg-muted/60 hover:bg-primary hover:text-primary-foreground flex items-center justify-center text-foreground/80 transition-colors"
+                className="w-8 h-8 rounded-full bg-primary/60 hover:bg-primary hover:text-primary-foreground flex items-center justify-center text-primary-foreground transition-colors"
                 aria-label="Facebook"
               >
                 <FaFacebook className="w-4 h-4" />
@@ -32,7 +32,7 @@ export default function Footer() {
                 href="https://instagram.com"
                 target="_blank"
                 rel="noreferrer"
-                className="w-8 h-8 rounded-full bg-muted/60 hover:bg-primary hover:text-primary-foreground flex items-center justify-center text-foreground/80 transition-colors"
+                className="w-8 h-8 rounded-full bg-primary/60 hover:bg-primary hover:text-primary-foreground flex items-center justify-center text-primary-foreground transition-colors"
                 aria-label="Instagram"
               >
                 <FaInstagram className="w-4 h-4" />
@@ -41,7 +41,7 @@ export default function Footer() {
                 href="https://youtube.com"
                 target="_blank"
                 rel="noreferrer"
-                className="w-8 h-8 rounded-full bg-muted/60 hover:bg-primary hover:text-primary-foreground flex items-center justify-center text-foreground/80 transition-colors"
+                className="w-8 h-8 rounded-full bg-primary/60 hover:bg-primary hover:text-primary-foreground flex items-center justify-center text-primary-foreground transition-colors"
                 aria-label="YouTube"
               >
                 <FaYoutube className="w-4 h-4" />
@@ -50,7 +50,7 @@ export default function Footer() {
                 href="https://twitter.com"
                 target="_blank"
                 rel="noreferrer"
-                className="w-8 h-8 rounded-full bg-muted/60 hover:bg-primary hover:text-primary-foreground flex items-center justify-center text-foreground/80 transition-colors"
+                className="w-8 h-8 rounded-full bg-primary/60 hover:bg-primary hover:text-primary-foreground flex items-center justify-center text-primary-foreground transition-colors"
                 aria-label="Twitter"
               >
                 <FaTwitter className="w-4 h-4" />
@@ -60,14 +60,14 @@ export default function Footer() {
 
           {/* Column 2: Customer Care */}
           <div className="space-y-3">
-            <h4 className="text-sm font-extrabold text-foreground tracking-tight">
+            <h4 className="text-sm font-extrabold text-primary-foreground tracking-tight">
               Customer Care
             </h4>
-            <ul className="space-y-2 text-xs font-medium text-muted-foreground">
+            <ul className="space-y-2 text-xs font-medium text-primary-foreground">
               <li>
                 <Link
-                  href="/help"
-                  className="hover:text-primary transition-colors"
+                  href="/contact"
+                  className="hover:text-primary-yellow transition-colors"
                 >
                   Help Center
                 </Link>
@@ -75,7 +75,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/track-order"
-                  className="hover:text-primary transition-colors"
+                  className="hover:text-primary-yellow transition-colors"
                 >
                   Track Order
                 </Link>
@@ -83,15 +83,15 @@ export default function Footer() {
               <li>
                 <Link
                   href="/return-refund"
-                  className="hover:text-primary transition-colors"
+                  className="hover:text-primary-yellow transition-colors"
                 >
                   Return & Refund
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/faq"
-                  className="hover:text-primary transition-colors"
+                  href="#faq"
+                  className="hover:text-primary-yellow transition-colors"
                 >
                   FAQ
                 </Link>
@@ -99,7 +99,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/contact"
-                  className="hover:text-primary transition-colors"
+                  className="hover:text-primary-yellow transition-colors"
                 >
                   Contact Us
                 </Link>
@@ -109,30 +109,22 @@ export default function Footer() {
 
           {/* Column 3: Company */}
           <div className="space-y-3">
-            <h4 className="text-sm font-extrabold text-foreground tracking-tight">
+            <h4 className="text-sm font-extrabold text-primary-foreground tracking-tight">
               Company
             </h4>
-            <ul className="space-y-2 text-xs font-medium text-muted-foreground">
+            <ul className="space-y-2 text-xs font-medium text-primary-foreground">
               <li>
                 <Link
                   href="/about"
-                  className="hover:text-primary transition-colors"
+                  className="hover:text-primary-yellow transition-colors"
                 >
                   About Us
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/careers"
-                  className="hover:text-primary transition-colors"
-                >
-                  Careers
-                </Link>
-              </li>
-              <li>
-                <Link
                   href="/privacy"
-                  className="hover:text-primary transition-colors"
+                  className="hover:text-primary-yellow transition-colors"
                 >
                   Privacy Policy
                 </Link>
@@ -140,17 +132,9 @@ export default function Footer() {
               <li>
                 <Link
                   href="/terms"
-                  className="hover:text-primary transition-colors"
+                  className="hover:text-primary-yellow transition-colors"
                 >
                   Terms & Conditions
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/blog"
-                  className="hover:text-primary transition-colors"
-                >
-                  Blog
                 </Link>
               </li>
             </ul>
@@ -158,46 +142,46 @@ export default function Footer() {
 
           {/* Column 4: Quick Links (Replaces "Our App") */}
           <div className="space-y-3">
-            <h4 className="text-sm font-extrabold text-foreground tracking-tight">
+            <h4 className="text-sm font-extrabold text-primary-foreground tracking-tight">
               Quick Links
             </h4>
-            <ul className="space-y-2 text-xs font-medium text-muted-foreground">
+            <ul className="space-y-2 text-xs font-medium text-primary-foreground">
               <li>
                 <Link
-                  href="/best-deals"
-                  className="hover:text-primary transition-colors"
+                  href="#best-deals"
+                  className="hover:text-primary-yellow transition-colors"
                 >
                   Best Deals
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/featured"
-                  className="hover:text-primary transition-colors"
+                  href="#featured"
+                  className="hover:text-primary-yellow transition-colors"
                 >
-                  Featured Products
+                  Popular Products
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/flash-sale"
-                  className="hover:text-primary transition-colors"
+                  href="#flash-sale"
+                  className="hover:text-primary-yellow transition-colors"
                 >
                   Flash Sale
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/new-arrivals"
-                  className="hover:text-primary transition-colors"
+                  href="#new-arrivals"
+                  className="hover:text-primary-yellow transition-colors"
                 >
                   New Arrivals
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/categories"
-                  className="hover:text-primary transition-colors"
+                  href="/products"
+                  className="hover:text-primary-yellow transition-colors"
                 >
                   All Categories
                 </Link>
@@ -207,12 +191,12 @@ export default function Footer() {
 
           {/* Column 5: Payment Methods */}
           <div className="space-y-3 sm:col-span-2 md:col-span-1 lg:col-span-1">
-            <h4 className="text-sm font-extrabold text-foreground tracking-tight">
+            <h4 className="text-sm font-extrabold text-primary-foreground tracking-tight">
               Payment Methods
             </h4>
 
             {/* Grid of Payment Badges */}
-            <div className="grid grid-cols-3 gap-2 pt-1">
+            <div className="grid grid-cols-3 md:grid-cols-1 gap-2 pt-1">
               <div className="h-9 rounded-md border border-border bg-background flex items-center justify-center p-1 shadow-2xs hover:border-primary/40 transition-colors">
                 <span className="text-[11px] font-black text-[#E2136E]">
                   bKash
@@ -228,21 +212,6 @@ export default function Footer() {
                   Rocket
                 </span>
               </div>
-              <div className="h-9 rounded-md border border-border/80 bg-background flex items-center justify-center p-1 shadow-2xs hover:border-primary/40 transition-colors">
-                <span className="text-[11px] font-black text-[#1A1F71] italic">
-                  VISA
-                </span>
-              </div>
-              <div className="h-9 rounded-md border border-border/80 bg-background flex items-center justify-center p-1 shadow-2xs hover:border-primary/40 transition-colors">
-                <span className="text-[9px] font-bold text-[#EB001B]">
-                  Mastercard
-                </span>
-              </div>
-              <div className="h-9 rounded-md border border-border/80 bg-background flex items-center justify-center p-1 shadow-2xs hover:border-primary/40 transition-colors">
-                <span className="text-[10px] font-bold text-[#006FCF]">
-                  AMEX
-                </span>
-              </div>
             </div>
           </div>
         </div>
@@ -256,21 +225,21 @@ export default function Footer() {
           <div className="flex items-center gap-3 sm:gap-4">
             <Link
               href="/privacy"
-              className="hover:text-primary transition-colors"
+              className="hover:text-primary-yellow transition-colors"
             >
               Privacy Policy
             </Link>
             <span className="text-border">|</span>
             <Link
               href="/terms"
-              className="hover:text-primary transition-colors"
+              className="hover:text-primary-yellow transition-colors"
             >
               Terms & Conditions
             </Link>
             <span className="text-border">|</span>
             <Link
               href="/refund-policy"
-              className="hover:text-primary transition-colors"
+              className="hover:text-primary-yellow transition-colors"
             >
               Refund Policy
             </Link>

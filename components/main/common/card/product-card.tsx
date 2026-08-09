@@ -35,7 +35,7 @@ export function ProductCard({
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             priority
-            quality={75}
+            loading="eager"
             src={product.images[0].url}
             alt={product.title}
             className="object-cover group-hover:scale-105 transition-transform duration-200"

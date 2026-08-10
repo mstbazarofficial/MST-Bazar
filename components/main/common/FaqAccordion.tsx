@@ -4,7 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import HeadLine from "./HeadLine";
+import HeadingStyle2 from "./HeadingStyle2";
 
 const LEFT_FAQS = [
   {
@@ -52,7 +52,11 @@ export function FaqAccordion() {
   return (
     <div className="space-y-6 site-container section-y">
       {/* Section Header */}
-      <HeadLine title="Frequently Asked Questions" />
+      <HeadingStyle2
+        firstTitle="Frequently Asked"
+        secondTitle="Questions"
+        size="md"
+      />
 
       {/* 2-Column FAQ Layout with shadcn Accordion */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4">

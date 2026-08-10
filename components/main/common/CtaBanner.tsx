@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export function CtaBanner() {
   return (
@@ -16,13 +17,13 @@ export function CtaBanner() {
           </p>
 
           <div className="pt-2">
-            <button
-              type="button"
+            <Link
+              href="/products"
               className="inline-flex items-center gap-2 bg-[#FFC700] hover:bg-[#E6B400] text-gray-900 font-extrabold text-xs sm:text-sm px-6 py-3 rounded-sm transition-all duration-300 shadow-md hover:shadow-lg active:scale-95 cursor-pointer"
             >
               <span>Shop Now</span>
               <ArrowRight className="w-4 h-4 stroke-3" />
-            </button>
+            </Link>
           </div>
         </div>
 

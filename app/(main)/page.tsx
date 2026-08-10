@@ -1,3 +1,4 @@
+import { CtaBanner } from "@/components/main/common/CtaBanner";
 import { BestDealsSection } from "@/components/main/home/best-deal-section";
 import { CategorySection } from "@/components/main/home/category-section";
 import FaqSection from "@/components/main/home/FAQ";
@@ -20,6 +21,7 @@ export default async function Home() {
       <PopularProductsSection products={popularProducts} />
       <PromoBannersSection />
       <FaqSection />
+      <CtaBanner />
     </main>
   );
 }

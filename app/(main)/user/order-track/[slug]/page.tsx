@@ -55,7 +55,7 @@ export default function OrderTrackingPage() {
     total: 1850,
     paymentStatus: "unpaid",
     paymentMethod: "COD",
-    currentStatus: "cancelled", // Possible values: "cancelled", "delivered", "in-progress"
+    currentStatus: "delivered", // Possible values: "cancelled", "delivered", "in-progress", "pending", "shipped"
     timeline: [
       {
         title: "Order Confirmed",

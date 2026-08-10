@@ -1,5 +1,5 @@
 "use client";
-import { Search } from "lucide-react";
+import { ArrowRight, Search } from "lucide-react";
 import { useState } from "react";
 import { CartSheet } from "./cart-sheet";
 import { CategoryNav } from "./category-nav";
@@ -8,6 +8,9 @@ import { Logo } from "./logo";
 import { MobileMenu } from "./mobile-menu";
 import { MobileSearchOverlay } from "./mobile-search-overlay";
 import { UserMenu } from "./user-menu";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 export function Navbar() {
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
@@ -23,6 +26,17 @@ export function Navbar() {
             <div className="flex flex-1 justify-center">
               <DesktopSearchBar />
             </div>
+            <div className="hidden sm:block items-center gap-4 flex-[0.2]">
+              <Link
+                href="/order-track"
+                className={cn(
+                  "inline-flex items-center gap-2.5 bg-primary-dark hover:bg-[#084820] text-white text-sm font-semibold px-4 py-2 rounded-md transition-all shadow-sm active:scale-95",
+                )}
+              >
+                <span>Track Order</span>
+                <ArrowRight className="w-4 h-4 stroke-[2.5]" />
+              </Link>
+            </div>
 
             <div className="ml-auto flex items-center gap-4">
               <button
@@ -35,6 +49,7 @@ export function Navbar() {
 
                 <span className="text-xs font-medium">Search</span>
               </button>
+
               <CartSheet />
 
               {/* Only show */}

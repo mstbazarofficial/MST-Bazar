@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { UnderLine } from "./Svg";
-import { ArrowRight, Heading, MoveRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function HeadingStyle2({
@@ -43,7 +43,7 @@ export default function HeadingStyle2({
             <div className="flex items-center">
               <h2
                 className={cn(
-                  " mr-3 uppercase font-bold tracking-tight text-foreground",
+                  " mr-2 uppercase font-bold tracking-tight text-foreground",
                   size === "sm" && "text-2xl",
                   size === "md" && "md:text-3xl text-2xl",
                   size === "lg" && "xl:text-4xl md:text-3xl text-2xl",

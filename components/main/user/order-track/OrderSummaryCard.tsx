@@ -1,13 +1,19 @@
 "use client";
 
-import { OrderData } from "@/app/(main)/user/order-track/page";
+import { OrderData } from "@/app/(main)/user/order-track/[slug]/page";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";
 
-export function OrderSummaryCard({ order }: { order: OrderData }) {
+export function OrderSummaryCard({
+  order,
+  className,
+}: {
+  order: OrderData;
+  className?: string;
+}) {
   const [copied, setCopied] = useState<boolean>(false);
 
   const handleCopy = () => {
@@ -17,7 +23,9 @@ export function OrderSummaryCard({ order }: { order: OrderData }) {
   };
 
   return (
-    <Card className="mb-6  border border-primary/50 rounded-md">
+    <Card
+      className={cn("mb-6  border border-primary/50 rounded-md", className)}
+    >
       <CardContent className="p-6">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 divide-x divide-primary/50">
           {/* Order ID & Date */}

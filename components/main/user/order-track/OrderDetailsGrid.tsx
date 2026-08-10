@@ -1,6 +1,6 @@
 "use client";
 
-import { OrderData } from "@/app/(main)/user/order-track/page";
+import { OrderData } from "@/app/(main)/user/order-track/[slug]/page";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Check, Copy } from "lucide-react";

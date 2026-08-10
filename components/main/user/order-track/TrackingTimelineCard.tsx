@@ -1,6 +1,6 @@
-import { TimelineStep } from "@/app/(main)/user/order-track/page";
+import { TimelineStep } from "@/app/(main)/user/order-track/[slug]/page";
 import { Card, CardContent } from "@/components/ui/card";
-import { tr } from "date-fns/locale";
+import { cn } from "@/lib/utils";
 import {
   Edit3,
   Package,
@@ -8,16 +8,18 @@ import {
   Check,
   Navigation,
   XCircle,
-} from "lucide-react"; // XCircle ইমপোর্ট করা হয়েছে
+} from "lucide-react";
 
 interface TrackingTimelineProps {
   steps: TimelineStep[];
   isCancelled?: boolean;
+  className?: string;
 }
 
 export function TrackingTimelineCard({
   steps,
   isCancelled = false,
+  className,
 }: TrackingTimelineProps) {
   const completedCount = steps.filter((step) => step.completed).length;
   const progressPercentage =
@@ -35,7 +37,13 @@ export function TrackingTimelineCard({
   const getIcon = [Edit3, Package, Truck, Navigation, Check];
 
   return (
-    <Card className="mb-6 shadow-sm border-gray-100 rounded-xl">
+    <Card
+      className={cn(
+        "mb-6 shadow-sm border border-primary/55 rounded-xl",
+        isCancelled && "border-red-500",
+        className,
+      )}
+    >
       <CardContent className="p-6 md:p-8">
         {/* Stepper */}
         <div className="relative flex justify-between items-start mb-12">
@@ -51,26 +59,23 @@ export function TrackingTimelineCard({
           ></div>
 
           {steps.map((step, idx) => {
-            // চেক করা হচ্ছে এটি শেষ কমপ্লিট হওয়া স্টেপ কিনা
             const isLastCompletedStep =
               step.completed &&
               (idx === steps.length - 1 || !steps[idx + 1]?.completed);
 
-            // ক্যানসেল হলে শেষের আইকনটি XCircle হয়ে যাবে
             const Icon =
               isCancelled && isLastCompletedStep
                 ? XCircle
                 : getIcon[idx] || Check;
 
-            // কালার লজিক
             let circleClasses =
-              "border-primary-dark text-primary-dark bg-green-50"; // Default
+              "border-primary-dark text-primary-dark bg-green-50";
             if (step.completed) {
               if (isCancelled && isLastCompletedStep) {
-                circleClasses = "bg-red-500 border-red-500 text-white"; // Cancelled State
+                circleClasses = "bg-red-500 border-red-500 text-white";
               } else {
                 circleClasses =
-                  "bg-primary-dark border-primary-dark text-primary-foreground"; // Completed State
+                  "bg-primary-dark border-primary-dark text-primary-foreground";
               }
             }
 
@@ -111,7 +116,7 @@ export function TrackingTimelineCard({
         {/* Success Alert Banner (Only visible if Delivered and NOT cancelled) */}
         {isDelivered && deliveredStep && !isAnyStepPending && (
           <div className="bg-green-50/80 border border-green-100 rounded-lg p-5 flex items-start gap-4 transition-all animate-in fade-in slide-in-from-bottom-2 mt-4">
-            <div className="bg-green-700 rounded-full p-1 mt-0.5">
+            <div className="bg-green-700 rounded-full p-3 mt-0.5">
               <Check className="w-6 h-6 text-white" />
             </div>
             <div>
@@ -129,7 +134,7 @@ export function TrackingTimelineCard({
         {/* Cancelled Alert Banner (Only visible if Cancelled) */}
         {isCancelled && (
           <div className="bg-red-50/80 border border-red-100 rounded-lg p-5 flex items-start gap-4 transition-all animate-in fade-in slide-in-from-bottom-2 mt-4">
-            <div className="bg-red-500 rounded-full p-1 mt-0.5">
+            <div className="bg-red-500 rounded-full p-3 mt-0.5">
               <XCircle className="w-6 h-6 text-white" />
             </div>
             <div>

@@ -52,7 +52,7 @@ export function HeroSection() {
 
             <div className="mt-6 flex w-full max-w-xs flex-col gap-3 sm:max-w-none sm:w-auto sm:flex-row">
               <Link
-                href="/shop"
+                href="/products"
                 className={cn(
                   "inline-flex items-center gap-2.5 bg-primary-dark hover:bg-[#084820] text-white text-sm font-semibold px-6 py-3.5 rounded-md transition-all shadow-sm active:scale-95",
                 )}

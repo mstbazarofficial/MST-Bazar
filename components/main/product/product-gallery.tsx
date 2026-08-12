@@ -9,6 +9,7 @@ import { useState } from "react";
 type GalleryImage = {
   id: string;
   url: string;
+  isFeatured: boolean;
 };
 
 export function ProductGallery({
@@ -18,7 +19,8 @@ export function ProductGallery({
   images: GalleryImage[];
   productTitle: string;
 }) {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const initialIndex = images.findIndex((img) => img.isFeatured);
+  const [activeIndex, setActiveIndex] = useState(initialIndex || 0);
   const activeImage = images[activeIndex] ?? null;
   const hasMultiple = images.length > 1;
 
@@ -37,7 +39,7 @@ export function ProductGallery({
             alt={productTitle}
             fill
             priority
-            quality={85}
+            quality={75}
             sizes="(max-width: 1024px) 100vw, 50vw"
             className="object-contain "
           />

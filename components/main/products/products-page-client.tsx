@@ -70,7 +70,7 @@ export function ProductsPageClient({ products }: { products: ProductDTO[] }) {
           <div
             className={`grid gap-4 grid-cols-2 ${
               viewMode === "list"
-                ? "lg:grid-cols-1"
+                ? "lg:grid-cols-2"
                 : "md:grid-cols-3 lg:grid-cols-4"
             }`}
           >
@@ -79,6 +79,7 @@ export function ProductsPageClient({ products }: { products: ProductDTO[] }) {
                 key={product.id}
                 product={product}
                 href={`/product/${product.slug}`}
+                isList={viewMode === "list"}
               />
             ))}
           </div>

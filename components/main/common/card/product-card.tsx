@@ -10,22 +10,33 @@ import { ProductDTO } from "@/lib/data/catalog";
 import Image from "next/image";
 import Link from "next/link";
 import { AddToCartButton } from "./add-to-cart-button";
+import { cn } from "@/lib/utils";
 
 export function ProductCard({
   product,
   href,
+  isList = false,
 }: {
   product: ProductDTO;
   href: string;
+  isList?: boolean;
 }) {
   const discountedPrice =
     product.price - (product.price * product.discountPercentage) / 100;
 
   return (
-    <Card className="border-border/60 hover:border-primary/40 transition-all duration-200 shadow-xs hover:shadow-md rounded-md overflow-hidden flex flex-col justify-between group p-3 bg-card h-full gap-2">
+    <Card className="border-border/60 hover:border-primary/40 transition-all duration-200 shadow-xs hover:shadow-md rounded-md overflow-hidden flex flex-col justify-between group p-3 bg-card h-full gap-2 relative">
       {/* Top Image & Badge Container */}
-      <Link href={href} className="block">
-        <div className="relative w-full aspect-square bg-muted/30 rounded-sm overflow-hidden">
+      <Link
+        href={href}
+        className={cn("block", isList && "flex justify-between gap-3")}
+      >
+        <div
+          className={cn(
+            "relative w-full aspect-square bg-muted/30 rounded-sm overflow-hidden ",
+            isList && "h-50 w-50",
+          )}
+        >
           {product.discountPercentage && (
             <span className="absolute top-2 left-2 bg-primary text-white text-[10px] sm:text-[11px] font-extrabold px-2 py-0.5 rounded-md shadow-xs z-10">
               {product.discountPercentage}% OFF
@@ -43,7 +54,13 @@ export function ProductCard({
         </div>
 
         {/* Middle Section: Title & Description (CardHeader) + Price (CardContent) */}
-        <div className="flex-1 flex flex-col justify-between pt-3 pb-2 space-y-2">
+
+        <div
+          className={cn(
+            "flex flex-col pt-3 pb-2 space-y-2 ",
+            isList && "flex-[0.8]",
+          )}
+        >
           {/* Title & Unit */}
           <CardHeader className="p-0 space-y-0.5">
             <CardTitle className="text-xs sm:text-sm font-bold text-foreground line-clamp-1 group-hover:text-primary transition-colors">
@@ -71,8 +88,15 @@ export function ProductCard({
       </Link>
 
       {/* Bottom Action Area (CardFooter) */}
-      <CardFooter className="p-0 pt-1">
-        <AddToCartButton product={product} productId={product.id} qty={1} />
+      <CardFooter
+        className={cn("p-0 pt-1", isList && "absolute bottom-3 right-3")}
+      >
+        <AddToCartButton
+          className={cn(isList && "w-56")}
+          product={product}
+          productId={product.id}
+          qty={1}
+        />
       </CardFooter>
     </Card>
   );

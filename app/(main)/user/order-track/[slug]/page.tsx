@@ -79,7 +79,7 @@ export default function OrderTrackingPage() {
         title: "Out for Delivery",
         date: "22 May 2024",
         time: "09:20 AM",
-        completed: true,
+        completed: false,
       },
       {
         title: "Delivered",

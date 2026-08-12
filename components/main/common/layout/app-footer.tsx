@@ -238,10 +238,10 @@ export default function Footer() {
             </Link>
             <span className="text-border">|</span>
             <Link
-              href="/refund-policy"
+              href="/return-refund"
               className="hover:text-primary-yellow transition-colors"
             >
-              Refund Policy
+              Return & Refund Policy
             </Link>
           </div>
           <div>

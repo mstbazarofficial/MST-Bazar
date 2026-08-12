@@ -15,15 +15,17 @@ import { Label } from "@/components/ui/label";
 import { Mail, Lock, EyeOff, Eye, ArrowRight } from "lucide-react";
 import HeadingStyle2 from "@/components/main/common/HeadingStyle2";
 import Link from "next/link";
+import AuthBg from "@/components/main/common/Auth-Bg";
 
 // --- Login Form Component ---
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <section className="flex items-center justify-center min-h-screen bg-gray-50 relative">
+    <section className="flex items-center lg:justify-start justify-center min-h-screen bg-gray-50 relative">
       <div className="absolute top-0 left-0 w-full h-full bg-green-700 opacity-10"></div>
-      <Card className="w-full bg-background z-10 gap-1 max-w-md py-5 shadow-lg rounded-2xl border ">
+      <AuthBg />
+      <Card className="w-full max-w-md lg:ml-60 py-5 gap-1 shadow-lg z-10 rounded-2xl border-0 my-auto">
         <CardHeader className="space-y-1 pb-6">
           <CardTitle className="text-2xl font-bold flex items-center justify-center gap-2 text-gray-900">
             <HeadingStyle2

@@ -1,8 +1,19 @@
-import { buttonVariants } from "@/components/ui/button";
+"use client";
 import { cn } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, EffectFade } from "swiper/modules";
+
+import "swiper/css";
+import "swiper/css/effect-fade";
+
+const slides = [
+  "/assets/banner.png",
+  "/assets/banner2.png",
+  "/assets/banner3.png",
+];
 
 export function HeroSection() {
   return (
@@ -16,21 +27,36 @@ export function HeroSection() {
             <div className="absolute max-sm:hidden w-60 h-60 bg-[#bce3c4] rounded-full right-6 bottom-10"></div>
             <div className="absolute max-sm:hidden w-40 h-40 bg-[#bce3c4] rounded-full left-6 bottom-10"></div>
             <div className="absolute max-sm:hidden w-80 h-80 bg-[#bce3c4] rounded-full right-1/2 translate-x-40 bottom-10"></div>
-
             <div className="absolute w-120 h-120 bg-black/15 rotate-x-70 rounded-full right-1/2 translate-x-60 -bottom-45 blur-2xl"></div>
-
-            <div className="relative w-full aspect-16/10 sm:aspect-video">
-              <Image
-                src="/assets/banner.png"
-                alt="Daily Fresh Organic Vegetables Basket"
-                width={600}
-                height={600}
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                priority
-                quality={75}
-                className="object-contain drop-shadow-xl"
-              />
-            </div>
+            <Swiper
+              modules={[Autoplay, EffectFade]}
+              effect="fade"
+              fadeEffect={{ crossFade: true }}
+              speed={2000}
+              loop
+              autoplay={{
+                delay: 3000,
+                disableOnInteraction: false,
+              }}
+              className="heroSwiper max-w-8xl mx-auto"
+            >
+              {slides.map((image, index) => (
+                <SwiperSlide key={index}>
+                  <div className="relative w-full aspect-16/10 sm:aspect-video">
+                    <Image
+                      src={image}
+                      alt="Daily Fresh Organic Vegetables Basket"
+                      width={600}
+                      height={600}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      priority
+                      quality={75}
+                      className="object-contain drop-shadow-xl"
+                    />
+                  </div>
+                </SwiperSlide>
+              ))}{" "}
+            </Swiper>
           </div>
 
           {/* Left Column: Text & Buttons (Restored heading sizes & original structure) */}

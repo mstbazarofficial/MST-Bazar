@@ -2,6 +2,7 @@
 
 import AuthBg from "@/components/main/common/Auth-Bg";
 import HeadingStyle2 from "@/components/main/common/HeadingStyle2";
+import { Logo } from "@/components/main/common/layout/Navbar/logo";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,6 +23,7 @@ import {
   Lock,
   Mail,
   Phone,
+  Section,
   User,
 } from "lucide-react";
 import Link from "next/link";
@@ -32,8 +34,11 @@ export default function SignUpForm() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   return (
-    <div className="h-screen w-full overflow-y-auto scrollbar-none [&::-webkit-scrollbar]:hidden bg-gray-50 relative">
+    <section className="h-screen w-full overflow-y-auto scrollbar-none [&::-webkit-scrollbar]:hidden bg-gray-50 relative">
       <div className="absolute top-0 left-0 w-full h-full bg-green-700 opacity-10 pointer-events-none"></div>
+      <div className="absolute top-8 left-13 z-20 flex gap-2 ">
+        <Logo size={50} />
+      </div>
       <AuthBg />
       <section className="flex w-full min-h-full lg:justify-start justify-center px-4 md:px-0 py-22 lg:py-26">
         <Card className="w-full max-w-md lg:ml-60 py-5 gap-1 shadow-lg z-10 rounded-2xl border-0 my-auto">
@@ -212,7 +217,7 @@ export default function SignUpForm() {
             </Button>
 
             {/* Divider */}
-            <div className="relative py-2 mt-2">
+            {/* <div className="relative py-2 mt-2">
               <div className="absolute inset-0 flex items-center">
                 <span className="w-full border-t border-gray-200" />
               </div>
@@ -221,10 +226,10 @@ export default function SignUpForm() {
                   or sign up with
                 </span>
               </div>
-            </div>
+            </div> */}
 
             {/* Social Login */}
-            <div className="grid grid-cols-2 gap-4">
+            {/* <div className="grid grid-cols-2 gap-4">
               <Button
                 variant="outline"
                 className="h-11 rounded-lg border-primary text-gray-600 font-medium hover:bg-gray-50"
@@ -262,10 +267,10 @@ export default function SignUpForm() {
                 </svg>
                 Facebook
               </Button>
-            </div>
+            </div> */}
 
             {/* Footer Link */}
-            <div className="text-center text-sm text-gray-600 mt-4">
+            <div className="text-center text-sm text-gray-600 mt-2">
               Already have an account?{" "}
               <Link
                 href="login"
@@ -277,6 +282,6 @@ export default function SignUpForm() {
           </CardContent>
         </Card>
       </section>
-    </div>
+    </section>
   );
 }

@@ -6,6 +6,7 @@ import { HeroSection } from "@/components/main/home/hero-section";
 import { PopularProductsSection } from "@/components/main/home/popular-product-section";
 import PromoBannersSection from "@/components/main/home/PromoBannersSection";
 import { getAllCategories, getAllProducts } from "@/lib/data/catalog";
+import { Suspense } from "react";
 
 export default async function Home() {
   const categories = await getAllCategories();
@@ -15,7 +16,15 @@ export default async function Home() {
 
   return (
     <main>
-      <HeroSection />
+      <Suspense
+        fallback={
+          <section className="site-container section-y w-full">
+            <div className="h-80 rounded-3xl bg-muted/30" />
+          </section>
+        }
+      >
+        <HeroSection />
+      </Suspense>
       <CategorySection categories={categories} />
       <BestDealsSection products={bestDeals} />
       <PopularProductsSection products={popularProducts} />

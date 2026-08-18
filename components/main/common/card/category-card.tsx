@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { ArrowRight, ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,11 +12,20 @@ export interface Category {
   image: string | null;
 }
 
-export function CategoryCard({ category }: { category: Category }) {
+export function CategoryCard({
+  category,
+  className,
+}: {
+  category: Category;
+  className?: string;
+}) {
   return (
     <Link
       href={`/products/${category.slug}`}
-      className="group relative flex flex-col sm:flex-row sm:items-center sm:justify-between overflow-hidden rounded-xl sm:rounded-2xl bg-card border border-border/80 p-2.5 sm:p-5 shadow-2xs hover:shadow-md hover:border-primary/50 transition-all duration-300 hover:-translate-y-0.5"
+      className={cn(
+        "group relative flex flex-col sm:flex-row sm:items-center sm:justify-between overflow-hidden rounded-md bg-card border border-border/80 p-2.5 sm:p-5 shadow-2xs hover:shadow-md hover:border-primary/50 transition-all duration-300 hover:-translate-y-0.5",
+        className,
+      )}
     >
       {/* Image Container: Full-width square on mobile -> Fixed 80px box on desktop */}
       <div className="relative w-full aspect-square sm:aspect-auto sm:w-20 sm:h-20 shrink-0 rounded-lg sm:rounded-xl overflow-hidden bg-muted/40 flex items-center justify-center border border-border/40 order-first sm:order-last mb-2 sm:mb-0">
@@ -51,6 +61,48 @@ export function CategoryCard({ category }: { category: Category }) {
           <span>Shop Now</span>
           <ArrowRight className="w-3.5 h-3.5" />
         </div>
+      </div>
+    </Link>
+  );
+}
+
+export function CategoryCard2({
+  category,
+  className,
+}: {
+  category?: Category;
+  className?: string;
+}) {
+  return (
+    <Link
+      href={`/products/${category?.slug}`}
+      className={cn(
+        "group relative flex sm:items-center sm:justify-center overflow-hidden bg-card p-2.5 sm:p-5   hover:-translate-y-0.5 flex-col-reverse gap-8",
+        className,
+      )}
+    >
+      {/* Image Container: Full-width square on mobile -> Fixed 80px box on desktop */}
+      <div className="relative aspect-square sm:aspect-auto sm:w-40 sm:h-40 shrink-0 rounded-full overflow-hidden bg-muted/40 flex items-center justify-center border order-first sm:order-last mb-2 sm:mb-0 group-hover:border-primary border-primary group-hover:border-4 transition-all duration-300">
+        {category?.image ? (
+          <Image
+            src={category?.image}
+            alt={category?.name}
+            fill
+            sizes="(max-width: 640px) 33vw, 96px"
+            className="object-cover transition-transform duration-300 group-hover:scale-110"
+          />
+        ) : (
+          <div className="flex items-center justify-center w-full h-full text-muted-foreground group-hover:text-primary transition-colors py-4 sm:py-0">
+            <ShoppingBag className="w-6 h-6 sm:w-8 sm:h-8 stroke-[1.5]" />
+          </div>
+        )}
+      </div>
+
+      {/* Text Content */}
+      <div className=" z-10 text-center sm:text-left pr-0 sm:pr-2">
+        <h3 className="font-bold text-xs sm:text-base text-foreground group-hover:text-primary transition-colors line-clamp-1 sm:line-clamp-2">
+          {category?.name}
+        </h3>
       </div>
     </Link>
   );

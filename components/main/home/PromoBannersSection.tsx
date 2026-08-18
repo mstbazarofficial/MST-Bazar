@@ -57,7 +57,7 @@ export default function PromoBannersSection() {
             <Image
               src="/assets/delivery.png"
               alt="Free Delivery Rider"
-              className="object-cover  group-hover:scale-105 transition-transform duration-300"
+              className="object-cover  group-hover:scale-105 transition-transform duration-300 mix-blend-multiply"
               fill
               sizes="(max-width: 768px) 45vw, (max-width: 1200px) 48vw, 48vw"
               loading="eager"

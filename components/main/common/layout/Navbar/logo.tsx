@@ -5,6 +5,7 @@ interface LogoProps {
   href?: string;
   src?: string;
   alt?: string;
+  size?: number;
 }
 
 // Drop your real logo path in via `src`, e.g. <Logo src="/logo.svg" />.
@@ -13,6 +14,7 @@ export function Logo({
   href = "/",
   src = "/assets/logo.png",
   alt = "Logo",
+  size = 48,
 }: LogoProps) {
   return (
     <Link
@@ -23,10 +25,10 @@ export function Logo({
       <Image
         src={src}
         alt={alt}
-        width={48}
-        height={48}
+        width={size}
+        height={size}
         priority
-        className="h-8 w-auto sm:h-9"
+        className=" w-auto"
       />
     </Link>
   );

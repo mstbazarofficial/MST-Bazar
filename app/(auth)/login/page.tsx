@@ -16,6 +16,7 @@ import { Mail, Lock, EyeOff, Eye, ArrowRight } from "lucide-react";
 import HeadingStyle2 from "@/components/main/common/HeadingStyle2";
 import Link from "next/link";
 import AuthBg from "@/components/main/common/Auth-Bg";
+import { Logo } from "@/components/main/common/layout/Navbar/logo";
 
 // --- Login Form Component ---
 export default function LoginForm() {
@@ -23,7 +24,10 @@ export default function LoginForm() {
 
   return (
     <section className="flex items-center lg:justify-start justify-center min-h-screen bg-gray-50 relative">
-      <div className="absolute top-0 left-0 w-full h-full bg-green-700 opacity-10"></div>
+      <div className="absolute  top-0 left-0 w-full h-full bg-green-700 opacity-10"></div>
+      <div className="absolute top-8 left-13 z-20 flex gap-2 ">
+        <Logo size={50} />
+      </div>
       <AuthBg />
       <Card className="w-full max-w-md lg:ml-60 py-5 gap-1 shadow-lg z-10 rounded-2xl border-0 my-auto">
         <CardHeader className="space-y-1 pb-6">
@@ -105,12 +109,12 @@ export default function LoginForm() {
                 Remember me
               </Label>
             </div>
-            <a
-              href="#"
+            <Link
+              href="/login/forgot-password"
               className="text-sm font-semibold text-green-700 hover:underline"
             >
               Forgot Password?
-            </a>
+            </Link>
           </div>
 
           {/* Login Button */}
@@ -120,7 +124,7 @@ export default function LoginForm() {
           </Button>
 
           {/* Divider */}
-          <div className="relative py-2">
+          {/* <div className="relative py-2">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t border-gray-200" />
             </div>
@@ -129,10 +133,10 @@ export default function LoginForm() {
                 or continue with
               </span>
             </div>
-          </div>
+          </div> */}
 
           {/* Social Login */}
-          <div className="grid grid-cols-2 gap-4">
+          {/* <div className="grid grid-cols-2 gap-4">
             <Button
               variant="outline"
               className="h-11 rounded-lg border-primary text-gray-600 font-medium hover:bg-gray-50"
@@ -170,10 +174,10 @@ export default function LoginForm() {
               </svg>
               Facebook
             </Button>
-          </div>
+          </div> */}
 
           {/* Footer Link */}
-          <div className="text-center text-sm text-gray-600 mt-4">
+          <div className="text-center text-sm text-gray-600 mt-2">
             Don't have an account?{" "}
             <Link
               href="sign-up"

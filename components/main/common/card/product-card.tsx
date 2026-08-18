@@ -25,7 +25,7 @@ export function ProductCard({
     product.price - (product.price * product.discountPercentage) / 100;
 
   return (
-    <Card className="border-border/60 hover:border-primary/40 transition-all duration-200 shadow-xs hover:shadow-md rounded-md overflow-hidden flex flex-col justify-between group p-3 bg-card h-full gap-2 relative">
+    <Card className="border border-border/60 hover:border-primary/60 transition-all duration-200 shadow-xs hover:shadow-md rounded-md overflow-hidden flex flex-col justify-between group p-3 bg-card h-full gap-2 relative">
       {/* Top Image & Badge Container */}
       <Link
         href={href}

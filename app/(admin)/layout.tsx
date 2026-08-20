@@ -7,8 +7,8 @@ import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | MST Shop Admin",
-    default: "Dashboard | MST Shop Admin",
+    template: "%s | MST Bazar Admin",
+    default: "Dashboard | MST Bazar Admin",
   },
   description: "MST Shop administration panel",
 };

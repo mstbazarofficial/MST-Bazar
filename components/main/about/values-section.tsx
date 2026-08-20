@@ -6,72 +6,82 @@ import {
   Truck,
   UserCheck,
 } from "lucide-react";
-import HeadLine from "../common/HeadLine";
+import { SectionHeading } from "../common/layout/section-heading";
 
 const VALUES_DATA = [
   {
     icon: Leaf,
-    title: "100% Natural",
-    description: "Pure, raw and unprocessed goodness.",
+    title: "100% Pure & Organic",
+    description:
+      "Ethically harvested raw ingredients packed with uncompromised natural goodness.",
   },
   {
     icon: FlaskConical,
-    title: "No Chemicals",
-    description: "No harmful additives, colors or preservatives.",
+    title: "Zero Chemicals & Additives",
+    description:
+      "Strictly free from artificial preservatives, synthetic colors, or harmful chemicals.",
   },
   {
     icon: UserCheck,
-    title: "Trusted Farmers",
-    description: "Sourced directly from local trusted farmers.",
+    title: "Direct From Local Farmers",
+    description:
+      "Empowering trusted local growers and beekeepers through direct, fair sourcing.",
   },
   {
     icon: ShieldCheck,
-    title: "Quality Tested",
-    description: "Every product is lab-tested for your safety.",
+    title: "Rigorously Lab Tested",
+    description:
+      "Every single batch undergoes stringent quality control tests for absolute safety.",
   },
   {
     icon: Truck,
-    title: "Fast Delivery",
-    description: "Quick & reliable delivery across Bangladesh.",
+    title: "Nationwide Express Delivery",
+    description:
+      "Fast, reliable doorstep delivery with tracking across all 64 districts.",
   },
   {
     icon: HeartHandshake,
-    title: "Customer First",
-    description: "Your satisfaction is our top most priority.",
+    title: "Customer Satisfaction First",
+    description:
+      "Instant inspection upon delivery with hassle-free replacement guarantees.",
   },
 ];
 
 export function ValuesSection() {
   return (
-    <section className=" bg-white">
+    <section className="bg-muted">
       <div className="site-container section-y space-y-10">
-        {/* 1. Header with Decorative Leaves */}
-        <HeadLine title="Our Core Values" />
+        {/* Section Heading */}
+        <SectionHeading title="Our Core Values" highlightPositions={[2]} />
 
-        {/* 2. Values 6-Card Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-5">
+        {/* 2-Row Layout: 3 Columns on Desktop, 2 on Tablet, 1 on Mobile */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
           {VALUES_DATA.map((item, index) => {
             const Icon = item.icon;
             return (
               <div
                 key={index}
-                className="bg-white border border-gray-100 rounded-md p-5 flex flex-col items-center text-center space-y-3 shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:shadow-md hover:border-primary/60 transition-all duration-300 group "
+                className="group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-card p-6 pb-8 border border-emerald-100/60 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
               >
-                {/* Circular Icon Holder */}
+                <div>
+                  {/* Top Icon Pill */}
+                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-primary-foreground">
+                    <Icon className="h-6 w-6 stroke-[1.8]" />
+                  </div>
 
-                <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-primary-dark text-primary-foreground flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300 ">
-                  <Icon className="w-6 h-6 stroke-[1.8]" />
+                  {/* Content */}
+                  <div className="space-y-2">
+                    <h3 className="text-base font-bold text-foreground transition-colors group-hover:text-primary">
+                      {item.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground font-medium">
+                      {item.description}
+                    </p>
+                  </div>
                 </div>
 
-                {/* Title */}
-                <h3 className="text-xs sm:text-sm font-bold text-gray-900 leading-snug">
-                  {item.title}
-                </h3>
-
-                {/* Description */}
-                <p className="text-[11px] sm:text-xs text-gray-500 font-medium leading-relaxed">
-                  {item.description}
-                </p>
+                {/* Solid Colored Bottom Accent Line (Matching Image) */}
+                <div className="absolute inset-x-0 bottom-0 h-1 w-full bg-linear-to-r from-[#10B981] via-[#059669] to-[#047857] transition-all duration-300 " />
               </div>
             );
           })}

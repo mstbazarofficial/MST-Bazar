@@ -2,7 +2,6 @@
 
 import { LayoutDashboard, LogOut, User as UserIcon } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -27,18 +26,10 @@ function getInitials(name: string) {
 }
 
 export function UserMenu() {
-  const router = useRouter();
   const { data: session, isPending } = authClient.useSession();
 
   const handleSignOut = async () => {
-    await authClient.signOut({
-      fetchOptions: {
-        onSuccess: () => {
-          router.push("/sign-in");
-          router.refresh();
-        },
-      },
-    });
+    await authClient.signOut();
   };
 
   if (isPending) {

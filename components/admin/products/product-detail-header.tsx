@@ -10,8 +10,10 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useQueryClient } from "@tanstack/react-query";
 import { MoreVertical, Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 type ProductDetailHeaderProps = {
   product: {
@@ -23,6 +25,13 @@ type ProductDetailHeaderProps = {
 };
 
 export function ProductDetailHeader({ product }: ProductDetailHeaderProps) {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const handleDelete = async () => {
+    await deleteProduct(product.id);
+    await queryClient.resetQueries({ queryKey: ["admin-products"] });
+    router.push("/admin/products");
+  };
   return (
     <PageHeader
       title={product.title}
@@ -59,7 +68,7 @@ export function ProductDetailHeader({ product }: ProductDetailHeaderProps) {
               <DeleteDialog
                 title="Delete product?"
                 description={`Are you sure you want to delete "${product.title}"? This action cannot be undone.`}
-                action={() => deleteProduct(product.id)}
+                action={() => handleDelete()}
                 successMessage="Product deleted successfully."
               >
                 <Button

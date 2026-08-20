@@ -13,6 +13,13 @@ const orderInclude = {
   notes: {
     orderBy: { createdAt: "desc" },
   },
+  user: {
+    select: {
+      id: true,
+      name: true,
+      image: true,
+    },
+  },
 } satisfies Prisma.OrderInclude;
 
 export type OrderWithDetails = Prisma.OrderGetPayload<{
@@ -34,6 +41,13 @@ export default async function AdminOrderDetailPage({
       orderItems: { orderBy: { createdAt: "asc" } },
       payments: { orderBy: { date: "desc" } },
       notes: { orderBy: { createdAt: "desc" } },
+      user: {
+        select: {
+          id: true,
+          name: true,
+          image: true,
+        },
+      },
     },
   });
 

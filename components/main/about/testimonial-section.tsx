@@ -1,6 +1,6 @@
 "use client";
 
-import { Star } from "lucide-react";
+import { Quote, Star } from "lucide-react";
 import Image from "next/image";
 
 // Swiper Components & Modules
@@ -10,39 +10,46 @@ import { Swiper, SwiperSlide } from "swiper/react";
 // Swiper Styles
 import "swiper/css";
 import "swiper/css/pagination";
-import HeadLine from "../common/HeadLine";
+import { SectionHeading } from "../common/layout/section-heading";
 
 const REVIEWS = [
   {
     rating: 5,
     comment:
-      "The quality of honey and ghee is amazing. Fully authentic and natural.",
+      "The quality of honey and mustard oil is unmatched. Truly 100% natural, fresh, and free from any chemical processing.",
     name: "Nusrat Jahan",
     location: "Dhaka",
+    verified: "Verified Buyer",
     avatar:
       "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=200",
   },
   {
     rating: 5,
-    comment: "MST Bazar is my trusted partner for healthy food for my family.",
+    comment:
+      "MST Bazar has become our family's primary store for daily organic essentials. The ghee aroma and purity are top notch!",
     name: "Tarique Ahmed",
     location: "Chattogram",
+    verified: "Verified Buyer",
     avatar:
       "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200",
   },
   {
     rating: 5,
-    comment: "Fast delivery, great packaging and super quality products.",
+    comment:
+      "Extremely fast doorstep delivery to Sylhet! The eco-friendly packaging ensured everything arrived completely intact.",
     name: "Sadia Akter",
     location: "Sylhet",
+    verified: "Verified Buyer",
     avatar:
       "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=200",
   },
   {
     rating: 5,
-    comment: "Organically sourced and pure products. Highly recommended!",
+    comment:
+      "Direct farm sourcing makes a noticeable difference in taste and quality. Highly recommended for health-conscious families.",
     name: "Ahmmed Rafiq",
     location: "Rajshahi",
+    verified: "Verified Buyer",
     avatar:
       "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200",
   },
@@ -50,12 +57,12 @@ const REVIEWS = [
 
 export function TestimonialsSection() {
   return (
-    <div className="space-y-6 site-container section-y">
+    <section className="w-full site-container bg-muted section-y space-y-8">
       {/* Section Header */}
-      <HeadLine title="What Our Customers Say" />
+      <SectionHeading title="What Our Customers Say" highlightPositions={[3]} />
 
       {/* Testimonials Swiper Carousel */}
-      <div className="relative pt-2 pb-6 [&_.swiper-pagination-bullet-active]:bg-[#0B5D2A]! [&_.swiper-pagination-bullet]:w-2.5! [&_.swiper-pagination-bullet]:h-2.5!">
+      <div className="relative pt-2 pb-6 [&_.swiper-pagination-bullet-active]:bg-primary! [&_.swiper-pagination-bullet]:w-2.5! [&_.swiper-pagination-bullet]:h-2.5!">
         <Swiper
           modules={[Pagination, Autoplay]}
           spaceBetween={20}
@@ -87,34 +94,30 @@ export function TestimonialsSection() {
         >
           {REVIEWS.map((review, index) => (
             <SwiperSlide key={index} className="h-auto">
-              {/* Single Review Card (HTML & Styling Same As Original) */}
-              <div className="bg-white border border-gray-100/90 rounded-2xl p-5 sm:p-6 flex flex-col justify-between space-y-4 shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:shadow-md transition-all duration-300 h-full">
+              <div className="group relative flex h-full flex-col justify-between space-y-5 rounded-xl border border-border/60 bg-card p-6 shadow-2xs transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-md">
+                {/* Top: Decorative Quote Icon & Star Ratings */}
                 <div className="space-y-3">
-                  {/* Star Rating */}
-                  <div className="flex items-center gap-1">
-                    {[...Array(review.rating)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className="w-4 h-4 fill-amber-400 text-amber-400"
-                      />
-                    ))}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1">
+                      {[...Array(review.rating)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className="h-4 w-4 fill-amber-400 text-amber-400"
+                        />
+                      ))}
+                    </div>
+                    <Quote className="h-6 w-6 text-primary/20 transition-colors group-hover:text-primary/40" />
                   </div>
 
-                  {/* Quote Text */}
-                  <p className="text-xs sm:text-sm text-gray-700 font-medium leading-relaxed">
-                    <span className="text-gray-400 text-3xl font-serif mr-1">
-                      &ldquo;
-                    </span>
-                    {review.comment}
-                    <span className="text-gray-400 text-3xl leading-0 font-serif ml-0.5">
-                      &rdquo;
-                    </span>
+                  {/* Comment Body */}
+                  <p className="text-xs sm:text-sm font-medium leading-relaxed text-foreground/90">
+                    "{review.comment}"
                   </p>
                 </div>
 
-                {/* Author Info */}
-                <div className="flex items-center gap-3 pt-2">
-                  <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden shrink-0 border border-gray-200">
+                {/* Bottom Author Profile */}
+                <div className="flex items-center gap-3 border-t border-border/50 pt-4">
+                  <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full border border-border shadow-xs">
                     <Image
                       src={review.avatar}
                       alt={review.name}
@@ -123,12 +126,15 @@ export function TestimonialsSection() {
                       className="object-cover"
                     />
                   </div>
-                  <div>
-                    <h4 className="text-xs sm:text-sm font-bold text-gray-900 leading-snug">
+                  <div className="min-w-0 flex-1">
+                    <h4 className="truncate text-xs sm:text-sm font-bold text-foreground">
                       {review.name}
                     </h4>
-                    <p className="text-[11px] text-gray-500 font-medium">
-                      {review.location}
+                    <p className="truncate text-[11px] font-medium text-muted-foreground">
+                      {review.location} •{" "}
+                      <span className="text-primary font-semibold">
+                        {review.verified}
+                      </span>
                     </p>
                   </div>
                 </div>
@@ -137,6 +143,6 @@ export function TestimonialsSection() {
           ))}
         </Swiper>
       </div>
-    </div>
+    </section>
   );
 }

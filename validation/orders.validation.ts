@@ -78,16 +78,21 @@ export const orderCostSchema = z.object({
 });
 export type OrderCostFormData = z.infer<typeof orderCostSchema>;
 
-export const editCustomerInfoSchema = z.object({
+export const editOrderInfoSchema = z.object({
   userId: z.string().nullable().optional(),
   customerName: z.string().min(1, "Customer name is required"),
   emailAddress: z.email("Invalid email address"),
   phoneNumber: z.string().min(1, "Phone number is required"),
   whatsappNumber: z.string().nullable().optional(),
   fullAddress: z.string().min(1, "Shipping address is required"),
+  orderPaymentMethod: z.enum(PaymentMethod, {
+    message: "Invalid payment method",
+  }),
+  TrxNumber: z.string().nullable().optional(),
+  TrxID: z.string().nullable().optional(),
 });
 
-export type EditCustomerInfoInput = z.infer<typeof editCustomerInfoSchema>;
+export type EditOrderInfoInput = z.infer<typeof editOrderInfoSchema>;
 
 export const editOrderSummarySchema = z.object({
   shippingCost: z.number().min(0, "Shipping cost cannot be negative"),
@@ -113,11 +118,6 @@ export type EditOrderCostsInput = z.input<typeof editOrderCostsSchema>;
 
 export const editOrderStatusSchema = z.object({
   status: z.enum(OrderStatus, { message: "Invalid order status" }),
-  orderPaymentMethod: z.enum(PaymentMethod, {
-    message: "Invalid payment method",
-  }),
-  TrxNumber: z.string().nullable().optional(),
-  TrxID: z.string().nullable().optional(),
 });
 
 export type EditOrderStatusInput = z.infer<typeof editOrderStatusSchema>;

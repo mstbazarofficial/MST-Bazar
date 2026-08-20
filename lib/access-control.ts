@@ -15,7 +15,8 @@ export const adminRole = ac.newRole({
 
 export const moderatorRole = ac.newRole({
   project: ["create"],
-  user: ["ban"],
+  user: ["create", "list", "get", "update"],
+  session: ["list"],
 });
 
 export const customerRole = ac.newRole({

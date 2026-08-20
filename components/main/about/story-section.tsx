@@ -1,90 +1,97 @@
-import { cn } from "@/lib/utils";
 import { Lightbulb, ShieldCheck, Store, TrendingUp, Users } from "lucide-react";
-import HeadLine from "../common/HeadLine";
+import { SectionHeading } from "../common/layout/section-heading";
 
 const STORY_STEPS = [
   {
     icon: Lightbulb,
-    title: "Dream",
+    title: "A Humble Dream",
     description:
-      "It all started with a simple dream to bring pure & healthy food to every home.",
+      "It all started with a clear vision: bringing pure, unadulterated organic food straight to everyday households.",
     year: "2018",
   },
   {
     icon: Store,
-    title: "Started Small",
+    title: "Starting Small",
     description:
-      "We started small with few items and a lot of passion for quality.",
+      "Launched with a handful of artisanal products and an unyielding commitment to uncompromised quality.",
     year: "2019",
   },
   {
     icon: ShieldCheck,
-    title: "Trusted Brand",
+    title: "Building Trust",
     description:
-      "Your trust inspired us to grow and maintain highest standards.",
+      "Word of mouth spread quickly. Your trust inspired us to establish rigorous laboratory purity standards.",
     year: "2020",
   },
   {
     icon: Users,
-    title: "Thousands of Happy Customers",
-    description: "Now thousands of families rely on MST Bazar every day.",
+    title: "Thousands Served",
+    description:
+      "Expanded nationwide, becoming a staple household name for thousands of health-conscious families.",
     year: "2022",
   },
   {
     icon: TrendingUp,
-    title: "Growing Every Day",
+    title: "Today & Beyond",
     description:
-      "We are committed to serving more families with even better quality.",
-    year: "Today & Beyond",
+      "Continuously innovating with sustainable sourcing, eco-friendly packaging, and expanding choices.",
+    year: "Present",
   },
 ];
 
 export function StoryTimeline() {
   return (
-    <section className="bg-white">
-      <div className="site-container section-y space-y-10">
-        {/* 1. Header with Decorative Leaves */}
-        <HeadLine title="Our Story Timeline" />
+    <section className="bg-background">
+      <div className="site-container section-y space-y-12">
+        {/* Section Heading */}
+        <SectionHeading title="Our Story Timeline" highlightPositions={[2]} />
 
-        {/* 2. Timeline Grid */}
         <div className="relative">
-          {/* Dashed Connecting Line (Desktop Only) */}
+          {/* Desktop Horizontal Progress Line */}
           <div
-            className="hidden lg:block absolute top-7 left-[10%] right-[10%] h-0.5 border-t-2 border-dashed border-[#8DC63F]/70 z-0"
+            className="hidden lg:block absolute top-7 left-[8%] right-[8%] h-0.5 border-t-2 border-dashed border-primary/40 z-0"
             aria-hidden="true"
           />
 
-          {/* 5 Timeline Cards */}
-          <div className="grid grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-3 relative z-10">
+          {/* Mobile/Tablet Vertical Progress Line */}
+          <div
+            className="block lg:hidden absolute top-4 bottom-4 left-6 w-0.5 border-l-2 border-dashed border-primary/40 z-0"
+            aria-hidden="true"
+          />
+
+          {/* Timeline Nodes */}
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-3 relative z-10">
             {STORY_STEPS.map((step, index) => {
               const IconComponent = step.icon;
+
               return (
                 <div
                   key={index}
-                  className={cn(
-                    "flex flex-col items-center text-center space-y-2.5 group",
-                    index === 4 && "max-lg:col-span-full",
-                  )}
+                  className="relative flex flex-row lg:flex-col items-start lg:items-center text-left lg:text-center gap-5 lg:gap-4 group pl-14 lg:pl-0"
                 >
-                  {/* Circular Icon */}
-                  <div className="w-14 h-14 rounded-full bg-[#0B5D2A] text-white flex items-center justify-center shadow-md border-4 border-white shrink-0 group-hover:scale-105 transition-transform duration-300">
-                    <IconComponent className="w-6 h-6 stroke-2" />
+                  {/* Circular Icon & Year Tag Container */}
+                  <div className="absolute left-0 lg:relative flex flex-col items-center shrink-0">
+                    <div className="h-12 w-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-sm ring-4 ring-background transition-transform duration-300 group-hover:scale-110 group-hover:ring-primary/20">
+                      <IconComponent className="h-5 w-5 stroke-[1.8]" />
+                    </div>
                   </div>
 
-                  {/* Title */}
-                  <h3 className="text-xs sm:text-sm font-extrabold text-gray-900 leading-snug min-h-8 flex items-center justify-center">
-                    {step.title}
-                  </h3>
-
-                  {/* Description */}
-                  <p className="text-[11px] sm:text-xs text-gray-600 font-medium leading-relaxed max-w-52.5 sm:max-w-47.5">
-                    {step.description}
-                  </p>
-
-                  {/* Year Tag */}
-                  <span className="text-xs font-extrabold text-[#0B5D2A] pt-1">
-                    {step.year}
-                  </span>
+                  {/* Step Card Content */}
+                  <div className="flex-1 flex flex-col justify-between rounded-xl border border-border/60 bg-card p-5 shadow-2xs transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-md w-full">
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between lg:justify-center gap-2">
+                        <span className="inline-block rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-bold text-primary">
+                          {step.year}
+                        </span>
+                      </div>
+                      <h3 className="text-sm font-bold text-foreground transition-colors group-hover:text-primary">
+                        {step.title}
+                      </h3>
+                      <p className="text-xs font-medium leading-relaxed text-muted-foreground">
+                        {step.description}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               );
             })}

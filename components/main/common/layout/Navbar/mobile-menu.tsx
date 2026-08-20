@@ -11,7 +11,13 @@ import {
 } from "@/components/ui/sheet";
 import { useCategories } from "@/context/catalog-provider";
 import { authClient } from "@/lib/auth-client";
-import { ChevronRight, Menu, User } from "lucide-react";
+import {
+  ChevronRight,
+  Menu,
+  PackageSearch,
+  ShoppingBag,
+  User,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Logo } from "./logo";
@@ -22,6 +28,7 @@ interface MobileMenuProps {
 }
 
 const staticLinks = [
+  { label: "Track Order", href: "/track-order", icon: PackageSearch },
   { label: "About Us", href: "/about" },
   { label: "Contact", href: "/contact" },
 ];
@@ -59,14 +66,14 @@ export function MobileMenu({
           <SheetTitle render={<Logo />} />
         </SheetHeader>
 
-        {/* User section */}
-        <div className="border-b border-border px-4 py-4">
+        {/* User section: Hidden on md screens */}
+        <div className="border-b border-border px-4 py-4 md:hidden">
           {user ? (
             <SheetClose
               nativeButton={false}
               render={
                 <Link
-                  href="/account"
+                  href="/dashboard"
                   className={`flex items-center gap-3 rounded-md p-1 transition-colors hover:bg-accent ${
                     pathname === "/account" ? "bg-accent font-semibold" : ""
                   }`}
@@ -120,10 +127,11 @@ export function MobileMenu({
 
         {/* Scrollable nav */}
         <nav className="flex-1 overflow-y-auto px-2 py-3">
-          {/* General links */}
-          <ul className="mb-2 flex flex-col gap-0.5">
+          {/* General links: Hidden on md screens */}
+          <ul className="mb-2 flex flex-col gap-0.5 md:hidden">
             {staticLinks.map((link) => {
               const isActive = pathname === link.href;
+              const Icon = link.icon;
               return (
                 <li key={link.href}>
                   <SheetClose
@@ -131,13 +139,16 @@ export function MobileMenu({
                     render={
                       <Link
                         href={link.href}
-                        className={`block rounded-md px-3 py-2.5 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground ${
+                        className={`flex items-center gap-2.5 rounded-md px-3 py-2.5 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground ${
                           isActive
-                            ? "bg-accent text-accent-foreground font-semibold"
+                            ? "bg-accent font-semibold text-accent-foreground"
                             : "text-foreground"
                         }`}
                       >
-                        {link.label}
+                        {Icon && (
+                          <Icon className="h-4 w-4 shrink-0 text-muted-foreground" />
+                        )}
+                        <span>{link.label}</span>
                       </Link>
                     }
                   />
@@ -146,13 +157,33 @@ export function MobileMenu({
             })}
           </ul>
 
-          {/* Categories */}
+          {/* Categories & Products */}
           {categories.length > 0 && (
-            <div className="mt-2">
+            <div className="border-t border-border/60 pt-2 md:border-t-0 md:pt-0">
               <p className="px-3 pb-1.5 pt-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 Shop by Category
               </p>
               <ul className="flex flex-col gap-0.5">
+                {/* All Products link: Hidden on md screens */}
+                <li className="md:hidden">
+                  <SheetClose
+                    nativeButton={false}
+                    render={
+                      <Link
+                        href="/products"
+                        className={`flex items-center gap-2.5 rounded-md px-3 py-2.5 text-sm font-semibold transition-colors hover:bg-accent hover:text-accent-foreground ${
+                          pathname === "/products"
+                            ? "bg-accent text-accent-foreground"
+                            : "text-foreground"
+                        }`}
+                      >
+                        <ShoppingBag className="h-4 w-4 shrink-0 text-muted-foreground" />
+                        <span>All Products</span>
+                      </Link>
+                    }
+                  />
+                </li>
+
                 {categories.map((category) => {
                   const href = `/products/${category.slug}`;
                   const isActive = pathname === href;
@@ -165,7 +196,7 @@ export function MobileMenu({
                             href={href}
                             className={`flex items-center justify-between rounded-md px-3 py-2.5 text-sm transition-colors hover:bg-accent hover:text-accent-foreground ${
                               isActive
-                                ? "bg-accent text-accent-foreground font-semibold"
+                                ? "bg-accent font-semibold text-accent-foreground"
                                 : "text-foreground"
                             }`}
                           >

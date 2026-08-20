@@ -1,5 +1,4 @@
 import { getAdminProductBySlug } from "@/actions/admin/product-actions";
-import { ProductCampaignCard } from "@/components/admin/products/product-campaign-card";
 import { ProductDescriptions } from "@/components/admin/products/product-descriptions";
 import { ProductDetailHeader } from "@/components/admin/products/product-detail-header";
 import { ProductImageGallery } from "@/components/admin/products/product-image-gallery";
@@ -19,8 +18,6 @@ export default async function AdminProductDetailPage({
   const product = await getAdminProductBySlug(decodeURIComponent(slug));
   if (!product) notFound();
 
-  const activeCampaign = product.campaigns.find((c) => c.isActive) ?? null;
-
   return (
     <>
       <ProductDetailHeader
@@ -33,10 +30,11 @@ export default async function AdminProductDetailPage({
       />
 
       <main className="flex-1 space-y-6 overflow-y-auto bg-muted/30 p-4 md:p-6">
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[280px_1fr]">
+        {/* TOP SECTION: Gallery + Core Info */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[300px_1fr]">
           <ProductImageGallery images={product.images} />
 
-          <div className="rounded-lg border border-border bg-card p-4">
+          <div className="flex flex-col justify-between rounded-xl border bg-card p-6 shadow-2xs">
             <ProductInfoGrid
               product={{
                 sku: product.sku,
@@ -47,18 +45,19 @@ export default async function AdminProductDetailPage({
                 discountPercentage: product.discountPercentage,
                 isBestDeal: product.isBestDeal,
                 slug: product.slug,
+                isPopular: product.isPopular,
               }}
             />
           </div>
         </div>
 
+        {/* BOTTOM SECTION: Descriptions + Details */}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <div className="lg:col-span-2">
             <ProductDescriptions productDetails={product.productDetails} />
           </div>
 
           <div className="space-y-6">
-            <ProductCampaignCard campaign={activeCampaign} />
             <ProductTimelineCard
               createdAt={product.createdAt}
               updatedAt={product.updatedAt}

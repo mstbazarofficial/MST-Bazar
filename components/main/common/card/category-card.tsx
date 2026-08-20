@@ -75,33 +75,33 @@ export function CategoryCard2({
 }) {
   return (
     <Link
-      href={`/products/${category?.slug}`}
+      href={`/products/${category?.slug || ""}`}
       className={cn(
-        "group relative flex sm:items-center sm:justify-center overflow-hidden bg-card p-2.5 sm:p-5   hover:-translate-y-0.5 flex-col-reverse gap-8",
+        "group relative flex flex-col items-center justify-center p-4 rounded-xl bg-card border border-border/60 hover:border-primary/50 hover:shadow-md transition-all duration-300 ease-out",
         className,
       )}
     >
-      {/* Image Container: Full-width square on mobile -> Fixed 80px box on desktop */}
-      <div className="relative aspect-square sm:aspect-auto sm:w-40 sm:h-40 shrink-0 rounded-full overflow-hidden bg-muted/40 flex items-center justify-center border order-first sm:order-last mb-2 sm:mb-0 group-hover:border-primary border-primary group-hover:border-4 transition-all duration-300">
+      {/* Image Container */}
+      <div className="relative size-20 sm:size-24 rounded-full overflow-hidden bg-muted/40 flex items-center justify-center border border-border group-hover:border-primary transition-colors duration-300">
         {category?.image ? (
           <Image
-            src={category?.image}
-            alt={category?.name}
+            src={category.image}
+            alt={category.name || "Category image"}
             fill
-            sizes="(max-width: 640px) 33vw, 96px"
-            className="object-cover transition-transform duration-300 group-hover:scale-110"
+            sizes="(max-width: 640px) 80px, 96px"
+            className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
           />
         ) : (
-          <div className="flex items-center justify-center w-full h-full text-muted-foreground group-hover:text-primary transition-colors py-4 sm:py-0">
-            <ShoppingBag className="w-6 h-6 sm:w-8 sm:h-8 stroke-[1.5]" />
+          <div className="flex items-center justify-center w-full h-full text-muted-foreground group-hover:text-primary transition-colors duration-300">
+            <ShoppingBag className="w-8 h-8 stroke-[1.5]" />
           </div>
         )}
       </div>
 
-      {/* Text Content */}
-      <div className=" z-10 text-center sm:text-left pr-0 sm:pr-2">
-        <h3 className="font-bold text-xs sm:text-base text-foreground group-hover:text-primary transition-colors line-clamp-1 sm:line-clamp-2">
-          {category?.name}
+      {/* Category Name */}
+      <div className="mt-3 text-center w-full">
+        <h3 className="font-semibold text-xs sm:text-sm text-foreground group-hover:text-primary transition-colors duration-300 line-clamp-1">
+          {category?.name || "Category"}
         </h3>
       </div>
     </Link>

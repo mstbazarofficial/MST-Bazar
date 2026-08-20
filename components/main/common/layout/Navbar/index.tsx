@@ -1,5 +1,6 @@
 "use client";
-import { ArrowRight, Search } from "lucide-react";
+import { Search, Truck } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { CartSheet } from "./cart-sheet";
 import { CategoryNav } from "./category-nav";
@@ -8,15 +9,12 @@ import { Logo } from "./logo";
 import { MobileMenu } from "./mobile-menu";
 import { MobileSearchOverlay } from "./mobile-search-overlay";
 import { UserMenu } from "./user-menu";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
 
 export function Navbar() {
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background">
+    <header className="sticky top-0 z-40  bg-background">
       {/* `relative` here is what lets the mobile search overlay cover this row */}
       <div className="site-container relative flex h-16 items-center gap-4">
         {!mobileSearchOpen && (
@@ -26,29 +24,27 @@ export function Navbar() {
             <div className="flex flex-1 justify-center">
               <DesktopSearchBar />
             </div>
-            <div className="hidden sm:block items-center gap-4 flex-[0.2]">
-              <Link
-                href="/order-track"
-                className={cn(
-                  "inline-flex items-center gap-2.5 bg-primary-dark hover:bg-[#084820] text-white text-sm font-semibold px-4 py-2 rounded-md transition-all shadow-sm active:scale-95",
-                )}
-              >
-                <span>Track Order</span>
-                <ArrowRight className="w-4 h-4 stroke-[2.5]" />
-              </Link>
-            </div>
 
-            <div className="ml-auto flex items-center gap-4">
+            <div className="ml-auto flex items-center gap-2 md:gap-3">
               <button
                 type="button"
                 aria-label="Open search"
                 onClick={() => setMobileSearchOpen(true)}
                 className="flex sm:hidden flex-col cursor-pointer items-center gap-0.5 px-1 text-foreground transition-colors hover:text-primary"
               >
-                <Search className="h-5 w-5" />
-
+                <Search className="size-4 " />
                 <span className="text-xs font-medium">Search</span>
               </button>
+
+              <Link
+                href="/track-order"
+                className="hidden md:flex flex-col items-center gap-0.5 px-1 text-foreground transition-colors hover:text-primary"
+              >
+                <Truck className="h-5 w-5" />
+                <span className="text-xs font-medium whitespace-nowrap">
+                  Track Order
+                </span>
+              </Link>
 
               <CartSheet />
 

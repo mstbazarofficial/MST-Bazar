@@ -25,7 +25,7 @@ export function AdminHeader() {
   const title = getPageTitle(pathname);
 
   return (
-    <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center gap-3 border-b border-border bg-card/80 px-4 backdrop-blur-sm">
+    <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center gap-3 border-b border-border bg-sidebar px-4 backdrop-blur-sm">
       <SidebarTrigger className="-ml-1 text-muted-foreground hover:text-foreground" />
       {/* Fixed: Use !h-4 and shrink-0 to prevent stretching to the top border */}
       <Separator orientation="vertical" className="h-4 my-auto shrink-0" />

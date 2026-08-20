@@ -1,7 +1,8 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { ImageOff } from "lucide-react";
+import { ImageOff, Star } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -18,25 +19,37 @@ export function ProductImageGallery({ images }: { images: ProductImage[] }) {
 
   if (!images.length) {
     return (
-      <div className="flex aspect-square items-center justify-center rounded-lg border border-dashed border-border bg-muted/40 text-muted-foreground">
-        <ImageOff className="size-8" />
+      <div className="flex aspect-square w-full flex-col items-center justify-center rounded-xl border border-dashed border-border bg-card p-4 text-center text-muted-foreground shadow-2xs">
+        <ImageOff className="size-8 stroke-[1.5]" />
+        <span className="mt-2 text-xs font-medium">No product images</span>
       </div>
     );
   }
 
   return (
-    <div className="space-y-3">
-      <div className="relative aspect-square overflow-hidden rounded-lg border border-border bg-muted/30">
+    <div className="flex flex-col gap-3">
+      {/* Main Display Area */}
+      <div className="relative aspect-square w-full overflow-hidden rounded-xl border bg-background shadow-2xs">
         <Image
           src={active.url}
-          alt="Product image"
+          alt="Product image preview"
           fill
-          className="object-cover"
+          className="object-contain p-2"
           sizes="(min-width: 1024px) 280px, 50vw"
           priority
         />
+        {active.isFeatured && (
+          <Badge
+            variant="secondary"
+            className="absolute top-2.5 left-2.5 gap-1 bg-background/80 backdrop-blur-xs text-[10px] font-semibold"
+          >
+            <Star className="size-3 fill-amber-400 text-amber-400" />
+            Featured
+          </Badge>
+        )}
       </div>
 
+      {/* Thumbnail Strip */}
       {images.length > 1 && (
         <div className="grid grid-cols-4 gap-2">
           {images.map((img) => (
@@ -45,10 +58,10 @@ export function ProductImageGallery({ images }: { images: ProductImage[] }) {
               type="button"
               onClick={() => setActiveId(img.id)}
               className={cn(
-                "relative aspect-square overflow-hidden rounded-md border transition",
+                "relative aspect-square overflow-hidden rounded-lg border bg-background transition-all hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                 img.id === active.id
-                  ? "border-primary ring-1 ring-primary"
-                  : "border-border hover:border-foreground/30",
+                  ? "border-primary ring-2 ring-primary/20"
+                  : "border-border opacity-70 hover:opacity-100",
               )}
             >
               <Image

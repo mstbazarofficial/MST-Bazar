@@ -18,7 +18,7 @@ export function FeatureBanner() {
   ];
 
   return (
-    <div className="mt-20 bg-primary-dark rounded-md p-8 lg:p-10">
+    <div className="mt-20 mb-8 bg-primary-dark rounded-md p-8 lg:p-10">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         {features.map((item, idx) => (
           <div key={idx} className="flex items-center gap-4">

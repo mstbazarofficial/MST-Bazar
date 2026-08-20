@@ -1,13 +1,11 @@
 "use client";
 
-import { useCategories } from "@/context/catalog-provider";
 import { Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MobileMenu } from "./mobile-menu";
 
 export function CategoryNav() {
-  const categories = useCategories();
   const pathname = usePathname();
 
   // Helper to apply active text color matching the hover state
@@ -34,6 +32,11 @@ export function CategoryNav() {
         />
         <ul className="flex items-center gap-6 overflow-x-auto">
           <li className="shrink-0">
+            <Link href="/" className={getLinkClasses("/")}>
+              Home
+            </Link>
+          </li>
+          <li className="shrink-0">
             <Link href="/about" className={getLinkClasses("/about")}>
               About
             </Link>
@@ -43,16 +46,11 @@ export function CategoryNav() {
               Products
             </Link>
           </li>
-          {categories.slice(0, 5).map((category) => {
-            const href = `/products/${category.slug}`;
-            return (
-              <li key={category.id} className="shrink-0">
-                <Link href={href} className={getLinkClasses(href)}>
-                  {category.name}
-                </Link>
-              </li>
-            );
-          })}
+          <li className="shrink-0">
+            <Link href="/contact" className={getLinkClasses("/contact")}>
+              Contact
+            </Link>
+          </li>
         </ul>
       </div>
     </nav>

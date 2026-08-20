@@ -89,14 +89,6 @@ export async function getAdminProductStats() {
 
   return { total, active, bestDeal };
 }
-export async function getActiveCampaigns() {
-  await requireAdmin();
-
-  return prisma.campaign.findMany({
-    select: { id: true, headline: true, isActive: true },
-    orderBy: { createdAt: "desc" },
-  });
-}
 
 export async function getAdminProductById(id: string) {
   await requireAdmin();
@@ -105,7 +97,6 @@ export async function getAdminProductById(id: string) {
     include: {
       images: true,
       category: true,
-      campaigns: true,
     },
   });
 }
@@ -116,7 +107,6 @@ export async function getAdminProductBySlug(slug: string) {
     include: {
       images: true,
       category: true,
-      campaigns: true,
     },
   });
 }

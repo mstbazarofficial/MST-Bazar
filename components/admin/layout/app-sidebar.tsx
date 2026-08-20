@@ -46,8 +46,8 @@ export function AppSidebar() {
             <SidebarMenuItem className="flex items-center gap-1">
               <SidebarMenuButton
                 size="lg"
-                tooltip="THM Consultency"
-                render={<Link href="/admin/dashboard" />}
+                tooltip="MST Shop"
+                render={<Link href="/" />}
                 className="w-full gap-3 rounded-lg data-[state=open]:bg-sidebar-accent"
               >
                 <div className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-brand-amber/30 bg-brand-amber/20">

@@ -1,40 +1,71 @@
-import { ArrowRight } from "lucide-react";
+// components/site/cta-banner.tsx
+import { ArrowRight, Leaf, ShieldCheck, Truck } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+const trustPoints = [
+  { icon: Leaf, label: "100% organic" },
+  { icon: ShieldCheck, label: "Lab tested" },
+  { icon: Truck, label: "Fast delivery" },
+];
+
 export function CtaBanner() {
   return (
-    <section className="relative overflow-hidden text-primary-foreground site-container section-y ">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center relative z-10 rounded-md bg-linear-to-r from-primary via-primary-dark to-primary p-6 pl-10 shadow-lg overflow-hidden">
-        {/* Left Side: Call to Action Text & Button */}
-        <div className="lg:col-span-6 space-y-4 text-left z-10">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight">
-            Join Thousands of Happy Families
+    <section className="relative isolate w-full overflow-hidden bg-[#0f3d1f]">
+      {/* Background image */}
+      <div className="absolute inset-0">
+        <Image
+          src="/assets/cta-bg.png"
+          alt=""
+          fill
+          priority
+          className="object-cover object-right"
+        />
+      </div>
+
+      {/* Legibility scrim — solid on mobile (image crops to mostly product),
+          soft gradient on tablet, and on large screens a tight left-only
+          fade so the product photo reads almost fully clear past ~55% width */}
+      <div className="absolute inset-0 bg-[#0f3d1f]/80 sm:bg-linear-to-r sm:from-[#0f3d1f] sm:via-[#0f3d1f]/85 sm:to-transparent lg:bg-linear-to-r lg:from-[#0f3d1f] lg:via-35% lg:via-[#0f3d1f]/40 lg:to-55% lg:to-transparent" />
+
+      <div className="site-container relative z-10 py-14 sm:py-16 lg:py-10">
+        <div className="max-w-xl">
+          <span className="inline-flex items-center rounded-full border border-[#FFC700]/30 bg-[#FFC700]/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-[#FFC700]">
+            Straight from the farm
+          </span>
+
+          <h2 className="mt-3 text-3xl font-extrabold leading-[1.1] tracking-tight text-white sm:text-4xl lg:text-4xl">
+            Join thousands of
+            <br />
+            happy families
           </h2>
 
-          <p className="text-xs sm:text-sm text-emerald-100 font-medium">
-            Choose pure, stay healthy with MST Bazar.
+          <p className="mt-3 max-w-sm text-sm text-emerald-100/80 sm:text-base">
+            Pure honey, oils, and pantry staples — sourced honestly, tested
+            rigorously, delivered to your door.
           </p>
 
-          <div className="pt-2">
+          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
             <Link
               href="/products"
-              className="inline-flex items-center gap-2 bg-[#FFC700] hover:bg-[#E6B400] text-gray-900 font-extrabold text-xs sm:text-sm px-6 py-3 rounded-sm transition-all duration-300 shadow-md hover:shadow-lg active:scale-95 cursor-pointer"
+              className="group inline-flex items-center gap-2 rounded-md bg-[#FFC700] px-6 py-3 text-sm font-bold text-[#0f3d1f] shadow-sm transition-all hover:bg-[#FFD633] hover:shadow-md active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFC700] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f3d1f]"
             >
-              <span>Shop Now</span>
-              <ArrowRight className="w-4 h-4 stroke-3" />
+              Shop now
+              <ArrowRight className="size-4 stroke-[2.5] transition-transform group-hover:translate-x-0.5" />
             </Link>
-          </div>
-        </div>
 
-        {/* Right Side: Organic Products Image Banner */}
-        <div className="absolute inset-0 w-full">
-          <Image
-            src="/assets/CTRbanner.png"
-            alt="MST Bazar Organic Products Jars and Bottles"
-            fill
-            className="object-cover object-center lg:object-right"
-          />
+            <ul className="flex flex-wrap items-center gap-x-5 gap-y-2">
+              {trustPoints.map(({ icon: Icon, label }) => (
+                <li
+                  key={label}
+                  className="flex items-center gap-1.5 text-xs font-medium text-emerald-100/70"
+                >
+                  <Icon className="size-3.5 text-[#FFC700]" />
+                  {label}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </section>

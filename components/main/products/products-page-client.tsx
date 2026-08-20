@@ -68,10 +68,10 @@ export function ProductsPageClient({ products }: { products: ProductDTO[] }) {
           </div>
         ) : (
           <div
-            className={`grid gap-4 grid-cols-2 ${
+            className={`grid gap-4  ${
               viewMode === "list"
-                ? "lg:grid-cols-2"
-                : "md:grid-cols-3 lg:grid-cols-4"
+                ? "grid-cols-1"
+                : "md:grid-cols-3 grid-cols-2 lg:grid-cols-4"
             }`}
           >
             {visibleProducts.map((product) => (

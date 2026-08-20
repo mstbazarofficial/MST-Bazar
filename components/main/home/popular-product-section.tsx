@@ -1,7 +1,6 @@
 import { ProductDTO } from "@/lib/data/catalog";
-import Link from "next/link";
 import { ProductCard } from "../common/card/product-card";
-import HeadingStyle2 from "../common/HeadingStyle2";
+import { SectionHeading, ViewAllLink } from "../common/layout/section-heading";
 
 export function PopularProductsSection({
   products,
@@ -10,13 +9,12 @@ export function PopularProductsSection({
 }) {
   return (
     // Full-bleed section using your theme's soft green accent background token
-    <section id="featured" className="w-full bg-accent/40 py-8 sm:py-12">
+    <section id="featured" className="w-full bg-muted py-8 sm:py-12">
       <div className="site-container">
-        {/* Header Row */}
-        <HeadingStyle2
-          firstTitle="Popular"
-          secondTitle="Products"
-          link="/products"
+        <SectionHeading
+          rightElement={<ViewAllLink href="/products" title="View All" />}
+          highlightPositions={[2]}
+          title="Popular products"
         />
 
         {/* Grid Layout: Desktop 5 Columns (10 items = 2 rows) */}

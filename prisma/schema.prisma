@@ -108,33 +108,10 @@ model Product {
   categoryId String
   category   Category @relation(fields: [categoryId], references: [id])
 
-  priority Int @default(0) // Added: For sorting products in the UI
-
-  campaigns  Campaign[]
+  priority   Int            @default(0) // Added: For sorting products in the UI
   orderItems OrderItem[]
   cartItems  CartItem[]
   images     ProductImage[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Campaign {
-  id       String @id @default(cuid())
-  slug     String @unique // e.g., "eid-special-honey"
-  headline String // Big, catchy title for the landing page
-
-  campaignPrice  Float // The special price just for this campaign
-  deliveryCharge Float @default(0) // Sometimes campaigns offer "Free Delivery"
-
-  videoUrl    String? // A specific marketing video for this campaign
-  description String? @db.Text // Long-form sales copy
-
-  isActive Boolean   @default(false)
-  endDate  DateTime? // Optional: If you want to show a "Sale ends in X days" countdown timer
-
-  productId String
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -168,7 +145,7 @@ model Order {
   orderId String @unique
 
   userId String?
-  user   User?   @relation(fields: [userId], references: [id])
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   customerName   String
   emailAddress   String
@@ -280,6 +257,7 @@ model ContactSubmission {
   email     String
   phone     String
   message   String        @db.Text
+  orderId   String? // Optional: If the contact is regarding a specific order
   status    ContactStatus @default(PENDING)
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt

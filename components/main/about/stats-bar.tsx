@@ -36,7 +36,7 @@ const STATS = [
 
 export function StatsBar() {
   return (
-    <section className=" text-primary-foreground site-container section-y shadow-md">
+    <section className=" text-primary-foreground site-container section-y ">
       <div className="bg-primary-dark grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 sm:gap-4 divide-y sm:divide-y-0 sm:divide-x divide-white/10 p-6 rounded-md">
         {STATS.map((stat, index) => {
           const Icon = stat.icon;

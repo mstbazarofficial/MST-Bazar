@@ -32,7 +32,7 @@ export function CartSheet() {
             className="flex cursor-pointer flex-col items-center gap-0.5 px-1 text-foreground transition-colors hover:text-primary"
           >
             <span className="relative">
-              <ShoppingCart className="h-5 w-5" />
+              <ShoppingCart className="size-4 md:size-5" />
               {totalItems > 0 && (
                 <span className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-orange-500 px-1 text-[10px] font-semibold text-white">
                   {totalItems}

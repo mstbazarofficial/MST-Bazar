@@ -1,10 +1,10 @@
 import { CtaBanner } from "@/components/main/common/CtaBanner";
 import { BestDealsSection } from "@/components/main/home/best-deal-section";
 import { CategorySection } from "@/components/main/home/category-section";
-import FaqSection from "@/components/main/home/FAQ";
 import { HeroSection } from "@/components/main/home/hero-section";
+import FaqSection from "@/components/main/home/home-faq-section";
 import { PopularProductsSection } from "@/components/main/home/popular-product-section";
-import PromoBannersSection from "@/components/main/home/PromoBannersSection";
+import { HomeTrustSection } from "@/components/main/home/trust-section";
 import { getAllCategories, getAllProducts } from "@/lib/data/catalog";
 import { Suspense } from "react";
 
@@ -28,9 +28,9 @@ export default async function Home() {
       <CategorySection categories={categories} />
       <BestDealsSection products={bestDeals} />
       <PopularProductsSection products={popularProducts} />
-      <PromoBannersSection />
-      <FaqSection />
       <CtaBanner />
+      <HomeTrustSection />
+      <FaqSection />
     </main>
   );
 }

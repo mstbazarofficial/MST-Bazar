@@ -197,14 +197,9 @@
 }
 
 /* Heading styles */
-.category-title {
-  font-family: "Georgia", "Times New Roman", serif;
-  font-weight: 700;
-  margin: 0;
-  padding: 0;
+.highlighted-heading {
+  text-transform: uppercase;
   letter-spacing: -0.04em;
-  line-height: 1.1;
-
   /* Complex gradient to replicate the textured, varied greens of the original text */
   background: linear-gradient(
     90deg,

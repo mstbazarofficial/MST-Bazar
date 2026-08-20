@@ -40,8 +40,9 @@ export function OrdersTable({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-48 pl-4">Order ID</TableHead>
             <TableHead className="min-w-64">Customer</TableHead>
+            <TableHead className="w-48 pl-4">Order ID</TableHead>
+
             <TableHead className="w-36">Date</TableHead>
             <TableHead className="w-32 text-right">Total Amount</TableHead>
             <TableHead className="w-32 text-center">Status</TableHead>
@@ -70,16 +71,6 @@ export function OrdersTable({
                 key={order.id}
                 className="group relative hover:bg-muted/50 transition-colors"
               >
-                {/* Order ID Cell with Stretched Link */}
-                <TableCell className="pl-4 font-medium">
-                  <Link
-                    href={`/admin/orders/${order.orderId}`}
-                    className="text-foreground group-hover:text-primary transition-colors focus:outline-none after:absolute after:inset-0"
-                  >
-                    {order.orderId}
-                  </Link>
-                </TableCell>
-
                 {/* Customer Cell */}
                 <TableCell>
                   <div className="flex items-center gap-3">
@@ -107,6 +98,15 @@ export function OrdersTable({
                       </span>
                     </div>
                   </div>
+                </TableCell>
+                {/* Order ID Cell with Stretched Link */}
+                <TableCell className="pl-4 font-medium">
+                  <Link
+                    href={`/admin/orders/${order.orderId}`}
+                    className="text-foreground group-hover:text-primary transition-colors focus:outline-none after:absolute after:inset-0"
+                  >
+                    {order.orderId}
+                  </Link>
                 </TableCell>
 
                 {/* Date Cell */}

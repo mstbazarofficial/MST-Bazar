@@ -1,6 +1,19 @@
-import HeadingStyle2 from "@/components/main/common/HeadingStyle2";
-import { CheckSquare, FileBadge, AlertTriangle, Scale, Gavel } from "lucide-react";
+import { SectionHeading } from "@/components/main/common/layout/section-heading";
+import {
+  AlertTriangle,
+  CheckSquare,
+  FileBadge,
+  Gavel,
+  Scale,
+} from "lucide-react";
+import { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Terms & Conditions",
+  description:
+    "Read our Terms & Conditions to understand the rules and regulations for using MST Bazar's website and services.",
+};
 
 // Mock data that can later be replaced with an API call from the backend
 const termsData = {
@@ -90,24 +103,9 @@ export default function TermsConditionsPage() {
       <div className="site-container -mt-8 relative z-10">
         <div className="bg-background rounded-xl shadow-sm border border-border p-6 md:p-10 max-w-4xl mx-auto space-y-12">
           {termsData.sections.map((section) => {
-            const titleArray = section.title.split(" ");
-            const title1st = titleArray.slice(0, -1).join(" ") ?? "";
-            const title2nd = titleArray[titleArray.length - 1] ?? "";
             return (
               <section key={section.id} className="space-y-4">
-                <div className="flex items-start gap-3 border-b border-border pb-2">
-                  <div className="p-2 bg-primary/10 rounded-lg text-primary">
-                    <section.icon className="w-5 h-5" />
-                  </div>
-                  <HeadingStyle2
-                    firstTitle={title1st}
-                    secondTitle={title2nd}
-                    isUnderLine={false}
-                    className="mb-5"
-                    size="md"
-                    position={2}
-                  />
-                </div>
+                <SectionHeading title={section.title} />
 
                 <ul className="space-y-3 pl-2">
                   {section.content.map((item, index) => (

@@ -37,17 +37,11 @@ interface Category {
   id: string;
   name: string;
 }
-interface Campaign {
-  id: string;
-  headline: string;
-  isActive: boolean;
-}
 
 interface ProductFormPageProps {
   mode?: string;
   productId?: string;
   categories: Category[];
-  campaigns: Campaign[];
   initialValues?: CreateProductInput & {
     id?: string;
     createdAt?: string;
@@ -61,7 +55,6 @@ export function ProductFormPage({
   mode,
   productId,
   categories,
-  campaigns,
   initialValues,
 }: ProductFormPageProps) {
   const router = useRouter();
@@ -71,12 +64,7 @@ export function ProductFormPage({
   const isEditing = mode === "edit" || !!productId;
   const activeProductId = productId || initialValues?.id;
 
-  const {
-    handleSubmit,
-    control,
-    setError,
-    formState: { errors },
-  } = useForm<CreateProductInput>({
+  const { handleSubmit, control, setError } = useForm<CreateProductInput>({
     resolver: zodResolver(createProductSchema),
     defaultValues: initialValues || {
       title: "",
@@ -89,7 +77,6 @@ export function ProductFormPage({
       shortDescription: "",
       productDetails: "",
       categoryId: "",
-      campaignId: "",
       isAvailable: true,
       isBestDeal: false,
       isPopular: false,
@@ -135,7 +122,7 @@ export function ProductFormPage({
                 ? "Product updated successfully!"
                 : "Product created successfully!",
         });
-        router.push("/admin/products");
+        router.back();
         router.refresh();
       } else {
         if (Array.isArray(result.error)) {
@@ -176,17 +163,20 @@ export function ProductFormPage({
         backHref="/admin/products"
         actions={
           <>
-            <Button
-              type="button"
-              variant="outline"
-              disabled={isPending}
-              onClick={handleSubmit((data) => submit(data, "draft"))}
-            >
-              {isPending && intent === "draft" && (
-                <Loader2 className="mr-2 size-4 animate-spin" />
-              )}
-              {isPending && intent === "draft" ? "Saving..." : "Save Draft"}
-            </Button>
+            {!isEditing && (
+              <Button
+                type="button"
+                variant="outline"
+                disabled={isPending}
+                onClick={handleSubmit((data) => submit(data, "draft"))}
+              >
+                {isPending && intent === "draft" && (
+                  <Loader2 className="mr-2 size-4 animate-spin" />
+                )}
+                {isPending && intent === "draft" ? "Saving..." : "Save Draft"}
+              </Button>
+            )}
+
             <Button
               type="button"
               disabled={isPending}
@@ -519,136 +509,110 @@ export function ProductFormPage({
           </FieldGroup>
 
           {/* 5. Visibility & Settings */}
+
           <FieldGroup className="gap-0! rounded-lg border bg-card p-6 shadow-sm">
             <h2 className="mb-4 text-lg font-semibold tracking-tight">
               5. Visibility & Settings
             </h2>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-              <div className="space-y-6">
-                <Controller
-                  name="isAvailable"
-                  control={control}
-                  render={({ field }) => (
-                    <Field>
-                      <FieldLabel>Availability</FieldLabel>
-                      <div className="mt-1 flex items-center gap-4">
-                        <label className="flex items-center gap-2 text-sm">
-                          <input
-                            type="radio"
-                            checked={field.value === true}
-                            onChange={() => field.onChange(true)}
-                            className="accent-primary"
-                          />
-                          Available
-                        </label>
-                        <label className="flex items-center gap-2 text-sm">
-                          <input
-                            type="radio"
-                            checked={field.value === false}
-                            onChange={() => field.onChange(false)}
-                            className="accent-primary"
-                          />
-                          Hidden
-                        </label>
-                      </div>
-                    </Field>
-                  )}
-                />
 
-                <Controller
-                  name="priority"
-                  control={control}
-                  render={({ field, fieldState }) => (
-                    <Field>
-                      <FieldLabel htmlFor="priority">Priority</FieldLabel>
-                      <QuantityStepper
-                        value={field.value}
-                        onChange={field.onChange}
-                        min={1}
-                        max={9999} // 4 digits max
-                        step={1}
-                      />
+            <div className="space-y-4">
+              {/* Availability */}
+              <Controller
+                name="isAvailable"
+                control={control}
+                render={({ field }) => (
+                  <Field>
+                    <FieldLabel>Availability</FieldLabel>
+                    <div className="mt-1 flex items-center gap-4">
+                      <label className="flex items-center gap-2 text-sm cursor-pointer">
+                        <input
+                          type="radio"
+                          checked={field.value === true}
+                          onChange={() => field.onChange(true)}
+                          className="accent-primary"
+                        />
+                        Available
+                      </label>
+                      <label className="flex items-center gap-2 text-sm cursor-pointer">
+                        <input
+                          type="radio"
+                          checked={field.value === false}
+                          onChange={() => field.onChange(false)}
+                          className="accent-primary"
+                        />
+                        Hidden
+                      </label>
+                    </div>
+                  </Field>
+                )}
+              />
 
+              {/* Priority */}
+              <Controller
+                name="priority"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field>
+                    <FieldLabel htmlFor="priority">Priority</FieldLabel>
+                    <QuantityStepper
+                      value={field.value}
+                      onChange={field.onChange}
+                      min={1}
+                      max={9999}
+                      step={1}
+                    />
+                    <FieldDescription>
+                      Determines the display order of categories. Lower numbers
+                      appear first.
+                    </FieldDescription>
+                    {fieldState.error && (
+                      <FieldError>{fieldState.error.message}</FieldError>
+                    )}
+                  </Field>
+                )}
+              />
+
+              {/* Popular Switch */}
+              <Controller
+                name="isPopular"
+                control={control}
+                render={({ field }) => (
+                  <Field className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                    <div className="space-y-0.5">
+                      <FieldLabel className="mb-0">Popular</FieldLabel>
                       <FieldDescription>
-                        Determines the display order of categories. Lower
-                        numbers appear first.
+                        Mark as popular product
                       </FieldDescription>
-                      {fieldState.error && (
-                        <FieldError>{fieldState.error.message}</FieldError>
-                      )}
-                    </Field>
-                  )}
-                />
+                    </div>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </Field>
+                )}
+              />
 
-                <Controller
-                  name="isPopular"
-                  control={control}
-                  render={({ field }) => (
-                    <Field className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm mt-4">
-                      <div className="space-y-0.5">
-                        <FieldLabel> Popular</FieldLabel>
-                        <FieldDescription>
-                          Mark as popular product
-                        </FieldDescription>
-                      </div>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </Field>
-                  )}
-                />
-
-                <Controller
-                  name="isBestDeal"
-                  control={control}
-                  render={({ field }) => (
-                    <Field className="flex flex-row items-center justify-between rounded-md border p-3">
+              {/* Best Deal Switch */}
+              <Controller
+                name="isBestDeal"
+                control={control}
+                render={({ field }) => (
+                  <Field className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                    <div className="space-y-0.5">
                       <FieldLabel className="mb-0">
                         Mark as Best Deal
                       </FieldLabel>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </Field>
-                  )}
-                />
-              </div>
-
-              <div className="space-y-4 rounded-md border p-4 bg-muted/20">
-                <Controller
-                  name="campaignId"
-                  control={control}
-                  render={({ field, fieldState }) => (
-                    <Field>
-                      <FieldLabel htmlFor="campaignId">
-                        Assign to Campaign (Optional)
-                      </FieldLabel>
-                      <NativeSelect id="campaignId" {...field}>
-                        <option value="">No campaign selected</option>
-                        {campaigns.map((campaign) => (
-                          <option key={campaign.id} value={campaign.id}>
-                            {campaign.headline}
-                            {!campaign.isActive ? " (inactive)" : ""}
-                          </option>
-                        ))}
-                      </NativeSelect>
-                      {fieldState.error && (
-                        <FieldError>{fieldState.error.message}</FieldError>
-                      )}
-                    </Field>
-                  )}
-                />
-                <Button
-                  type="button"
-                  variant="link"
-                  className="h-auto p-0 text-sm"
-                  onClick={() => router.push("/admin/campaigns/new")}
-                >
-                  + Create New Campaign
-                </Button>
-              </div>
+                      <FieldDescription>
+                        Highlight as a special deal
+                      </FieldDescription>
+                    </div>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </Field>
+                )}
+              />
             </div>
           </FieldGroup>
 

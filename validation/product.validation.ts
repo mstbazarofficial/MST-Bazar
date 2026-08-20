@@ -38,7 +38,6 @@ const productBaseSchema = z.object({
   priority: z.number().int().min(0, "Priority must be a non-negative integer"),
 
   categoryId: z.string().min(1, "Please select a category"),
-  campaignId: z.string().optional(),
 
   // Images array is strictly typed here
   images: z.array(productImageSchema),

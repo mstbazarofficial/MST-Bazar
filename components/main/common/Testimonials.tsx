@@ -1,6 +1,6 @@
 import { Quote, Star } from "lucide-react";
 import Image from "next/image";
-import HeadingStyle2 from "./HeadingStyle2";
+import { SectionHeading } from "./layout/section-heading";
 
 const TESTIMONIALS = [
   {
@@ -38,15 +38,10 @@ const TESTIMONIALS = [
 const Testimonials = () => {
   return (
     <section className="site-container section-y">
-      <div className="mb-8">
-        <HeadingStyle2
-          firstTitle="What Our"
-          secondTitle="Customers Say"
-          className="mb-5"
-          link="/reviews"
-          position={5}
-        />
-      </div>
+      <SectionHeading
+        highlightPositions={[3, 4]}
+        title="What Our Customers Say"
+      />
 
       {/* Reviews Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">

@@ -6,18 +6,20 @@ import { deletePayment } from "@/actions/admin/payment-mutations";
 import { OrderWithDetails } from "@/app/(admin)/admin/orders/[orderId]/page";
 import { useModalParam } from "@/hooks/use-modal-param";
 import { calculateOrderTotal } from "@/utils/calculate-order-total";
+import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { AddItemFormModal } from "./edit-order/add-item-form";
 import { AddNoteFormModal } from "./edit-order/add-note-form";
 import { AddPaymentFormModal } from "./edit-order/add-payment-form";
-import { EditCustomerInfoFormModal } from "./edit-order/edit-customer-form";
 import { EditItemFormModal } from "./edit-order/edit-item-form";
 import { EditOrderCostsModal } from "./edit-order/edit-order-costs-form";
+import { EditOrderInfoModal } from "./edit-order/edit-order-info-form";
 import { EditOrderSummaryModal } from "./edit-order/edit-order-summary";
 import { EditPaymentFormModal } from "./edit-order/edit-payment-form";
 import { CostManagementCard } from "./order-info/cost-management-card";
-import { CustomerInfoCard } from "./order-info/customer-info-card";
 import { NotesCard } from "./order-info/notes-card";
 import { OrderDetailHeader } from "./order-info/order-detail-header";
+import { OrderInfoCard } from "./order-info/order-info-card";
 import { OrderItemsCard } from "./order-info/order-items-card";
 import { OrderStatusCard } from "./order-info/order-status-card";
 import { OrderSummaryCard } from "./order-info/order-summary-card";
@@ -27,13 +29,14 @@ export type EditSectionType = "customer" | "summary" | "cost" | "status";
 
 export function OrderDetailsClient({ order }: { order: OrderWithDetails }) {
   // Modal URL parameters
+  const queryClient = useQueryClient();
+  const router = useRouter();
   const [addItemOpen, setAddItemOpen] = useModalParam("add-item");
   const [editItem, setEditItem] = useModalParam("edit-item");
   const [addPaymentOpen, setAddPaymentOpen] = useModalParam("add-payment");
   const [editPayment, setEditPayment] = useModalParam("edit-payment");
   const [addNoteOpen, setAddNoteOpen] = useModalParam("add-note");
-  const [editCustomerInfo, setEditCustomerInfo] =
-    useModalParam("edit-customer-info");
+  const [editOrderInfo, setEditOrderInfo] = useModalParam("edit-order-info");
   const [editOrderSummary, setEditOrderSummary] =
     useModalParam("edit-order-summary");
   const [editOrderCosts, setEditOrderCosts] = useModalParam("edit-order-costs");
@@ -44,6 +47,12 @@ export function OrderDetailsClient({ order }: { order: OrderWithDetails }) {
   const selectedPayment =
     order.payments?.find((payment) => payment.id === editPayment) ?? null;
 
+  const handleDelete = async () => {
+    await deleteOrder({ orderId: order.id });
+    await queryClient.resetQueries({ queryKey: ["admin-orders"] });
+    await queryClient.resetQueries({ queryKey: ["admin-order-stats"] });
+    router.push("/admin/orders");
+  };
   return (
     <>
       <OrderDetailHeader
@@ -52,15 +61,15 @@ export function OrderDetailsClient({ order }: { order: OrderWithDetails }) {
           orderId: order.orderId,
           status: order.status,
         }}
-        onDelete={() => deleteOrder({ orderId: order.id })}
+        onDelete={handleDelete}
       />
 
       <main className="flex-1 space-y-6 overflow-y-auto bg-muted/30 p-4 md:p-6">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
           <div className="space-y-6 lg:col-span-8">
-            <CustomerInfoCard
+            <OrderInfoCard
               order={order}
-              onEditClick={() => setEditCustomerInfo("true")}
+              onEditClick={() => setEditOrderInfo("true")}
             />
             <OrderItemsCard
               items={order.orderItems}
@@ -141,12 +150,12 @@ export function OrderDetailsClient({ order }: { order: OrderWithDetails }) {
           onSuccess={() => setAddNoteOpen(null)}
         />
 
-        <EditCustomerInfoFormModal
-          open={!!editCustomerInfo}
-          onOpenChange={(open) => !open && setEditCustomerInfo(null)}
+        <EditOrderInfoModal
+          open={!!editOrderInfo}
+          onOpenChange={(open) => !open && setEditOrderInfo(null)}
           orderId={order.id}
           initialData={order}
-          onSuccess={() => setEditCustomerInfo(null)}
+          onSuccess={() => setEditOrderInfo(null)}
         />
         <EditOrderSummaryModal
           open={!!editOrderSummary}

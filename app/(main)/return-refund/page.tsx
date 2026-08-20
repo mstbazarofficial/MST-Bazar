@@ -1,12 +1,18 @@
-import HeadingStyle2 from "@/components/main/common/HeadingStyle2";
+import { SectionHeading } from "@/components/main/common/layout/section-heading";
 import {
-  ShieldCheck,
-  RefreshCcw,
-  CreditCard,
   Clock,
+  CreditCard,
+  RefreshCcw,
+  ShieldCheck,
   Truck,
 } from "lucide-react";
 import Link from "next/link";
+
+export const metadata = {
+  title: "Return & Refund Policy",
+  description:
+    "Read our Return & Refund Policy to understand how we handle returns, refunds, and exchanges at MST Bazar.",
+};
 
 // Mock data that can later be replaced with an API call from the backend
 const refundPolicyData = {
@@ -98,24 +104,9 @@ export default function ReturnRefundPage() {
       <div className="site-container -mt-8 relative z-10">
         <div className="bg-background rounded-xl shadow-sm border border-border p-6 md:p-10 max-w-4xl mx-auto space-y-12">
           {refundPolicyData.sections.map((section) => {
-            const titleArray = section.title.split(" ");
-            const title1st = titleArray.slice(0, -1).join(" ") ?? "";
-            const title2nd = titleArray[titleArray.length - 1] ?? "";
             return (
               <section key={section.id} className="space-y-4">
-                <div className="flex items-start gap-3 border-b border-border pb-2">
-                  <div className="p-2 bg-primary/10 rounded-lg text-primary">
-                    <section.icon className="w-5 h-5" />
-                  </div>
-                  <HeadingStyle2
-                    firstTitle={title1st}
-                    secondTitle={title2nd}
-                    isUnderLine={false}
-                    className="mb-5"
-                    size="md"
-                    position={2}
-                  />
-                </div>
+                <SectionHeading title={section.title} />
 
                 <ul className="space-y-3 pl-2">
                   {section.content.map((item, index) => (

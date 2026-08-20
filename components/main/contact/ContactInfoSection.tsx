@@ -1,6 +1,6 @@
 import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
-import HeadingStyle2 from "../common/HeadingStyle2";
+import { SectionHeading } from "../common/layout/section-heading";
 
 export function ContactInfoSection() {
   const contactMethods = [
@@ -33,11 +33,8 @@ export function ContactInfoSection() {
   return (
     <div className="flex flex-col space-y-8 h-full">
       <div>
-        <HeadingStyle2
-          firstTitle="Get in"
-          secondTitle="Touch"
-          className="mb-5"
-        />
+        <SectionHeading title="Get in touch" highlightPositions={[3]} />
+
         <p className="text-gray-600 text-sm leading-relaxed">
           We value your feedback and are here to assist you with any inquiries,
           issues, or suggestions. Reach out to us through any of the following

@@ -28,7 +28,6 @@ export default async function EditProductPage({
       mode="edit"
       productId={product.id}
       categories={categories}
-      campaigns={[]} // Assuming you have a function to fetch campaigns, you can replace this with actual data
       initialValues={{
         title: product.title,
         inputSlug: product.slug,

@@ -7,82 +7,89 @@ import {
   Smile,
   Truck,
 } from "lucide-react";
-import HeadLine from "../common/HeadLine";
+import { SectionHeading } from "../common/layout/section-heading";
 
 const JOURNEY_STEPS = [
   {
-    number: "1",
-    title: "Farm",
-    desc: "We work with trusted farmers",
+    number: "01",
+    title: "Farm Sourcing",
+    desc: "Directly sourced from trusted organic farmers & beekeepers.",
     icon: Home,
   },
   {
-    number: "2",
+    number: "02",
     title: "Collection",
-    desc: "Carefully collected at the right time",
+    desc: "Carefully gathered at peak freshness and quality.",
     icon: ShoppingBag,
   },
   {
-    number: "3",
+    number: "03",
     title: "Quality Check",
-    desc: "Lab tested & quality assured",
+    desc: "Lab tested for purity with zero chemical additives.",
     icon: FlaskConical,
   },
   {
-    number: "4",
+    number: "04",
     title: "Packaging",
-    desc: "Hygienic & eco-friendly packaging",
+    desc: "Hygienically packed in eco-friendly containers.",
     icon: PackageCheck,
   },
   {
-    number: "5",
-    title: "Delivery",
-    desc: "Fast delivery to your doorstep",
+    number: "05",
+    title: "Fast Delivery",
+    desc: "Swift, safe doorstep delivery across Bangladesh.",
     icon: Truck,
   },
   {
-    number: "6",
-    title: "Happy You",
-    desc: "Pure & healthy products for you",
+    number: "06",
+    title: "Happy Customer",
+    desc: "Pure & healthy products delivered to your home.",
     icon: Smile,
   },
 ];
 
 export function ProductJourneySection() {
   return (
-    <section className="space-y-8 site-container section-y">
-      {/* Header with Decorative Leaves */}
-      <HeadLine title="Our Product Journey" />
+    <section className="site-container section-y space-y-10">
+      {/* Section Header */}
+      <SectionHeading title="Our Product Journey" highlightPositions={[2]} />
 
-      {/* 6 Step Items Row */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 items-center lg:justify-items-center">
+      {/* Grid Container */}
+      <div className="relative grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-6 lg:gap-3">
         {JOURNEY_STEPS.map((step, index) => {
           const IconComponent = step.icon;
           const isLast = index === JOURNEY_STEPS.length - 1;
 
           return (
             <div
-              key={index}
-              className="relative flex items-center text-left sm:text-center group gap-1"
+              key={step.number}
+              className="group relative flex flex-col justify-between rounded-xl border border-border/60 bg-card p-5 shadow-2xs transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-md"
             >
-              <div className="flex items-center gap-1 justify-start">
-                {/* Icon Circle */}
-                <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-primary/10 text-primary-dark flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform duration-300">
-                  <IconComponent className="w-6 h-6 stroke-[1.8]" />
+              {/* Connector Arrow for Desktop */}
+              {!isLast && (
+                <div className="absolute -right-3 top-1/2 z-10 hidden -translate-y-1/2 lg:block">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-full border border-border bg-background shadow-xs transition-colors group-hover:border-primary/40 group-hover:bg-primary/5">
+                    <ArrowRight className="h-3 w-3 text-muted-foreground group-hover:text-primary" />
+                  </div>
                 </div>
+              )}
 
-                {/* Connecting Arrow for Desktop */}
-                {!isLast && (
-                  <ArrowRight className="hidden lg:block w-4 h-4 text-[#0B5D2A]/60 shrink-0" />
-                )}
+              {/* Card Top: Step Badge & Icon */}
+              <div className="flex items-center justify-between">
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-primary-foreground">
+                  <IconComponent className="h-6 w-6 stroke-[1.75]" />
+                </div>
+                <span className="text-xs font-bold tracking-wider text-muted-foreground/60 transition-colors group-hover:text-primary">
+                  {step.number}
+                </span>
               </div>
 
-              {/* Text Info */}
-              <div className="mt-3 space-y-1 text-left w-full">
-                <h3 className="text-xs sm:text-sm font-extrabold text-gray-900">
-                  {step.number}. {step.title}
+              {/* Card Bottom: Content */}
+              <div className="mt-5 space-y-1.5">
+                <h3 className="text-sm font-bold text-foreground transition-colors group-hover:text-primary">
+                  {step.title}
                 </h3>
-                <p className="text-[11px] text-gray-500 font-medium leading-normal">
+                <p className="text-xs font-medium leading-relaxed text-muted-foreground">
                   {step.desc}
                 </p>
               </div>

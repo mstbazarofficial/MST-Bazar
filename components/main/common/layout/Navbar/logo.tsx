@@ -5,16 +5,12 @@ interface LogoProps {
   href?: string;
   src?: string;
   alt?: string;
-  size?: number;
 }
 
-// Drop your real logo path in via `src`, e.g. <Logo src="/logo.svg" />.
-// Using a fixed height + auto width so any logo aspect ratio stays sharp.
 export function Logo({
   href = "/",
-  src = "/assets/logo.png",
+  src = "/assets/logo-vertical.png",
   alt = "Logo",
-  size = 48,
 }: LogoProps) {
   return (
     <Link
@@ -25,10 +21,10 @@ export function Logo({
       <Image
         src={src}
         alt={alt}
-        width={size}
-        height={size}
+        width={120}
+        height={48}
         priority
-        className=" w-auto"
+        className=" w-auto h-6 sm:h-8 object-contain"
       />
     </Link>
   );

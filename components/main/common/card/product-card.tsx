@@ -1,16 +1,8 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { ProductDTO } from "@/lib/data/catalog";
 import Image from "next/image";
 import Link from "next/link";
 import { AddToCartButton } from "./add-to-cart-button";
-import { cn } from "@/lib/utils";
 
 export function ProductCard({
   product,
@@ -21,23 +13,72 @@ export function ProductCard({
   href: string;
   isList?: boolean;
 }) {
-  const discountedPrice =
-    product.price - (product.price * product.discountPercentage) / 100;
+  const discountedPrice = product.discountPercentage
+    ? product.price - (product.price * product.discountPercentage) / 100
+    : product.price;
 
+  // 1. List View Rendering
+  if (isList) {
+    return (
+      <Card className="border border-border/60 hover:border-primary/60 transition-all duration-200 shadow-xs hover:shadow-md rounded-md overflow-hidden bg-card p-3 sm:p-3.5 group">
+        <div className="flex flex-col sm:flex-row items-start justify-between gap-3 sm:gap-4">
+          <Link
+            href={href}
+            className="flex items-start gap-3.5 flex-1 min-w-0 w-full"
+          >
+            {/* Compact Image */}
+            <div className="relative w-20 h-20 sm:w-24 sm:h-24 bg-muted/30 rounded-md overflow-hidden shrink-0 border border-border/40">
+              {!!product.discountPercentage && (
+                <span className="absolute top-1 left-1 bg-primary text-white text-[9px] sm:text-[10px] font-extrabold px-1.5 py-0.5 rounded shadow-xs z-10">
+                  {product.discountPercentage}% OFF
+                </span>
+              )}
+              <Image
+                fill
+                sizes="96px"
+                src={product.images[0].url}
+                alt={product.title}
+                className="object-cover group-hover:scale-105 transition-transform duration-200"
+              />
+            </div>
+
+            {/* Title, Unit & Price */}
+            <div className="flex flex-col min-w-0 flex-1 space-y-0.5">
+              <h3 className="text-xs sm:text-sm font-bold text-foreground line-clamp-2 leading-snug group-hover:text-primary transition-colors">
+                {product.title}
+              </h3>
+              <p className="text-[11px] text-muted-foreground font-medium">
+                {product.unit}
+              </p>
+              <div className="flex items-baseline gap-2 pt-0.5">
+                <span className="text-sm sm:text-base font-extrabold text-primary">
+                  ৳{discountedPrice.toFixed(2)}
+                </span>
+                {!!product.discountPercentage && (
+                  <span className="text-xs text-muted-foreground/70 line-through font-medium">
+                    ৳{product.price.toFixed(2)}
+                  </span>
+                )}
+              </div>
+            </div>
+          </Link>
+
+          {/* Action Button */}
+          <div className="w-full sm:w-44 shrink-0 sm:self-center pt-2 sm:pt-0 border-t sm:border-t-0 border-border/40">
+            <AddToCartButton product={product} productId={product.id} qty={1} />
+          </div>
+        </div>
+      </Card>
+    );
+  }
+
+  // 2. Grid View Rendering
   return (
     <Card className="border border-border/60 hover:border-primary/60 transition-all duration-200 shadow-xs hover:shadow-md rounded-md overflow-hidden flex flex-col justify-between group p-3 bg-card h-full gap-2 relative">
-      {/* Top Image & Badge Container */}
-      <Link
-        href={href}
-        className={cn("block", isList && "flex justify-between gap-3")}
-      >
-        <div
-          className={cn(
-            "relative w-full aspect-square bg-muted/30 rounded-sm overflow-hidden ",
-            isList && "h-50 w-50",
-          )}
-        >
-          {product.discountPercentage && (
+      <Link href={href} className="block space-y-2">
+        {/* Square Image */}
+        <div className="relative w-full aspect-square bg-muted/30 rounded-sm overflow-hidden">
+          {!!product.discountPercentage && (
             <span className="absolute top-2 left-2 bg-primary text-white text-[10px] sm:text-[11px] font-extrabold px-2 py-0.5 rounded-md shadow-xs z-10">
               {product.discountPercentage}% OFF
             </span>
@@ -45,59 +86,37 @@ export function ProductCard({
           <Image
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            priority
-            loading="eager"
             src={product.images[0].url}
             alt={product.title}
             className="object-cover group-hover:scale-105 transition-transform duration-200"
           />
         </div>
 
-        {/* Middle Section: Title & Description (CardHeader) + Price (CardContent) */}
-
-        <div
-          className={cn(
-            "flex flex-col pt-3 pb-2 space-y-2 ",
-            isList && "flex-[0.8]",
-          )}
-        >
-          {/* Title & Unit */}
-          <CardHeader className="p-0 space-y-0.5">
-            <CardTitle className="text-xs sm:text-sm font-bold text-foreground line-clamp-1 group-hover:text-primary transition-colors">
-              {product.title}
-            </CardTitle>
-            <CardDescription className="text-[11px] text-muted-foreground font-normal">
-              {product.unit}
-            </CardDescription>
-          </CardHeader>
-
-          {/* Pricing */}
-          <CardContent className="p-0">
-            <div className="flex items-baseline gap-2">
-              <span className="text-sm sm:text-base font-extrabold text-primary">
-                ৳{discountedPrice.toFixed(2)}
+        {/* Title, Unit & Price */}
+        <div className="flex flex-col space-y-2">
+          <h3 className="text-xs sm:text-sm font-bold text-foreground line-clamp-2 leading-snug group-hover:text-primary transition-colors">
+            {product.title}
+          </h3>
+          <p className="text-[11px] text-muted-foreground font-normal">
+            {product.unit}
+          </p>
+          <div className="flex items-baseline gap-2 pt-0.5">
+            <span className="text-sm sm:text-base font-extrabold text-primary">
+              ৳{discountedPrice.toFixed(2)}
+            </span>
+            {!!product.discountPercentage && (
+              <span className="text-xs text-muted-foreground/70 line-through font-medium">
+                ৳{product.price.toFixed(2)}
               </span>
-              {product.price && (
-                <span className="text-xs text-muted-foreground/70 line-through font-medium">
-                  ৳{product.price.toFixed(2)}
-                </span>
-              )}
-            </div>
-          </CardContent>
+            )}
+          </div>
         </div>
       </Link>
 
-      {/* Bottom Action Area (CardFooter) */}
-      <CardFooter
-        className={cn("p-0 pt-1", isList && "absolute bottom-3 right-3")}
-      >
-        <AddToCartButton
-          className={cn(isList && "w-56")}
-          product={product}
-          productId={product.id}
-          qty={1}
-        />
-      </CardFooter>
+      {/* Action Button */}
+      <div className="pt-1">
+        <AddToCartButton product={product} productId={product.id} qty={1} />
+      </div>
     </Card>
   );
 }

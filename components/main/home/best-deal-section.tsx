@@ -1,16 +1,14 @@
 import { ProductDTO } from "@/lib/data/catalog";
-import Link from "next/link";
 import { ProductCard } from "../common/card/product-card";
-import HeadingStyle2 from "../common/HeadingStyle2";
+import { SectionHeading, ViewAllLink } from "../common/layout/section-heading";
 
 export function BestDealsSection({ products }: { products: ProductDTO[] }) {
   return (
     <section id="best-deals" className="w-full site-container section-y">
-      {/* Section Header */}
-      <HeadingStyle2
-        firstTitle="Best Deals"
-        secondTitle="For You"
-        link="/deals"
+      <SectionHeading
+        rightElement={<ViewAllLink href="/products" title="View All" />}
+        highlightPositions={[3, 4]}
+        title="Best Deals for you"
       />
 
       {/* Product Grid: 2 cols on mobile -> 3 cols on sm -> 6 cols on lg */}

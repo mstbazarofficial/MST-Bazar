@@ -1,8 +1,6 @@
 "use client";
 
-import AuthBg from "@/components/main/common/Auth-Bg";
-import HeadingStyle2 from "@/components/main/common/HeadingStyle2";
-import { Logo } from "@/components/main/common/layout/Navbar/logo";
+import { AuthBg } from "@/components/auth/auth-bg";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,272 +12,391 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { authClient } from "@/lib/auth-client";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  AlertCircle,
   ArrowRight,
-  ChevronDown,
   Eye,
   EyeOff,
-  Leaf,
+  Loader2,
   Lock,
   Mail,
+  MailCheck,
   Phone,
-  Section,
   User,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+
+const signUpSchema = z
+  .object({
+    name: z.string().min(2, "Full name must be at least 2 characters"),
+    email: z.email("Please enter a valid email address"),
+    phone: z
+      .string()
+      .min(10, "Please enter a valid phone number")
+      .optional()
+      .or(z.literal("")),
+    password: z.string().min(8, "Password must be at least 8 characters"),
+    confirmPassword: z.string().min(1, "Please confirm your password"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+type SignUpFormValues = z.infer<typeof signUpSchema>;
 
 export default function SignUpForm() {
+  const [agreeTerms, setAgreeTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submittedEmail, setSubmittedEmail] = useState("");
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<SignUpFormValues>({
+    resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
+
+  const onSubmit = async (values: SignUpFormValues) => {
+    setServerError(null);
+
+    try {
+      const { error: authError } = await authClient.signUp.email({
+        name: values.name,
+        email: values.email,
+        password: values.password,
+        phoneNumber: values.phone || undefined,
+        callbackURL: "/",
+      });
+
+      if (authError) {
+        setServerError(
+          authError.message || "Failed to create account. Please try again.",
+        );
+      } else {
+        setSubmittedEmail(values.email);
+        setIsSubmitted(true);
+      }
+    } catch (err: any) {
+      setServerError(
+        err?.message || "An unexpected error occurred. Please try again.",
+      );
+    }
+  };
 
   return (
-    <section className="h-screen w-full overflow-y-auto scrollbar-none [&::-webkit-scrollbar]:hidden bg-gray-50 relative">
-      <div className="absolute top-0 left-0 w-full h-full bg-green-700 opacity-10 pointer-events-none"></div>
-      <div className="absolute top-8 left-13 z-20 flex gap-2 ">
-        <Logo size={50} />
-      </div>
+    <section className="h-screen w-full overflow-y-auto scrollbar-none [&::-webkit-scrollbar]:hidden bg-background relative flex flex-col justify-between">
+      <div className="absolute top-0 left-0 w-full h-full bg-primary/10 pointer-events-none" />
       <AuthBg />
-      <section className="flex w-full min-h-full lg:justify-start justify-center px-4 md:px-0 py-22 lg:py-26">
-        <Card className="w-full max-w-md lg:ml-60 py-5 gap-1 shadow-lg z-10 rounded-2xl border-0 my-auto">
-          <CardHeader className="space-y-1 pb-6">
-            <CardTitle className="text-2xl font-bold flex items-center justify-center gap-2 text-gray-900">
-              <HeadingStyle2
-                firstTitle="Create"
-                secondTitle="Account"
-                size="lg"
-                isUnderLine={false}
-                className="mb-4"
+
+      <section className="flex w-full min-h-full items-center justify-center lg:justify-start lg:pl-28 px-0 sm:px-4 py-0 sm:py-12 z-10">
+        <Card className="w-full min-h-screen sm:min-h-0 sm:max-w-md py-8 sm:py-6 gap-1 border-0 sm:border border-border rounded-none sm:rounded-2xl shadow-none sm:shadow-xl bg-background sm:bg-card text-card-foreground backdrop-blur-sm my-auto flex flex-col justify-center px-2 sm:px-0">
+          {/* Logo */}
+          <div className="flex justify-center pt-2 pb-1">
+            <Link
+              href="/"
+              className="flex shrink-0 items-center"
+              aria-label="Go to homepage"
+            >
+              <Image
+                src="/assets/logo.png"
+                alt="Logo"
+                width={48}
+                height={48}
+                priority
+                className=" w-auto"
               />
-            </CardTitle>
-            <CardDescription className="text-gray-500 text-center text-sm">
-              Create your account and start your healthy shopping journey
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {/* Full Name Field */}
-            <div className="space-y-2">
-              <Label
-                htmlFor="name"
-                className="text-sm font-medium text-gray-700"
-              >
-                Full Name
-              </Label>
-              <div className="relative">
-                <User className="absolute left-3 top-3 h-4 w-4 text-primary" />
-                <Input
-                  id="name"
-                  type="text"
-                  placeholder="Enter your full name"
-                  className="pl-10 border-primary focus-visible:ring-primary/45 focus-visible:border-0 rounded-lg h-11"
-                />
-              </div>
-            </div>
+            </Link>
+          </div>
 
-            {/* Email Field */}
-            <div className="space-y-2">
-              <Label
-                htmlFor="email_signup"
-                className="text-sm font-medium text-gray-700"
-              >
-                Email Address
-              </Label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-3 h-4 w-4 text-primary" />
-                <Input
-                  id="email_signup"
-                  type="email"
-                  placeholder="Enter your email address"
-                  className="pl-10 border-primary focus-visible:ring-primary/45 focus-visible:border-0 rounded-lg h-11"
-                />
+          {isSubmitted ? (
+            /* Email Verification Screen */
+            <CardContent className="space-y-6 pt-4 text-center px-6 sm:px-6">
+              <div className="flex justify-center">
+                <div className="h-16 w-16 bg-accent text-accent-foreground rounded-full flex items-center justify-center">
+                  <MailCheck className="h-8 w-8 text-primary" />
+                </div>
               </div>
-            </div>
 
-            {/* Phone Number Field */}
-            <div className="space-y-2">
-              <Label
-                htmlFor="phone"
-                className="text-sm font-medium text-gray-700"
-              >
-                Phone Number
-              </Label>
-              <div className="flex gap-2">
-                <div className="flex items-center justify-center gap-1 border border-primary rounded-lg px-3 h-11 bg-gray-50 cursor-pointer min-w-22.5">
-                  <span className="text-lg">🇧🇩</span>
-                  <span className="text-sm text-gray-700 font-medium">
-                    +880
+              <div className="space-y-2">
+                <h3 className="text-2xl font-bold text-foreground">
+                  Check Your Email
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  We sent an activation link to{" "}
+                  <span className="font-semibold text-foreground">
+                    {submittedEmail}
                   </span>
-                  <ChevronDown className="h-4 w-4 text-primary" />
-                </div>
-                <div className="relative flex-1">
-                  <Phone className="absolute left-3 top-3 h-4 w-4 text-primary" />
-                  <Input
-                    id="phone"
-                    type="tel"
-                    placeholder="Enter your phone number"
-                    className="pl-10 border-primary focus-visible:ring-primary/45 focus-visible:border-0 rounded-lg h-11"
-                  />
-                </div>
+                  .
+                </p>
               </div>
-            </div>
 
-            {/* Password Field */}
-            <div className="space-y-2">
-              <Label
-                htmlFor="password_signup"
-                className="text-sm font-medium text-gray-700"
-              >
-                Password
-              </Label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-3 h-4 w-4 text-primary" />
-                <Input
-                  id="password_signup"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Create a password"
-                  className="pl-10 pr-10 border-primary focus-visible:ring-primary/45 focus-visible:border-0 rounded-lg h-11"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
-                >
-                  {showPassword ? (
-                    <Eye className="h-4 w-4 text-primary" />
-                  ) : (
-                    <EyeOff className="h-4 w-4 text-primary" />
-                  )}
-                </button>
+              <div className="p-4 bg-muted border border-border rounded-xl text-xs text-muted-foreground text-left space-y-1">
+                <p className="font-semibold text-foreground">
+                  ⚡ Didn't get the email?
+                </p>
+                <p>
+                  Please check your <strong>Spam</strong> or{" "}
+                  <strong>Junk</strong> folder. Activation emails can sometimes
+                  be filtered automatically.
+                </p>
               </div>
-            </div>
 
-            {/* Confirm Password Field */}
-            <div className="space-y-2">
-              <Label
-                htmlFor="confirm_password"
-                className="text-sm font-medium text-gray-700"
-              >
-                Confirm Password
-              </Label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-3 h-4 w-4 text-primary" />
-                <Input
-                  id="confirm_password"
-                  type={showConfirmPassword ? "text" : "password"}
-                  placeholder="Confirm your password"
-                  className="pl-10 pr-10 border-primary focus-visible:ring-primary/45 focus-visible:border-0 rounded-lg h-11"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
-                >
-                  {showConfirmPassword ? (
-                    <Eye className="h-4 w-4 text-primary" />
-                  ) : (
-                    <EyeOff className="h-4 w-4 text-primary" />
-                  )}
-                </button>
-              </div>
-            </div>
-
-            {/* Terms and Conditions */}
-            <div className="flex items-center space-x-2 pt-1">
-              <Checkbox
-                id="terms"
-                className=" border-gray-300 data-[state=checked]:bg-green-700 data-[state=checked]:text-white"
-              />
-              <Label
-                htmlFor="terms"
-                className="text-sm leading-snug text-gray-600 font-normal"
-              >
-                I agree to the{" "}
-                <Link
-                  href="/actions/terms-and-conditions"
-                  className="text-green-700 font-semibold hover:underline"
-                >
-                  Terms & Conditions
-                </Link>{" "}
-                and{" "}
-                <Link
-                  href="/actions/privacy-policy"
-                  className="text-green-700 font-semibold hover:underline"
-                >
-                  Privacy Policy
-                </Link>
-              </Label>
-            </div>
-
-            {/* Create Account Button */}
-            <Button className="w-full bg-green-700 hover:bg-green-800 text-white rounded-lg h-12 text-base font-semibold group mt-2">
-              Create Account
-              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Button>
-
-            {/* Divider */}
-            {/* <div className="relative py-2 mt-2">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t border-gray-200" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-2 text-gray-400 lowercase">
-                  or sign up with
-                </span>
-              </div>
-            </div> */}
-
-            {/* Social Login */}
-            {/* <div className="grid grid-cols-2 gap-4">
-              <Button
-                variant="outline"
-                className="h-11 rounded-lg border-primary text-gray-600 font-medium hover:bg-gray-50"
-              >
-                <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
-                  <path
-                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                    fill="#4285F4"
-                  />
-                  <path
-                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                    fill="#34A853"
-                  />
-                  <path
-                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                    fill="#FBBC05"
-                  />
-                  <path
-                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                    fill="#EA4335"
-                  />
-                </svg>
-                Google
-              </Button>
-              <Button
-                variant="outline"
-                className="h-11 rounded-lg border-primary text-gray-600 font-medium hover:bg-gray-50"
-              >
-                <svg
-                  className="w-5 h-5 mr-2 text-[#1877F2]"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                </svg>
-                Facebook
-              </Button>
-            </div> */}
-
-            {/* Footer Link */}
-            <div className="text-center text-sm text-gray-600 mt-2">
-              Already have an account?{" "}
-              <Link
-                href="login"
-                className="text-green-700 font-semibold hover:underline"
-              >
-                Login Now
+              <Link href="/login" className="block w-full">
+                <Button className="w-full bg-primary hover:bg-primary-dark text-primary-foreground rounded-lg h-11 text-base font-semibold">
+                  Go to Login
+                </Button>
               </Link>
-            </div>
-          </CardContent>
+            </CardContent>
+          ) : (
+            /* Registration Form View */
+            <>
+              <CardHeader className="space-y-1 pb-4 px-6 sm:px-6">
+                <CardTitle className="text-2xl font-bold flex items-center justify-center text-foreground">
+                  Welcome to MST Bazar
+                </CardTitle>
+                <CardDescription className="text-muted-foreground text-center text-sm">
+                  Create your account and start your healthy shopping journey
+                </CardDescription>
+              </CardHeader>
+
+              <CardContent className="px-6 sm:px-6">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                  {/* Global Server Error Banner */}
+                  {serverError && (
+                    <div className="p-3 bg-destructive/10 border border-destructive/20 text-destructive rounded-lg text-sm flex items-center gap-2">
+                      <AlertCircle className="h-4 w-4 shrink-0" />
+                      <span>{serverError}</span>
+                    </div>
+                  )}
+
+                  {/* Full Name */}
+                  <div className="space-y-1">
+                    <Label
+                      htmlFor="name"
+                      className="text-sm font-medium text-foreground"
+                    >
+                      Full Name
+                    </Label>
+                    <div className="relative">
+                      <User className="absolute left-3 top-3.5 h-4 w-4 text-primary" />
+                      <Input
+                        id="name"
+                        type="text"
+                        placeholder="Enter your full name"
+                        {...register("name")}
+                        className="pl-10 border-input focus-visible:border-ring rounded-lg h-11"
+                      />
+                    </div>
+                    {errors.name && (
+                      <p className="text-xs text-destructive font-medium mt-1">
+                        {errors.name.message}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Email Address */}
+                  <div className="space-y-1">
+                    <Label
+                      htmlFor="email"
+                      className="text-sm font-medium text-foreground"
+                    >
+                      Email Address
+                    </Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-3.5 h-4 w-4 text-primary" />
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="Enter your email address"
+                        {...register("email")}
+                        className="pl-10 border-input focus-visible:border-ring rounded-lg h-11"
+                      />
+                    </div>
+                    {errors.email && (
+                      <p className="text-xs text-destructive font-medium mt-1">
+                        {errors.email.message}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Phone Number */}
+                  <div className="space-y-1">
+                    <Label
+                      htmlFor="phone"
+                      className="text-sm font-medium text-foreground"
+                    >
+                      Phone Number
+                    </Label>
+                    <div className="relative">
+                      <Phone className="absolute left-3 top-3.5 h-4 w-4 text-primary" />
+                      <Input
+                        id="phone"
+                        type="tel"
+                        placeholder="Enter your phone number"
+                        {...register("phone")}
+                        className="pl-10 border-input focus-visible:border-ring rounded-lg h-11"
+                      />
+                    </div>
+                    {errors.phone && (
+                      <p className="text-xs text-destructive font-medium mt-1">
+                        {errors.phone.message}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Password */}
+                  <div className="space-y-1">
+                    <Label
+                      htmlFor="password"
+                      className="text-sm font-medium text-foreground"
+                    >
+                      Password
+                    </Label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-3.5 h-4 w-4 text-primary" />
+                      <Input
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Create a password"
+                        {...register("password")}
+                        className="pl-10 pr-10 border-input focus-visible:border-ring rounded-lg h-11"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-3.5 text-muted-foreground hover:text-foreground"
+                      >
+                        {showPassword ? (
+                          <Eye className="h-4 w-4 text-primary" />
+                        ) : (
+                          <EyeOff className="h-4 w-4 text-primary" />
+                        )}
+                      </button>
+                    </div>
+                    {errors.password && (
+                      <p className="text-xs text-destructive font-medium mt-1">
+                        {errors.password.message}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Confirm Password */}
+                  <div className="space-y-1">
+                    <Label
+                      htmlFor="confirmPassword"
+                      className="text-sm font-medium text-foreground"
+                    >
+                      Confirm Password
+                    </Label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-3.5 h-4 w-4 text-primary" />
+                      <Input
+                        id="confirmPassword"
+                        type={showConfirmPassword ? "text" : "password"}
+                        placeholder="Confirm your password"
+                        {...register("confirmPassword")}
+                        className="pl-10 pr-10 border-input focus-visible:border-ring rounded-lg h-11"
+                      />
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setShowConfirmPassword(!showConfirmPassword)
+                        }
+                        className="absolute right-3 top-3.5 text-muted-foreground hover:text-foreground"
+                      >
+                        {showConfirmPassword ? (
+                          <Eye className="h-4 w-4 text-primary" />
+                        ) : (
+                          <EyeOff className="h-4 w-4 text-primary" />
+                        )}
+                      </button>
+                    </div>
+                    {errors.confirmPassword && (
+                      <p className="text-xs text-destructive font-medium mt-1">
+                        {errors.confirmPassword.message}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Terms & Conditions Checkbox */}
+                  <div className="flex items-start space-x-2 pt-1">
+                    <Checkbox
+                      id="terms"
+                      checked={agreeTerms}
+                      onCheckedChange={(checked) =>
+                        setAgreeTerms(checked === true)
+                      }
+                      className="mt-0.5 border-border data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+                    />
+                    <Label
+                      htmlFor="terms"
+                      className="text-xs leading-snug text-muted-foreground font-normal cursor-pointer"
+                    >
+                      I agree to the{" "}
+                      <Link
+                        href="/terms"
+                        className="text-primary font-semibold hover:underline"
+                      >
+                        Terms & Conditions
+                      </Link>{" "}
+                      and{" "}
+                      <Link
+                        href="/privacy-policy"
+                        className="text-primary font-semibold hover:underline"
+                      >
+                        Privacy Policy
+                      </Link>
+                    </Label>
+                  </div>
+
+                  {/* Submit Button */}
+                  <Button
+                    type="submit"
+                    disabled={!agreeTerms || isSubmitting}
+                    className="w-full bg-primary hover:bg-primary-dark text-primary-foreground rounded-lg h-11 text-base font-semibold group mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isSubmitting ? (
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                    ) : (
+                      <>
+                        Create Account
+                        <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                      </>
+                    )}
+                  </Button>
+
+                  {/* Footer Link */}
+                  <div className="text-center text-sm text-muted-foreground pt-1">
+                    Already have an account?{" "}
+                    <Link
+                      href="/login"
+                      className="text-primary font-semibold hover:underline"
+                    >
+                      Login Now
+                    </Link>
+                  </div>
+                </form>
+              </CardContent>
+            </>
+          )}
         </Card>
       </section>
     </section>

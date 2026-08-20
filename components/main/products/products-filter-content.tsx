@@ -25,9 +25,9 @@ const PRICE_MIN = 50;
 const PRICE_MAX = 2500;
 
 const DISCOUNTS = [
-  { id: "10-or-more", label: "10% or more", count: 18 },
-  { id: "20-or-more", label: "20% or more", count: 10 },
-  { id: "30-or-more", label: "30% or more", count: 5 },
+  { id: "10-or-more", label: "10% or more" },
+  { id: "20-or-more", label: "20% or more" },
+  { id: "30-or-more", label: "30% or more" },
 ];
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
@@ -173,9 +173,6 @@ export default function FilterContent({
                 />
                 <span>{disc.label}</span>
               </label>
-              <span className="text-[11px] font-medium text-muted-foreground">
-                ({disc.count})
-              </span>
             </div>
           ))}
         </AccordionContent>

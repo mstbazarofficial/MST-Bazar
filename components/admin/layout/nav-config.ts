@@ -1,8 +1,10 @@
 import {
   BookOpen,
+  ContactRound,
   FileText,
   LayoutDashboard,
   Users,
+  UsersRound,
   type LucideIcon,
 } from "lucide-react";
 
@@ -46,7 +48,16 @@ export const navGroups: NavGroup[] = [
         title: "Orders",
         href: "/admin/orders",
         icon: FileText,
-        badge: "New",
+      },
+      {
+        title: "Users",
+        href: "/admin/users",
+        icon: UsersRound,
+      },
+      {
+        title: "Contacts",
+        href: "/admin/contacts",
+        icon: ContactRound,
       },
     ],
   },

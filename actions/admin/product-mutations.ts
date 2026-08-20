@@ -57,7 +57,6 @@ export async function createProduct(input: CreateProductInput) {
         isBestDeal: data.isBestDeal,
         isAvailable: data.isAvailable,
         categoryId: data.categoryId,
-
         isPopular: data.isPopular,
         priority: data.priority,
         images: {

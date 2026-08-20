@@ -6,10 +6,10 @@ import { prisma } from "@/lib/prisma";
 import { createUniqueId } from "@/utils/create-unique-id";
 import {
   createOrderSchema,
-  EditCustomerInfoInput,
-  editCustomerInfoSchema,
   EditOrderCostsInput,
   editOrderCostsSchema,
+  EditOrderInfoInput,
+  editOrderInfoSchema,
   EditOrderStatusInput,
   editOrderStatusSchema,
   EditOrderSummaryInput,
@@ -188,18 +188,18 @@ export async function deleteOrderItem({
   }
 }
 
-export async function updateCustomerInfo({
+export async function updateOrderInfo({
   orderId,
   input,
 }: {
   orderId: string;
-  input: EditCustomerInfoInput;
+  input: EditOrderInfoInput;
 }) {
   try {
-    // 1. Validate Input
-    const validated = editCustomerInfoSchema.parse(input);
+    const validated = editOrderInfoSchema.parse(input);
 
-    // 3. Update Order Customer Details
+    const isCod = validated.orderPaymentMethod === "CASH_ON_DELIVERY";
+
     const updatedOrder = await prisma.order.update({
       where: { id: orderId },
       data: {
@@ -209,10 +209,12 @@ export async function updateCustomerInfo({
         phoneNumber: validated.phoneNumber,
         whatsappNumber: validated.whatsappNumber ?? null,
         fullAddress: validated.fullAddress,
+        orderPaymentMethod: validated.orderPaymentMethod,
+        TrxNumber: isCod ? null : (validated.TrxNumber ?? null),
+        TrxID: isCod ? null : (validated.TrxID ?? null),
       },
     });
 
-    // 4. Revalidate Pages
     revalidatePath(`/admin/orders/${orderId}`);
     revalidatePath("/admin/orders");
 
@@ -221,13 +223,11 @@ export async function updateCustomerInfo({
       data: updatedOrder,
     };
   } catch (error) {
-    console.error("Failed to update customer info:", error);
+    console.error("Failed to update order info:", error);
     return {
       success: false,
       error:
-        error instanceof Error
-          ? error.message
-          : "Failed to update customer info",
+        error instanceof Error ? error.message : "Failed to update order info",
     };
   }
 }
@@ -317,9 +317,6 @@ export async function updateOrderStatus({
       where: { id: orderId },
       data: {
         status: validated.status,
-        orderPaymentMethod: validated.orderPaymentMethod,
-        TrxID: validated.TrxID || null,
-        TrxNumber: validated.TrxNumber || null,
       },
     });
 

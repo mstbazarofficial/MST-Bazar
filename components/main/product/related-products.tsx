@@ -1,7 +1,6 @@
 import { ProductDTO } from "@/lib/data/catalog";
-import Link from "next/link";
 import { ProductCard } from "../common/card/product-card";
-import HeadingStyle2 from "../common/HeadingStyle2";
+import { SectionHeading } from "../common/layout/section-heading";
 
 export function RelatedProductsSection({
   products,
@@ -10,15 +9,7 @@ export function RelatedProductsSection({
 }) {
   return (
     <section className="w-full site-container section-y">
-      {/* Section Header */}
-      <div className="mb-4 sm:mb-6">
-        <HeadingStyle2
-          firstTitle="Related"
-          secondTitle="Products"
-          className="mb-5"
-          link="/products"
-        />
-      </div>
+      <SectionHeading highlightPositions={[2]} title="Related Products" />
 
       {/* Product Grid: 2 cols on mobile -> 3 cols on sm -> 6 cols on lg */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">

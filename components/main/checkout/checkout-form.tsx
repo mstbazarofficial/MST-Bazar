@@ -9,6 +9,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
 import { useCart } from "@/context/cart-provider";
+import { authClient } from "@/lib/auth-client"; // Better Auth client import
 import {
   checkoutDefaultValues,
   checkoutFormSchema,
@@ -29,8 +30,9 @@ import { PaymentMethodField } from "./payment-method-field";
 export function CheckoutForm() {
   const { items, errors: cartErrors, clearError, removeItem } = useCart();
 
-  // Items are selected by default; we track *deselected* ids so newly
-  // added cart items are automatically included in the order.
+  // Fetch Better Auth session on client side
+  const { data: session } = authClient.useSession();
+
   const [deselectedIds, setDeselectedIds] = useState<Set<string>>(new Set());
   const [placedOrder, setPlacedOrder] = useState<PlacedOrder | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -53,6 +55,23 @@ export function CheckoutForm() {
     defaultValues: checkoutDefaultValues,
     mode: "onBlur",
   });
+
+  // Auto-fill user information from Better Auth session
+  useEffect(() => {
+    if (session?.user) {
+      const user = session.user as Record<string, any>;
+      const currentValues = form.getValues();
+
+      form.reset({
+        ...currentValues,
+        fullName: currentValues.fullName || user.name || "",
+        email: currentValues.email || user.email || "",
+        phone: currentValues.phone || user.phone || "",
+        whatsapp: currentValues.whatsapp || user.whatsapp || user.phone || "",
+        address: currentValues.address || user.address || "",
+      });
+    }
+  }, [session, form]);
 
   const deliveryOption = form.watch("deliveryOption");
 
@@ -120,10 +139,9 @@ export function CheckoutForm() {
           type: "error",
         });
 
-        // Surface server-side (re-)validation errors on the right fields.
         if (result.fieldErrors) {
           Object.entries(result.fieldErrors).forEach(([field, messages]) => {
-            const [, key] = field.split("."); // fieldErrors are namespaced as "customer.<field>"
+            const [, key] = field.split(".");
             const message = messages?.[0];
             if (key && message) {
               form.setError(key as keyof CheckoutFormValues, { message });
@@ -133,11 +151,14 @@ export function CheckoutForm() {
         return;
       }
 
-      // Order is saved — drop the ordered items from the cart. Works for
-      // both guest (local) and signed-in (server-synced) carts.
       selectedItems.forEach((item) => removeItem(item.productId));
 
-      setPlacedOrder({ orderId: result.orderId, email: values.email, total });
+      setPlacedOrder({
+        orderId: result.orderId,
+        email: values.email,
+        total,
+        phone: values.phone,
+      });
       form.reset(checkoutDefaultValues);
     } catch (error) {
       console.error("Failed to submit order:", error);
@@ -151,7 +172,6 @@ export function CheckoutForm() {
     }
   });
 
-  // Keep dialog mounted while placedOrder is active
   if (items.length === 0 && !placedOrder) {
     return (
       <div className="flex flex-col items-center justify-center rounded-xl border bg-card p-12 text-center shadow-xs">
@@ -180,7 +200,6 @@ export function CheckoutForm() {
     <FormProvider {...form}>
       <form onSubmit={onSubmit} noValidate className="space-y-6">
         <div className="grid grid-cols-1 gap-6 items-start lg:grid-cols-3">
-          {/* Mobile Order Summary (order-1 on mobile, order-2 on lg sidebar) */}
           <div className="order-1 lg:order-2 lg:col-span-1 lg:sticky lg:top-28">
             <OrderSummary
               items={items}
@@ -195,7 +214,6 @@ export function CheckoutForm() {
             />
           </div>
 
-          {/* Form Fields (order-2 on mobile, order-1 on lg) */}
           <div className="order-2 lg:order-1 lg:col-span-2 space-y-6">
             <ContactInfoFields />
             <DeliveryAddressField />

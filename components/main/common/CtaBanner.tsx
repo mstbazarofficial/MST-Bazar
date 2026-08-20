@@ -23,10 +23,8 @@ export function CtaBanner() {
         />
       </div>
 
-      {/* Legibility scrim — solid on mobile (image crops to mostly product),
-          soft gradient on tablet, and on large screens a tight left-only
-          fade so the product photo reads almost fully clear past ~55% width */}
-      <div className="absolute inset-0 bg-[#0f3d1f]/80 sm:bg-linear-to-r sm:from-[#0f3d1f] sm:via-[#0f3d1f]/85 sm:to-transparent lg:bg-linear-to-r lg:from-[#0f3d1f] lg:via-35% lg:via-[#0f3d1f]/40 lg:to-55% lg:to-transparent" />
+      {/* 85% solid overlay on mobile | Pure transparent gradient on large screens */}
+      <div className="absolute inset-0 bg-[#0f3d1f]/85 lg:bg-[#0f3d1f]/40" />
 
       <div className="site-container relative z-10 py-14 sm:py-16 lg:py-10">
         <div className="max-w-xl">
@@ -40,7 +38,7 @@ export function CtaBanner() {
             happy families
           </h2>
 
-          <p className="mt-3 max-w-sm text-sm text-emerald-100/80 sm:text-base">
+          <p className="mt-3 max-w-sm text-sm text-emerald-100/90 sm:text-base">
             Pure honey, oils, and pantry staples — sourced honestly, tested
             rigorously, delivered to your door.
           </p>
@@ -58,7 +56,7 @@ export function CtaBanner() {
               {trustPoints.map(({ icon: Icon, label }) => (
                 <li
                   key={label}
-                  className="flex items-center gap-1.5 text-xs font-medium text-emerald-100/70"
+                  className="flex items-center gap-1.5 text-xs font-medium text-emerald-100/90"
                 >
                   <Icon className="size-3.5 text-[#FFC700]" />
                   {label}

@@ -15,9 +15,10 @@ export async function getAdminCategories(search?: string) {
       name: true,
       slug: true,
       image: true,
+      priority: true,
       _count: { select: { products: true } },
     },
-    orderBy: { name: "asc" },
+    orderBy: [{ priority: "asc" }, { name: "asc" }],
   });
 }
 

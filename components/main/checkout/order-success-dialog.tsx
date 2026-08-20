@@ -21,10 +21,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { authClient } from "@/lib/auth-client";
 
 export interface PlacedOrder {
   orderId: string;
   email: string;
+  phone: string;
   total: number;
 }
 
@@ -38,6 +40,8 @@ export function OrderSuccessDialog({
   onOpenChange,
 }: OrderSuccessDialogProps) {
   const [copied, setCopied] = useState(false);
+  const { data: session } = authClient.useSession();
+  const isAuthenticated = !!session?.user;
 
   const handleCopyOrderId = async () => {
     if (!order) return;
@@ -56,6 +60,10 @@ export function OrderSuccessDialog({
       });
     }
   };
+
+  const trackOrderHref = order
+    ? `/track-order?orderId=${encodeURIComponent(order.orderId)}&phone=${encodeURIComponent(order.phone)}`
+    : "/track-order";
 
   return (
     <Dialog open={!!order} onOpenChange={onOpenChange}>
@@ -117,23 +125,25 @@ export function OrderSuccessDialog({
         )}
 
         <DialogFooter className="flex-col gap-2 sm:flex-col">
-          <Button
-            render={<Link href="/track-order" />}
-            nativeButton={false}
-            variant="outline"
-            className="w-full justify-center gap-2"
-          >
-            <PackageSearch className="h-4 w-4" />
-            Track My Order
-          </Button>
-          <Button
-            render={<Link href="/profile/orders" />}
-            nativeButton={false}
-            className="w-full justify-center gap-2"
-          >
-            <LayoutDashboard className="h-4 w-4" />
-            View In My Dashboard
-          </Button>
+          {isAuthenticated ? (
+            <Button
+              render={<Link href="/dashboard/orders" />}
+              nativeButton={false}
+              className="w-full justify-center gap-2"
+            >
+              <LayoutDashboard className="h-4 w-4" />
+              View In My Dashboard
+            </Button>
+          ) : (
+            <Button
+              render={<Link href={trackOrderHref} />}
+              nativeButton={false}
+              className="w-full justify-center gap-2"
+            >
+              <PackageSearch className="h-4 w-4" />
+              Track My Order
+            </Button>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -1,7 +1,8 @@
 "use client";
 
 import { Hash, Loader2, Phone, Search } from "lucide-react";
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface OrderSearchFormProps {
   onSearch: (orderId: string, phone: string) => void;
@@ -9,8 +10,19 @@ interface OrderSearchFormProps {
 }
 
 export function OrderSearchForm({ onSearch, isPending }: OrderSearchFormProps) {
+  const searchParams = useSearchParams();
   const [orderId, setOrderId] = useState("");
   const [phone, setPhone] = useState("");
+
+  useEffect(() => {
+    const orderId = searchParams.get("orderId") || "";
+    const phone = searchParams.get("phone") || "";
+
+    if (orderId && phone) {
+      setOrderId(orderId.trim());
+      setPhone(phone.trim());
+    }
+  }, [searchParams]);
 
   function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();

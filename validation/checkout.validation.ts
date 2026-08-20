@@ -3,7 +3,7 @@ import { z } from "zod";
 /**
  * Bangladeshi mobile numbers: 11 digits, starting 013-019.
  */
-const BD_PHONE_REGEX = /^01[3-9]\d{8}$/;
+const BD_PHONE_REGEX = /^(?:01[3-9]\d{8}|\+8801[3-9]\d{8})$/;
 
 export const PAYMENT_METHODS = ["cod", "bkash", "nagad", "rocket"] as const;
 export const DELIVERY_OPTIONS = ["inside", "outside"] as const;
@@ -19,16 +19,13 @@ export const checkoutFormSchema = z
       .min(3, "Full name must be at least 3 characters")
       .max(80, "Full name looks too long"),
 
-    email: z.string().trim().email("Enter a valid email address"),
+    email: z.email("Enter a valid email address"),
 
     phone: z
       .string()
       .trim()
       .min(1, "Phone number is required")
-      .regex(
-        BD_PHONE_REGEX,
-        "Enter a valid 11-digit number (e.g. 017XXXXXXXX)",
-      ),
+      .regex(BD_PHONE_REGEX, "Enter a valid Bangladeshi phone number "),
 
     whatsapp: z
       .union([
@@ -36,7 +33,7 @@ export const checkoutFormSchema = z
         z
           .string()
           .trim()
-          .regex(BD_PHONE_REGEX, "Enter a valid 11-digit WhatsApp number"),
+          .regex(BD_PHONE_REGEX, "Enter a valid WhatsApp number"),
       ])
       .optional(),
 

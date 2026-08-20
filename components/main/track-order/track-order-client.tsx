@@ -3,7 +3,7 @@
 import { trackOrderAction } from "@/actions/main/track-order";
 import { useQuery } from "@tanstack/react-query";
 import { AlertCircle } from "lucide-react";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { OrderResult } from "./order-result";
 import { OrderSearchForm } from "./order-search-form";
 import { SupportCard } from "./support-card";
@@ -39,9 +39,13 @@ export function TrackOrderClient() {
   return (
     <div className="space-y-5">
       {/* Search card */}
-      <div className="bg-card border border-border rounded-lg p-6 sm:px-9 shadow-md">
-        <OrderSearchForm onSearch={handleSearch} isPending={isFetching} />
-      </div>
+      <Suspense
+        fallback={<div className="animate-pulse h-40 bg-muted rounded-lg" />}
+      >
+        <div className="bg-card border border-border rounded-lg p-6 sm:px-9 shadow-md">
+          <OrderSearchForm onSearch={handleSearch} isPending={isFetching} />
+        </div>
+      </Suspense>
 
       {/* Error */}
       {errorMessage && !isFetching && (

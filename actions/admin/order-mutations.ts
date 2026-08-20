@@ -38,7 +38,7 @@ export async function createOrder(data: CreateOrderInput) {
     // 2. Create the order and nested order items in the database
     const order = await prisma.order.create({
       data: {
-        orderId: createUniqueId("ORD"),
+        orderId: createUniqueId("MST"),
         customerName: orderData.customerName,
         emailAddress: orderData.emailAddress,
         phoneNumber: orderData.phoneNumber,

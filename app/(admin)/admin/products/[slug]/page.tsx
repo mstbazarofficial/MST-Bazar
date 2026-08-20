@@ -3,7 +3,6 @@ import { ProductDescriptions } from "@/components/admin/products/product-descrip
 import { ProductDetailHeader } from "@/components/admin/products/product-detail-header";
 import { ProductImageGallery } from "@/components/admin/products/product-image-gallery";
 import { ProductInfoGrid } from "@/components/admin/products/product-info-grid";
-import { ProductTimelineCard } from "@/components/admin/products/product-timeline-card";
 import { requireAdmin } from "@/lib/admin-auth";
 import { notFound } from "next/navigation";
 
@@ -35,35 +34,11 @@ export default async function AdminProductDetailPage({
           <ProductImageGallery images={product.images} />
 
           <div className="flex flex-col justify-between rounded-xl border bg-card p-6 shadow-2xs">
-            <ProductInfoGrid
-              product={{
-                sku: product.sku,
-                brand: product.brand,
-                categoryName: product.category.name,
-                unit: product.unit,
-                price: product.price,
-                discountPercentage: product.discountPercentage,
-                isBestDeal: product.isBestDeal,
-                slug: product.slug,
-                isPopular: product.isPopular,
-              }}
-            />
+            <ProductInfoGrid product={product} />
           </div>
         </div>
 
-        {/* BOTTOM SECTION: Descriptions + Details */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          <div className="lg:col-span-2">
-            <ProductDescriptions productDetails={product.productDetails} />
-          </div>
-
-          <div className="space-y-6">
-            <ProductTimelineCard
-              createdAt={product.createdAt}
-              updatedAt={product.updatedAt}
-            />
-          </div>
-        </div>
+        <ProductDescriptions productDetails={product.productDetails} />
       </main>
     </>
   );

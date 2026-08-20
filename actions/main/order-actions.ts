@@ -134,7 +134,7 @@ export async function placeOrder(
 
   const shippingCost = getShippingCost(customer.deliveryOption);
   const isManualPayment = customer.paymentMethod !== "cod";
-  const orderId = createUniqueId("ORD");
+  const orderId = createUniqueId("MST");
 
   try {
     const order = await prisma.order.create({

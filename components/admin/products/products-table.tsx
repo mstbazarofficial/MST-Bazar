@@ -1,4 +1,3 @@
-// src/components/admin/products/products-table.tsx
 "use client";
 
 import { Badge } from "@/components/ui/badge";
@@ -24,6 +23,7 @@ type ProductRow = {
   category: { id: string; name: string };
   image: string | null;
   slug: string;
+  priority: number;
 };
 
 export function ProductsTable({
@@ -40,7 +40,8 @@ export function ProductsTable({
           <TableRow>
             <TableHead className="w-16 pl-4">Image</TableHead>
             <TableHead className="min-w-50">Product</TableHead>
-            <TableHead className="w-55">Category</TableHead>
+            <TableHead className="w-44">Category</TableHead>
+            <TableHead className="w-24 text-center">Priority</TableHead>
             <TableHead className="w-36 text-right">Price</TableHead>
             <TableHead className="w-32 text-center pr-4">Status</TableHead>
           </TableRow>
@@ -51,7 +52,7 @@ export function ProductsTable({
           {!isLoading && products.length === 0 && (
             <TableRow>
               <TableCell
-                colSpan={5}
+                colSpan={6}
                 className="h-32 text-center text-muted-foreground"
               >
                 No products match these filters.
@@ -109,6 +110,13 @@ export function ProductsTable({
                   {product.category.name}
                 </TableCell>
 
+                {/* Priority Cell */}
+                <TableCell className="text-center">
+                  <Badge variant="outline" className="font-mono text-xs">
+                    {product.priority ?? 0}
+                  </Badge>
+                </TableCell>
+
                 {/* Price Cell */}
                 <TableCell className="text-right whitespace-nowrap">
                   {product.discountPercentage > 0 ? (
@@ -163,6 +171,9 @@ function TableSkeletonRows() {
           </TableCell>
           <TableCell>
             <Skeleton className="h-4 w-28" />
+          </TableCell>
+          <TableCell className="text-center">
+            <Skeleton className="mx-auto h-5 w-10 rounded-md" />
           </TableCell>
           <TableCell className="text-right">
             <Skeleton className="ml-auto h-4 w-20" />

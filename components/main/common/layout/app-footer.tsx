@@ -77,7 +77,7 @@ export default function Footer() {
             <ul className="space-y-2 text-xs font-medium text-white/80">
               <li>
                 <Link
-                  href="/home"
+                  href="/"
                   className="hover:text-amber-300 transition-colors"
                 >
                   Home
@@ -89,6 +89,14 @@ export default function Footer() {
                   className="hover:text-amber-300 transition-colors"
                 >
                   Shop Products
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/checkout"
+                  className="hover:text-amber-300 transition-colors"
+                >
+                  Checkout
                 </Link>
               </li>
               <li>

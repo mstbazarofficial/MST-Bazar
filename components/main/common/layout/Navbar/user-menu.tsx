@@ -52,6 +52,10 @@ export function UserMenu() {
 
   const initials = getInitials(user.name ?? user.email ?? "U");
 
+  // Normalize role string check in case Better Auth saves roles as lowercase ("admin" / "moderator")
+  const role = user.role?.toUpperCase();
+  const isAdminOrModerator = role === "ADMIN" || role === "MODERATOR";
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -95,6 +99,19 @@ export function UserMenu() {
             }
           />
         </DropdownMenuGroup>
+
+        {isAdminOrModerator && (
+          <DropdownMenuGroup>
+            <DropdownMenuItem
+              render={
+                <Link href="/admin" className="cursor-pointer">
+                  <LayoutDashboard className="mr-2 h-4 w-4" />
+                  Admin Panel
+                </Link>
+              }
+            />
+          </DropdownMenuGroup>
+        )}
 
         <DropdownMenuSeparator />
 

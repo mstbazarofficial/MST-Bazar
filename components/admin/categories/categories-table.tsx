@@ -1,5 +1,6 @@
 import { getAdminCategories } from "@/actions/admin/category-actions";
 import { CategoryRowActions } from "@/components/admin/categories/category-row-actions";
+import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -26,6 +27,7 @@ export async function CategoriesTable({ search }: { search?: string }) {
               <TableHead className="w-16 text-center">Image</TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Slug</TableHead>
+              <TableHead className="w-24 text-center">Priority</TableHead>
               <TableHead className="w-24 text-center">Products</TableHead>
               <TableHead className="w-28 text-right">Actions</TableHead>
             </TableRow>
@@ -35,7 +37,7 @@ export async function CategoriesTable({ search }: { search?: string }) {
             {categories.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={5}
+                  colSpan={6}
                   className="h-32 text-center text-muted-foreground"
                 >
                   No categories found.
@@ -65,6 +67,12 @@ export async function CategoriesTable({ search }: { search?: string }) {
 
                   <TableCell className="text-muted-foreground">
                     {category.slug}
+                  </TableCell>
+
+                  <TableCell className="text-center">
+                    <Badge variant="outline" className="font-mono text-xs">
+                      {category.priority ?? 0}
+                    </Badge>
                   </TableCell>
 
                   <TableCell className="text-center text-muted-foreground">

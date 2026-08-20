@@ -4,6 +4,8 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Checkout",
+  description:
+    "Review your items, delivery details, and complete your order on our checkout page.",
 };
 export default function CheckoutPage() {
   return (

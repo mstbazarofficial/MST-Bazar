@@ -7,7 +7,7 @@ import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | Account Dashboard",
+    template: "%s | MST Bazar Dashboard",
     default: "My Account",
   },
   description: "User dashboard and profile management",

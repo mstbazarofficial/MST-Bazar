@@ -85,7 +85,7 @@ export const getAllProducts = unstable_cache(
         isPopular: true,
         isCombo: true,
       },
-      orderBy: [{ priority: "asc" }, { title: "asc" }],
+      orderBy: [{ priority: "asc" }, { createdAt: "desc" }],
     });
   },
   ["all-products"],

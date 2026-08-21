@@ -208,7 +208,7 @@ export function ProductPurchasePanel({
             className="flex items-center justify-center h-11 bg-blue-500 hover:bg-blue-600 text-white font-extrabold text-xs sm:text-sm rounded-md gap-2 shadow-xs transition-all active:scale-98 cursor-pointer flex-1"
           >
             <FaWhatsapp className="w-4 h-4" />
-            <span>Order on Whatsapp</span>
+            <span> Whatsapp</span>
           </Link>
           <Link
             href={`tel:${phoneNumber}`}

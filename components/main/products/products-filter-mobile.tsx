@@ -30,7 +30,7 @@ export default function ProductsFilterMobile({
         render={
           <Button
             variant="secondary"
-            className="flex h-10 shrink-0 cursor-pointer items-center gap-2 rounded-md border-border/70 bg-card px-4 text-xs font-extrabold text-foreground shadow-2xs active:scale-98"
+            className="flex h-9 shrink-0 cursor-pointer items-center gap-2 rounded-md border-border/70 bg-card px-4 text-xs font-extrabold text-foreground shadow-2xs active:scale-98"
           >
             <SlidersHorizontal className="h-4 w-4 text-primary" />
             <span>Filter</span>

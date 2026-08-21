@@ -186,7 +186,7 @@ export function CheckoutForm() {
           our products to start shopping.
         </p>
         <Button
-          render={<Link href="/shop" />}
+          render={<Link href="/products" />}
           nativeButton={false}
           className="mt-6"
         >

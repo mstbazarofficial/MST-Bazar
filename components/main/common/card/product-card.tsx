@@ -26,18 +26,8 @@ export function ProductCard({
             href={href}
             className="flex items-start gap-3.5 flex-1 min-w-0 w-full"
           >
-            {/* Compact Image */}
+            {/* Clean Compact Image */}
             <div className="relative w-20 h-20 sm:w-24 sm:h-24 bg-muted/30 rounded-md overflow-hidden shrink-0 border border-border/40">
-              {!!product.discountPercentage && (
-                <span className="absolute top-1 left-1 bg-primary text-white text-[9px] sm:text-[10px] font-extrabold px-1.5 py-0.5 rounded shadow-xs z-10">
-                  {product.discountPercentage}% OFF
-                </span>
-              )}
-              {product.isCombo && (
-                <span className="absolute top-1 right-1 bg-amber-600 text-white text-[9px] sm:text-[10px] font-extrabold px-1.5 py-0.5 rounded shadow-xs z-10 uppercase tracking-wider">
-                  Combo
-                </span>
-              )}
               <Image
                 fill
                 sizes="96px"
@@ -47,14 +37,16 @@ export function ProductCard({
               />
             </div>
 
-            {/* Title, Unit & Price */}
+            {/* Title, Unit, Price & Bottom Badges */}
             <div className="flex flex-col min-w-0 flex-1 space-y-0.5">
-              <h3 className="text-xs sm:text-sm font-bold text-foreground line-clamp-2 leading-snug group-hover:text-primary transition-colors">
+              <h3 className="text-sm sm:text-lg font-bold text-foreground line-clamp-2 leading-snug group-hover:text-primary transition-colors">
                 {product.title}
               </h3>
+
               <p className="text-[11px] text-muted-foreground font-medium">
                 {product.unit}
               </p>
+
               <div className="flex items-baseline gap-2 pt-0.5">
                 <span className="text-sm sm:text-base font-extrabold text-primary">
                   ৳{discountedPrice.toFixed(2)}
@@ -65,6 +57,22 @@ export function ProductCard({
                   </span>
                 )}
               </div>
+
+              {/* Badges placed below price */}
+              {(!!product.discountPercentage || product.isCombo) && (
+                <div className="flex flex-wrap items-center gap-1.5 pt-1.5">
+                  {!!product.discountPercentage && (
+                    <span className="bg-primary/10 text-primary border border-primary/20 text-[10px] font-extrabold px-1.5 py-0.5 rounded">
+                      {product.discountPercentage}% OFF
+                    </span>
+                  )}
+                  {product.isCombo && (
+                    <span className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 text-[10px] font-extrabold px-1.5 py-0.5 rounded uppercase tracking-wider">
+                      Combo
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
           </Link>
 
@@ -84,12 +92,12 @@ export function ProductCard({
         {/* Square Image */}
         <div className="relative w-full aspect-square bg-muted/30 rounded-sm overflow-hidden">
           {!!product.discountPercentage && (
-            <span className="absolute top-2 left-2 bg-primary text-white text-[10px] sm:text-[11px] font-extrabold px-2 py-0.5 rounded-md shadow-xs z-10">
+            <span className="absolute top-1 left-0 bg-primary text-white text-[9px] sm:text-[11px] font-semibold px-2 py-0.5 rounded-sm shadow-xs z-10">
               {product.discountPercentage}% OFF
             </span>
           )}
           {product.isCombo && (
-            <span className="absolute top-2 right-2 bg-amber-600 text-white text-[10px] sm:text-[11px] font-extrabold px-2 py-0.5 rounded-md shadow-xs z-10 uppercase tracking-wider">
+            <span className="absolute top-1 right-0 bg-amber-600 text-white text-[9px] sm:text-[11px] font-semibold px-2 py-0.5 rounded-sm shadow-xs z-10 uppercase tracking-wider">
               Combo
             </span>
           )}

@@ -24,6 +24,12 @@ interface FilterContentProps {
 const PRICE_MIN = 50;
 const PRICE_MAX = 2500;
 
+const SPECIAL_FILTERS = [
+  { slug: "best-deals", label: "Best Deals" },
+  { slug: "popular-products", label: "Popular Products" },
+  { slug: "combo-deals", label: "Combo Deals" },
+] as const;
+
 const DISCOUNTS = [
   { id: "10-or-more", label: "10% or more" },
   { id: "20-or-more", label: "20% or more" },
@@ -45,6 +51,7 @@ export default function FilterContent({
 }: FilterContentProps) {
   const params = useParams<{ slug?: string[] }>();
 
+  // Extract raw slug parameter ("best-deals", "popular-products", or category slug)
   const currentCategory = params.slug?.[0] ?? "";
   const categories = useCategories();
   const [priceDraft, setPriceDraft] = useState<[number, number]>(
@@ -87,6 +94,7 @@ export default function FilterContent({
           <SectionHeading>Filter by Category</SectionHeading>
         </AccordionTrigger>
         <AccordionContent className="space-y-1 pt-1 [&_a]:no-underline">
+          {/* All Products */}
           <Link
             href="/products"
             onClick={onNavigate}
@@ -98,6 +106,25 @@ export default function FilterContent({
             </span>
           </Link>
 
+          {/* Special Deal Filters */}
+          {SPECIAL_FILTERS.map((item) => {
+            const isActive = currentCategory === item.slug;
+            return (
+              <Link
+                key={item.slug}
+                href={`/products/${item.slug}`}
+                onClick={onNavigate}
+                className={categoryLinkClass(isActive)}
+              >
+                <span className="flex items-center gap-2">
+                  <ChevronRight className={chevronClass(isActive)} />
+                  {item.label}
+                </span>
+              </Link>
+            );
+          })}
+
+          {/* Regular Database Categories */}
           {categories.map((cat) => {
             const isActive = currentCategory === cat.slug;
             return (
@@ -111,7 +138,7 @@ export default function FilterContent({
                   <ChevronRight className={chevronClass(isActive)} />
                   {cat.name}
                 </span>
-                <span
+                {/*                 <span
                   className={`text-[11px] font-medium ${
                     isActive
                       ? "font-bold text-accent-foreground"
@@ -119,7 +146,7 @@ export default function FilterContent({
                   }`}
                 >
                   ({cat.productCount})
-                </span>
+                </span> */}
               </Link>
             );
           })}

@@ -3,7 +3,6 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { QueryProvider } from "@/context/query-provider";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: {
@@ -32,12 +31,10 @@ export default async function AdminLayout({
   return (
     <QueryProvider>
       <SidebarProvider defaultOpen>
-        <Suspense>
-          <AppSidebar />
-          <SidebarInset className="flex flex-col min-h-screen">
-            {children}
-          </SidebarInset>
-        </Suspense>
+        <AppSidebar />
+        <SidebarInset className="flex flex-col min-h-screen">
+          {children}
+        </SidebarInset>
       </SidebarProvider>
     </QueryProvider>
   );

@@ -56,6 +56,7 @@ export async function createProduct(input: CreateProductInput) {
         productDetails: data.productDetails || null,
         isBestDeal: data.isBestDeal,
         isAvailable: data.isAvailable,
+        isCombo: data.isCombo,
         categoryId: data.categoryId,
         isPopular: data.isPopular,
         priority: data.priority,
@@ -141,6 +142,7 @@ export async function updateProduct(
           categoryId: data.categoryId,
           isPopular: data.isPopular,
           priority: data.priority,
+          isCombo: data.isCombo,
         },
       }),
       ...(removedImageIds.length

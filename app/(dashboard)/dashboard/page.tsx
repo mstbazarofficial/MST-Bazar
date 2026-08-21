@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import QuickLinkSection from "@/components/dashboard/home/quick-link";
 import StatsSection from "@/components/dashboard/home/stats";
 import WelcomeSection from "@/components/dashboard/home/welcome";

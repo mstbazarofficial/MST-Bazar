@@ -80,6 +80,7 @@ export function ProductFormPage({
       isAvailable: true,
       isBestDeal: false,
       isPopular: false,
+      isCombo: false,
       priority: 1,
 
       images: [],
@@ -592,6 +593,24 @@ export function ProductFormPage({
                 )}
               />
 
+              {/* Combo Switch */}
+              <Controller
+                name="isCombo"
+                control={control}
+                render={({ field }) => (
+                  <Field className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                    <div className="space-y-0.5">
+                      <FieldLabel className="mb-0">Combo</FieldLabel>
+                      <FieldDescription>Mark as combo product</FieldDescription>
+                    </div>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </Field>
+                )}
+              />
+
               {/* Best Deal Switch */}
               <Controller
                 name="isBestDeal"
@@ -615,31 +634,6 @@ export function ProductFormPage({
               />
             </div>
           </FieldGroup>
-
-          {/* Product Info (edit mode only) */}
-          {isEditing && initialValues && (
-            <FieldGroup className="gap-0! rounded-lg border bg-card p-6 shadow-sm">
-              <h2 className="mb-4 text-sm font-semibold">Metadata</h2>
-              <dl className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-3">
-                <div>
-                  <dt className="text-muted-foreground">Product ID</dt>
-                  <dd className="mt-1 font-medium">{initialValues.id}</dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">Created At</dt>
-                  <dd className="mt-1 font-medium">
-                    {initialValues.createdAt}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">Updated At</dt>
-                  <dd className="mt-1 font-medium">
-                    {initialValues.updatedAt}
-                  </dd>
-                </div>
-              </dl>
-            </FieldGroup>
-          )}
         </fieldset>
       </main>
     </>

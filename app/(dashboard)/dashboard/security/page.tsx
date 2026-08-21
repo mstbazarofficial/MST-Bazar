@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { SecuritySection } from "@/components/dashboard/security/security-section";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";

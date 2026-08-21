@@ -1,6 +1,7 @@
 import { CtaBanner } from "@/components/main/common/CtaBanner";
 import { BestDealsSection } from "@/components/main/home/best-deal-section";
 import { CategorySection } from "@/components/main/home/category-section";
+import { ComboProductsSection } from "@/components/main/home/combo-products-section";
 import { HeroSection } from "@/components/main/home/hero-section";
 import FaqSection from "@/components/main/home/home-faq-section";
 import { PopularProductsSection } from "@/components/main/home/popular-product-section";
@@ -13,6 +14,7 @@ export default async function Home() {
   const products = await getAllProducts();
   const bestDeals = products.filter((p) => p.isBestDeal).slice(0, 6);
   const popularProducts = products.filter((p) => p.isPopular).slice(0, 10);
+  const comboProducts = products.filter((p) => p.isCombo).slice(0, 10);
 
   return (
     <main>
@@ -28,6 +30,8 @@ export default async function Home() {
       <CategorySection categories={categories} />
       <BestDealsSection products={bestDeals} />
       <PopularProductsSection products={popularProducts} />
+      <ComboProductsSection products={comboProducts} />
+
       <CtaBanner />
       <HomeTrustSection />
       <FaqSection />

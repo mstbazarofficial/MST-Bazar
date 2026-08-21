@@ -69,7 +69,6 @@ export default function FaqSection() {
             payments at MST Bazar. If you need further assistance, feel free to
             reach out to our support team.
           </p>
-
           <div className="w-full max-w-xs mx-auto pt-2">
             <Image
               src="/assets/faq.svg"
@@ -77,6 +76,7 @@ export default function FaqSection() {
               width={320}
               height={260}
               className="w-full h-auto object-contain"
+              style={{ height: "auto" }}
               priority
             />
           </div>

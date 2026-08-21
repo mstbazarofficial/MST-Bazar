@@ -12,7 +12,9 @@ export function PopularProductsSection({
     <section id="featured" className="w-full bg-muted py-8 sm:py-12">
       <div className="site-container">
         <SectionHeading
-          rightElement={<ViewAllLink href="/products" title="View All" />}
+          rightElement={
+            <ViewAllLink href="/products/popular-products" title="View All" />
+          }
           highlightPositions={[2]}
           title="Popular products"
         />

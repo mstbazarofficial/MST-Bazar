@@ -88,23 +88,31 @@ export default function Footer() {
                   href="/products"
                   className="hover:text-amber-300 transition-colors"
                 >
-                  Shop Products
+                  All Products
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/checkout"
+                  href="/products/best-deals"
                   className="hover:text-amber-300 transition-colors"
                 >
-                  Checkout
+                  Best Deals
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/login"
+                  href="/products/popular-products"
                   className="hover:text-amber-300 transition-colors"
                 >
-                  Login
+                  Popular Products
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/products/combo-deals"
+                  className="hover:text-amber-300 transition-colors"
+                >
+                  Combo Offers
                 </Link>
               </li>
             </ul>

@@ -41,6 +41,7 @@ export default async function EditProductPage({
         categoryId: product.categoryId,
         images: product.images,
         isPopular: product.isPopular,
+        isCombo: product.isCombo,
         priority: product.priority,
         productDetails: product.productDetails ?? "",
       }}

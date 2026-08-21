@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { OrderDeliveryCard } from "@/components/dashboard/orders/order-delivery-card";
 import { OrderHelpCard } from "@/components/dashboard/orders/order-help-card";
 import { OrderItemsCard } from "@/components/dashboard/orders/order-items-card";

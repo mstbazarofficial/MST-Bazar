@@ -80,7 +80,7 @@ export function ProductsTable({
                         alt={product.title}
                         width={40}
                         height={40}
-                        className="size-10 object-cover"
+                        className="rounded-md object-cover"
                       />
                     ) : (
                       <div className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">

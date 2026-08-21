@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { OrdersSection } from "@/components/dashboard/orders/orders-section";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";

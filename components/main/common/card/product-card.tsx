@@ -33,6 +33,11 @@ export function ProductCard({
                   {product.discountPercentage}% OFF
                 </span>
               )}
+              {product.isCombo && (
+                <span className="absolute top-1 right-1 bg-amber-600 text-white text-[9px] sm:text-[10px] font-extrabold px-1.5 py-0.5 rounded shadow-xs z-10 uppercase tracking-wider">
+                  Combo
+                </span>
+              )}
               <Image
                 fill
                 sizes="96px"
@@ -81,6 +86,11 @@ export function ProductCard({
           {!!product.discountPercentage && (
             <span className="absolute top-2 left-2 bg-primary text-white text-[10px] sm:text-[11px] font-extrabold px-2 py-0.5 rounded-md shadow-xs z-10">
               {product.discountPercentage}% OFF
+            </span>
+          )}
+          {product.isCombo && (
+            <span className="absolute top-2 right-2 bg-amber-600 text-white text-[10px] sm:text-[11px] font-extrabold px-2 py-0.5 rounded-md shadow-xs z-10 uppercase tracking-wider">
+              Combo
             </span>
           )}
           <Image

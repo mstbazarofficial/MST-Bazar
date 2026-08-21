@@ -1,6 +1,6 @@
 // lib/data/catalog.ts
 import { prisma } from "@/lib/prisma";
-import { cacheLife, cacheTag } from "next/cache";
+import { unstable_cache } from "next/cache";
 
 export type CategoryDTO = {
   id: string;
@@ -19,6 +19,7 @@ export type ProductDTO = {
   discountPercentage: number;
   isBestDeal: boolean;
   isPopular: boolean;
+  isCombo: boolean;
   categoryId: string;
   category: {
     id: string;
@@ -31,136 +32,136 @@ export type ProductDTO = {
   }[];
 };
 
-const INFINITE = { stale: Infinity, revalidate: Infinity, expire: Infinity };
-
-export async function getAllCategories(): Promise<CategoryDTO[]> {
-  "use cache";
-  cacheTag("categories");
-  cacheLife(INFINITE);
-
-  const categories = await prisma.category.findMany({
-    select: {
-      id: true,
-      name: true,
-      slug: true,
-      image: true,
-      _count: { select: { products: true } },
-    },
-    orderBy: [{ priority: "asc" }, { name: "asc" }],
-  });
-
-  return categories.map((c) => ({
-    id: c.id,
-    name: c.name,
-    slug: c.slug,
-    image: c.image,
-    productCount: c._count.products,
-  }));
-}
-
-export async function getAllProducts(): Promise<ProductDTO[]> {
-  "use cache";
-  cacheTag("products");
-  cacheLife(INFINITE);
-
-  return prisma.product.findMany({
-    select: {
-      id: true,
-      title: true,
-      slug: true,
-      unit: true,
-      price: true,
-      discountPercentage: true,
-      images: {
-        select: {
-          url: true,
-          isFeatured: true,
-        },
+export const getAllCategories = unstable_cache(
+  async (): Promise<CategoryDTO[]> => {
+    const categories = await prisma.category.findMany({
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        image: true,
+        _count: { select: { products: true } },
       },
-      categoryId: true,
-      category: {
-        select: {
-          id: true,
-          name: true,
-          slug: true,
+      orderBy: [{ priority: "asc" }, { name: "asc" }],
+    });
+
+    return categories.map((c) => ({
+      id: c.id,
+      name: c.name,
+      slug: c.slug,
+      image: c.image,
+      productCount: c._count.products,
+    }));
+  },
+  ["all-categories"],
+  { tags: ["categories"] },
+);
+
+export const getAllProducts = unstable_cache(
+  async (): Promise<ProductDTO[]> => {
+    return prisma.product.findMany({
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        unit: true,
+        price: true,
+        discountPercentage: true,
+        images: {
+          select: {
+            url: true,
+            isFeatured: true,
+          },
         },
+        categoryId: true,
+        category: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+        isBestDeal: true,
+        isPopular: true,
+        isCombo: true,
       },
-      isBestDeal: true,
-      isPopular: true,
+      orderBy: [{ priority: "asc" }, { title: "asc" }],
+    });
+  },
+  ["all-products"],
+  { tags: ["products"] },
+);
+
+export const getProductBySlug = (slug: string) =>
+  unstable_cache(
+    async () => {
+      return prisma.product.findUnique({
+        where: { slug },
+        include: {
+          images: true,
+          category: { select: { id: true, name: true, slug: true } },
+        },
+      });
     },
-    orderBy: [{ priority: "asc" }, { title: "asc" }],
-  });
-}
+    ["product-by-slug", slug],
+    { tags: [`product-${slug}`] },
+  )();
 
-export async function getProductBySlug(slug: string) {
-  "use cache";
-  cacheTag(`product-${slug}`); // ✅ ONLY tag the specific product
-  cacheLife(INFINITE);
+export const getAllProductSlugs = unstable_cache(
+  async (): Promise<string[]> => {
+    const products = await prisma.product.findMany({
+      select: { slug: true },
+    });
 
-  const product = await prisma.product.findUnique({
-    where: { slug },
-    include: {
-      images: true,
-      category: { select: { id: true, name: true, slug: true } },
-    },
-  });
+    return products.map((p) => p.slug);
+  },
+  ["all-product-slugs"],
+  { tags: ["products"] },
+);
 
-  return product;
-}
-
-export async function getAllProductSlugs(): Promise<string[]> {
-  "use cache";
-  cacheTag("products"); // ✅ Broad tag is correct here because adding/deleting products changes slug list
-  cacheLife(INFINITE);
-
-  const products = await prisma.product.findMany({
-    select: { slug: true },
-  });
-
-  return products.map((p) => p.slug);
-}
-
-export async function getRelatedProducts(
+export const getRelatedProducts = (
   categoryId: string,
   currentProductId: string,
   limit = 4,
-): Promise<ProductDTO[]> {
-  "use cache";
-  cacheTag(`category-${categoryId}`); // ✅ ONLY tag the specific category
-  cacheLife(INFINITE);
-
-  return prisma.product.findMany({
-    where: {
-      categoryId,
-      NOT: {
-        id: currentProductId,
-      },
-    },
-    take: limit,
-    select: {
-      id: true,
-      title: true,
-      slug: true,
-      unit: true,
-      price: true,
-      discountPercentage: true,
-      images: {
-        select: {
-          url: true,
-          isFeatured: true,
+) =>
+  unstable_cache(
+    async (): Promise<ProductDTO[]> => {
+      return prisma.product.findMany({
+        where: {
+          categoryId,
+          NOT: {
+            id: currentProductId,
+          },
         },
-      },
-      categoryId: true,
-      category: {
+        take: limit,
         select: {
           id: true,
-          name: true,
+          title: true,
           slug: true,
+          unit: true,
+          price: true,
+          discountPercentage: true,
+          images: {
+            select: {
+              url: true,
+              isFeatured: true,
+            },
+          },
+          categoryId: true,
+          category: {
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+            },
+          },
+          isBestDeal: true,
+          isPopular: true,
+          isCombo: true,
         },
-      },
-      isBestDeal: true,
-      isPopular: true,
+        orderBy: [{ priority: "asc" }, { title: "asc" }],
+      });
     },
-    orderBy: [{ priority: "asc" }, { title: "asc" }],
-  });
-}
+    ["related-products", categoryId, currentProductId, String(limit)],
+    { tags: [`category-${categoryId}`] },
+  )();

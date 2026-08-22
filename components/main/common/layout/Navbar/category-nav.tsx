@@ -4,28 +4,31 @@ import { Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MobileMenu } from "./mobile-menu";
+import { useCategories } from "@/context/catalog-provider";
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
-  { label: "Products", href: "/products" },
-  { label: "Contact", href: "/contact" },
   { label: "Checkout", href: "/checkout" },
+  { label: "All Products", href: "/products" },
 ] as const;
 
 export function CategoryNav() {
   const pathname = usePathname();
+  const categories = useCategories();
 
   const getLinkClasses = (href: string) => {
     const isActive = pathname === href;
     return `whitespace-nowrap transition-colors hover:text-primary-yellow ${
-      isActive ? "text-primary-yellow font-semibold" : ""
+      isActive
+        ? "text-primary-yellow border-b-2 border-primary-yellow h-full font-semibold"
+        : ""
     }`;
   };
 
   return (
     <nav className="hidden bg-primary-dark text-primary-foreground lg:block">
-      <div className="site-container grid grid-cols-3 items-center py-2 text-sm">
+      <div className="site-container flex  items-center py-2 text-sm">
         {/* Left: All Categories Trigger */}
         <div className="justify-self-start">
           <MobileMenu
@@ -42,7 +45,7 @@ export function CategoryNav() {
         </div>
 
         {/* Center: Navigation Links */}
-        <ul className="flex items-center justify-center gap-6 overflow-x-auto">
+        <ul className="flex items-center w-full justify-center justify-self-center gap-6">
           {NAV_LINKS.map((link) => (
             <li key={link.href} className="shrink-0">
               <Link href={link.href} className={getLinkClasses(link.href)}>
@@ -50,10 +53,17 @@ export function CategoryNav() {
               </Link>
             </li>
           ))}
+          {categories.slice(0, 6).map((category) => (
+            <li key={category.id} className="shrink-0">
+              <Link
+                href={`/products/${category.slug}`}
+                className={getLinkClasses(`/products/${category.slug}`)}
+              >
+                {category.name}
+              </Link>
+            </li>
+          ))}
         </ul>
-
-        {/* Right: Empty spacer to balance grid centering */}
-        <div />
       </div>
     </nav>
   );

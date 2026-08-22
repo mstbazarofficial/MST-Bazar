@@ -1,6 +1,8 @@
 {
-  "name": "MyWebSite",
-  "short_name": "MySite",
+  "name": "MST Bazar",
+  "short_name": "MST Bazar",
+  "description": "Online grocery store in Bangladesh",
+  "start_url": "/",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",

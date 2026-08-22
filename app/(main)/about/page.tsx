@@ -12,9 +12,11 @@ import { Metadata } from "next";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-  title: "About Us",
+  title: {
+    absolute: "About MST Bazar | Trusted Products Delivered Bangladesh",
+  },
   description:
-    "Learn about MST Bazar, your trusted online grocery store in Bangladesh. Discover our story, values, and commitment to delivering fresh, natural, and healthy products straight to your doorstep.",
+    "Learn how MST Bazar sourcing trusted, natural grocery products and serves customers doorstep with quality, care, easy ordering, and delivery across Bangladesh.",
 };
 export default function AboutPage() {
   return (

@@ -21,7 +21,7 @@ export function HeroSection() {
     <section className="site-container section-y w-full ">
       {/* Card Container */}
       <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-[linear-gradient(110deg,#fcfde3_0%,#dcf1df_50%,#c8eacc_100%)]">
-        <div className="grid items-center gap-6 px-4 py-6 sm:px-8 sm:py-12 lg:grid-cols-2 lg:gap-12 lg:py-16">
+        <div className="grid items-center gap-6 px-4 py-6 sm:px-8 sm:py-12 lg:grid-cols-2 lg:py-16">
           {/* Swiper & Backdrop Column */}
           <div className="order-first flex w-full items-center justify-center lg:order-last relative lg:top-4 lg:right-2 z-10">
             {/* Responsive Organic Backdrop Shapes */}
@@ -69,14 +69,16 @@ export function HeroSection() {
             </span>
 
             <h1 className="mt-3 sm:mt-4 text-2xl font-bold leading-tight tracking-tight sm:text-4xl lg:text-5xl">
-              <span className="text-foreground">Daily Fresh Products</span>
+              <span className="text-foreground">
+                Fresh Grocery Products, Honey & Combo Deals
+              </span>
               <br />
-              <span className="text-primary">Delivered to Your Doorstep</span>
+              <span className="text-primary">Delivered Across Bangladesh</span>
             </h1>
 
             <p className="mt-2 sm:mt-3 max-w-md text-xs sm:text-base text-muted-foreground">
-              Best quality grocery items at affordable prices. Fast delivery
-              across Bangladesh.
+              Quality grocery essentials, black seed, and oils delivered to your
+              doorstep at affordable prices.
             </p>
 
             <div className="mt-5 sm:mt-6 flex w-full max-w-xs flex-col gap-2.5 sm:gap-3 sm:max-w-none sm:w-auto sm:flex-row">

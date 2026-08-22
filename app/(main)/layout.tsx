@@ -8,11 +8,11 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: {
-    default: "MST Bazar | Online Grocery Store in Bangladesh",
+    default: "MST Bazar | Fresh Grocery Products & Honey in Bangladesh",
     template: "%s | MST Bazar",
   },
   description:
-    "Your trusted online grocery store in Bangladesh. Fresh, natural, and healthy products delivered straight to your doorstep.",
+    "Shop fresh grocery products, honey, black seed, oils, and combo deals from MST Bazar. Quality essentials delivered across Bangladesh.",
 };
 
 export default async function RootLayout({

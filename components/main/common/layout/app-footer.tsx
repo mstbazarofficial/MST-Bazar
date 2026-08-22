@@ -28,6 +28,14 @@ export default function Footer() {
               and healthy products delivered to your doorstep.
             </p>
 
+            <address className="not-italic text-xs text-white/80 leading-relaxed">
+              <a href="tel:+880123456789" className="hover:text-amber-300">
+                +880 1234 56789
+              </a>
+              <br />
+              House 12, Road 5, Dhanmondi, Dhaka 1205
+            </address>
+
             {/* Social Icons */}
             <div className="flex items-center gap-2 pt-1">
               <Link

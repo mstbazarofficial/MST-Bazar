@@ -2,8 +2,83 @@ import { NavigationProgressBar } from "@/components/my-ui/navigation-progress-ba
 import { Toaster } from "@/components/ui/toast";
 import { cn } from "@/lib/utils";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import "./globals.css";
+
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://mstshop.vercel.app";
+
+export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
+  openGraph: {
+    title: "MST Bazar | Fresh Grocery Products & Honey in Bangladesh",
+    description:
+      "Shop fresh grocery products, honey, black seed, oils, and combo deals from MST Bazar. Quality essentials delivered across Bangladesh.",
+    url: siteUrl,
+    siteName: "MST Bazar",
+    type: "website",
+    locale: "en_BD",
+    images: [
+      {
+        url: "/assets/banner.png",
+        width: 1536,
+        height: 1024,
+        alt: "Fresh grocery products delivered by MST Bazar",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "MST Bazar | Fresh Grocery Products & Honey in Bangladesh",
+    description:
+      "Shop fresh grocery products, honey, black seed, oils, and combo deals from MST Bazar. Quality essentials delivered across Bangladesh.",
+    images: ["/assets/banner.png"],
+    site: "@mstbazar",
+    creator: "@mstbazar",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  alternates: {
+    canonical: "./",
+    languages: {
+      "en-BD": "./",
+      "x-default": "./",
+    },
+  },
+};
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${siteUrl}/#organization`,
+      name: "MST Bazar",
+      url: siteUrl,
+      logo: `${siteUrl}/assets/logo-vertical.png`,
+      email: "support@mstbazar.com",
+      telephone: "+880 1234 56789",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "House 12, Road 5, Dhanmondi",
+        addressLocality: "Dhaka",
+        postalCode: "1205",
+        addressCountry: "BD",
+      },
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${siteUrl}/#website`,
+      name: "MST Bazar",
+      url: siteUrl,
+      publisher: { "@id": `${siteUrl}/#organization` },
+      inLanguage: "en-BD",
+    },
+  ],
+};
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -37,6 +112,10 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-background">
         {" "}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
         <Suspense fallback={null}>
           <NavigationProgressBar />
         </Suspense>

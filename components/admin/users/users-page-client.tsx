@@ -75,7 +75,7 @@ export function UsersPageClient({
             Create User
           </Button>
         }
-        title="Orders List"
+        title="Users List"
       />
 
       <main className="flex-1 space-y-6 overflow-y-auto bg-muted/30 p-4 md:p-6">

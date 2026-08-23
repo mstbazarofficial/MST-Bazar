@@ -43,7 +43,7 @@ export const auth = betterAuth({
     autoSignIn: false, // Don't sign in automatically after signup
     revokeSessionsOnPasswordReset: true,
     sendResetPassword: async ({ user, url, token }, request) => {
-      if (process.env.NODE_ENV === "production") {
+      if (process.env.ENABLE_EMAILS === "true") {
         sendPasswordResetEmail({
           email: user.email,
           token: token,
@@ -60,7 +60,7 @@ export const auth = betterAuth({
     sendOnSignIn: true, // Send verification email if user tries to login unverified
     autoSignInAfterVerification: true, // Auto sign in after verification
     sendVerificationEmail: async ({ user, url, token }, request) => {
-      if (process.env.NODE_ENV === "production") {
+      if (process.env.ENABLE_EMAILS === "true") {
         sendEmailVerification({
           email: user.email,
           name: user.name || undefined,

@@ -164,7 +164,7 @@ export async function placeOrder(
       select: { orderId: true },
     });
 
-    if (process.env.NODE_ENV === "production") {
+    if (process.env.ENABLE_EMAILS === "true") {
       sendOrderConfirmationEmail({
         orderId: order.orderId,
         customerName: customer.fullName,

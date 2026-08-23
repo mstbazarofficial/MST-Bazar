@@ -27,6 +27,8 @@ export async function sendEmail({
   const recipients: EmailRecipient[] =
     typeof to === "string" ? [{ email: to }] : to;
 
+  console.log("Recipients:", recipients);
+
   const payload: Record<string, any> = {
     sender: {
       name: process.env.SENDER_NAME,
@@ -57,11 +59,14 @@ export async function sendEmail({
     body: JSON.stringify(payload),
   });
 
+  // Read response stream ONCE
+  const responseData = await response.json().catch(() => ({}));
+
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    console.error("Brevo Email Sending Error:", errorData);
-    throw new Error(errorData.message || "Failed to send email");
+    console.error("Brevo Email Sending Error:", responseData);
+    throw new Error(responseData.message || "Failed to send email");
   }
 
-  return response.json();
+  // Return already parsed JSON
+  return responseData;
 }

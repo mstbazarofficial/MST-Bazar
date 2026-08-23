@@ -2,7 +2,7 @@
 
 import { Hash, Loader2, Phone, Search } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface OrderSearchFormProps {
   onSearch: (orderId: string, phone: string) => void;
@@ -14,17 +14,24 @@ export function OrderSearchForm({ onSearch, isPending }: OrderSearchFormProps) {
   const [orderId, setOrderId] = useState("");
   const [phone, setPhone] = useState("");
 
+  // Track auto-search execution to prevent duplicate requests
+  const hasAutoSearched = useRef(false);
+
   useEffect(() => {
-    const orderId = searchParams.get("orderId") || "";
-    const phone = searchParams.get("phone") || "";
+    const paramOrderId = searchParams.get("orderId")?.trim() || "";
+    const paramPhone = searchParams.get("phone")?.trim() || "";
 
-    if (orderId && phone) {
-      setOrderId(orderId.trim());
-      setPhone(phone.trim());
+    if (paramOrderId) setOrderId(paramOrderId);
+    if (paramPhone) setPhone(paramPhone);
+
+    // Auto-trigger search on load if both parameters exist and hasn't searched yet
+    if (paramOrderId && paramPhone && !hasAutoSearched.current) {
+      hasAutoSearched.current = true;
+      onSearch(paramOrderId, paramPhone);
     }
-  }, [searchParams]);
+  }, [searchParams, onSearch]);
 
-  function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     onSearch(orderId, phone);
   }
@@ -45,7 +52,7 @@ export function OrderSearchForm({ onSearch, isPending }: OrderSearchFormProps) {
             <input
               id="orderId"
               type="text"
-              placeholder="e.g. ORD-20240001"
+              placeholder="e.g. MST-12345"
               value={orderId}
               onChange={(e) => setOrderId(e.target.value)}
               className="w-full h-11.5 pl-9 pr-3 border border-input rounded-md text-[15px] text-foreground bg-background outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:bg-muted disabled:opacity-70 transition-all box-border placeholder:text-muted-foreground"
@@ -55,7 +62,7 @@ export function OrderSearchForm({ onSearch, isPending }: OrderSearchFormProps) {
           </div>
         </div>
 
-        {/* Phone */}
+        {/* Mobile Number */}
         <div className="flex-1 flex flex-col gap-1.5">
           <label
             className="text-[13px] font-semibold text-foreground"
@@ -81,7 +88,7 @@ export function OrderSearchForm({ onSearch, isPending }: OrderSearchFormProps) {
         {/* Submit */}
         <button
           type="submit"
-          className="h-11.5 px-6 bg-primary hover:bg-primary-dark disabled:opacity-65 disabled:cursor-not-allowed text-primary-foreground text-[15px] font-bold rounded-md flex items-center justify-center gap-2 whitespace-nowrap transition-colors shrink-0"
+          className="h-11.5 px-6 bg-primary hover:bg-primary/90 disabled:opacity-65 disabled:cursor-not-allowed text-primary-foreground text-[15px] font-bold rounded-md flex items-center justify-center gap-2 whitespace-nowrap transition-colors shrink-0"
           disabled={isPending}
         >
           {isPending ? (

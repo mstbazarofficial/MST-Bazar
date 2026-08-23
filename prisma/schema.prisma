@@ -101,10 +101,11 @@ model Product {
   shortDescription String?
   productDetails   String? @db.Text
 
-  isAvailable Boolean @default(true)
-  isBestDeal  Boolean @default(false)
-  isPopular   Boolean @default(false)
-  isCombo     Boolean @default(false)
+  isAvailable  Boolean @default(true)
+  isBestDeal   Boolean @default(false)
+  isPopular    Boolean @default(false)
+  isCombo      Boolean @default(false)
+  isTopSelling Boolean @default(false)
 
   categoryId String
   category   Category @relation(fields: [categoryId], references: [id])

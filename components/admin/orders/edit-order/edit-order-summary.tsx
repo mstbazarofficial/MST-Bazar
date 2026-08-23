@@ -154,7 +154,7 @@ export function EditOrderSummaryModal({
             control={control}
             render={({ field, fieldState }) => (
               <Field>
-                <FieldLabel>Order Discount (%)</FieldLabel>
+                <FieldLabel>Order Discount</FieldLabel>
                 <NumberInput
                   placeholder="0"
                   value={field.value}
@@ -187,7 +187,7 @@ export function EditOrderSummaryModal({
           </div>
 
           <div className="flex justify-between text-emerald-600 dark:text-emerald-400">
-            <span>Discount ({currentDiscount}%):</span>
+            <span>Discount {currentDiscount}</span>
             <span>-{formatPrice(liveTotal.discountAmount)}</span>
           </div>
 

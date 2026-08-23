@@ -3,10 +3,8 @@ import { UserDetailCard } from "@/components/admin/users/user-detail-card";
 import { UserDetailHeader } from "@/components/admin/users/user-details-header";
 import { UserOrdersTable } from "@/components/admin/users/user-orders-table";
 import { UserSessionsCard } from "@/components/admin/users/user-sessions-card";
-import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { headers } from "next/headers";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -14,11 +12,6 @@ interface Props {
 
 export default async function AdminUserDetailPage({ params }: Props) {
   const { id } = await params;
-
-  const session = await auth.api.getSession({ headers: await headers() });
-  if (!session?.user) redirect("/login");
-  if (session.user.role !== "ADMIN") redirect("/dashboard");
-
   const now = new Date();
 
   const user = await prisma.user.findUnique({

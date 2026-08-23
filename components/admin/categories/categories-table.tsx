@@ -1,4 +1,3 @@
-import { getAdminCategories } from "@/actions/admin/category-actions";
 import { CategoryRowActions } from "@/components/admin/categories/category-row-actions";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -11,16 +10,25 @@ import {
 } from "@/components/ui/table";
 import Image from "next/image";
 
-export async function CategoriesTable({ search }: { search?: string }) {
-  const categories = await getAdminCategories(search);
+type Category = {
+  id: string;
+  name: string;
+  slug: string;
+  priority: number | null;
+  image: string | null;
+  _count: {
+    products: number;
+  };
+};
 
+export function CategoriesTable({ categories }: { categories: Category[] }) {
   return (
     <div className="space-y-3">
       <p className="text-sm text-muted-foreground">
         {categories.length} categor{categories.length === 1 ? "y" : "ies"}
       </p>
 
-      <div className="overflow-hidden rounded-lg border">
+      <div className="overflow-hidden rounded-lg border bg-card">
         <Table>
           <TableHeader>
             <TableRow className="[&_th]:py-3">

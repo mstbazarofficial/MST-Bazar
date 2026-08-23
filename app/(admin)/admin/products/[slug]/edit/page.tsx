@@ -4,7 +4,6 @@ import {
   getAdminProductBySlug,
 } from "@/actions/admin/product-actions";
 import { ProductFormPage } from "@/components/admin/products/product-form-page";
-import { requireAdmin } from "@/lib/admin-auth";
 import { notFound } from "next/navigation";
 
 export default async function EditProductPage({
@@ -12,8 +11,6 @@ export default async function EditProductPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  await requireAdmin();
-
   const { slug } = await params;
 
   const [product, categories] = await Promise.all([
@@ -43,6 +40,7 @@ export default async function EditProductPage({
         isPopular: product.isPopular,
         isCombo: product.isCombo,
         priority: product.priority,
+        isTopSelling: product.isTopSelling,
         productDetails: product.productDetails ?? "",
       }}
     />

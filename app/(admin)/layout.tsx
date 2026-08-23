@@ -1,8 +1,8 @@
 import { AppSidebar } from "@/components/admin/layout/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { QueryProvider } from "@/context/query-provider";
+import { requireRole } from "@/lib/admin-auth";
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: {
@@ -12,21 +12,12 @@ export const metadata: Metadata = {
   description: "MST Shop administration panel",
 };
 
-/**
- * Server Component — runs on every request.
- * Reads the session cookie on the server; redirects to /login if not authed.
- * No client-side auth checks needed inside /admin pages.
- */
 export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const authenticated = true;
-
-  if (!authenticated) {
-    redirect("/login");
-  }
+  await requireRole(["ADMIN", "MODERATOR"]);
 
   return (
     <QueryProvider>

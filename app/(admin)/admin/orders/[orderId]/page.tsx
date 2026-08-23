@@ -1,6 +1,5 @@
 import { OrderDetailsClient } from "@/components/admin/orders/order-details-client";
 import { Prisma } from "@/generated/prisma/client";
-import { requireAdmin } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 const orderInclude = {
@@ -31,8 +30,6 @@ export default async function AdminOrderDetailPage({
 }: {
   params: Promise<{ orderId: string }>;
 }) {
-  await requireAdmin();
-
   const { orderId } = await params;
 
   const order = await prisma.order.findUnique({

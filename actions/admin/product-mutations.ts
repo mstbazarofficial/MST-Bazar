@@ -1,6 +1,6 @@
 "use server";
 
-import { requireAdmin } from "@/lib/admin-auth";
+import { requireRole } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 import {
   createProductSchema,
@@ -34,7 +34,7 @@ async function generateUniqueSlug(base: string, excludeId?: string) {
 }
 
 export async function createProduct(input: CreateProductInput) {
-  await requireAdmin();
+  await requireRole(["ADMIN", "MODERATOR"]);
 
   const parsed = createProductSchema.safeParse(input);
   if (!parsed.success)
@@ -59,6 +59,7 @@ export async function createProduct(input: CreateProductInput) {
         isCombo: data.isCombo,
         categoryId: data.categoryId,
         isPopular: data.isPopular,
+        isTopSelling: data.isTopSelling,
         priority: data.priority,
         images: {
           create: data.images.map((img) => ({
@@ -90,7 +91,7 @@ export async function updateProduct(
   productId: string,
   input: UpdateProductInput,
 ) {
-  await requireAdmin();
+  await requireRole(["ADMIN", "MODERATOR"]);
 
   const parsed = updateProductSchema.safeParse({ ...input, id: productId });
   if (!parsed.success)
@@ -139,6 +140,7 @@ export async function updateProduct(
           productDetails: data.productDetails || null,
           isBestDeal: data.isBestDeal,
           isAvailable: data.isAvailable,
+          isTopSelling: data.isTopSelling,
           categoryId: data.categoryId,
           isPopular: data.isPopular,
           priority: data.priority,
@@ -205,7 +207,8 @@ export async function updateProduct(
   }
 }
 export async function deleteProduct(id: string) {
-  await requireAdmin();
+  await requireRole(["ADMIN", "MODERATOR"]);
+
   const deletedProduct = await prisma.product.delete({ where: { id } });
   revalidatePath("/admin/products");
 

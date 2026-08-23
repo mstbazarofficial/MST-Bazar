@@ -1,7 +1,7 @@
 // src/actions/admin/order-mutations.ts
 "use server";
 
-import { requireAdmin } from "@/lib/admin-auth";
+import { requireRole } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 import { createUniqueId } from "@/utils/create-unique-id";
 import {
@@ -21,7 +21,8 @@ import {
 import { revalidatePath } from "next/cache";
 
 export async function createOrder(data: CreateOrderInput) {
-  await requireAdmin();
+  await requireRole(["ADMIN", "MODERATOR"]);
+
   try {
     // 1. Validate input data
     const parsed = createOrderSchema.safeParse(data);
@@ -90,7 +91,8 @@ export async function addOrderItem({
   orderId: string;
   input: OrderItemInput;
 }) {
-  await requireAdmin();
+  await requireRole(["ADMIN", "MODERATOR"]);
+
   try {
     const validatedData = orderItemSchema.parse(input);
 
@@ -128,6 +130,8 @@ export async function updateOrderItem({
   itemId: string;
   input: OrderItemInput;
 }) {
+  await requireRole(["ADMIN", "MODERATOR"]);
+
   try {
     const validatedData = orderItemSchema.parse(input);
 
@@ -166,6 +170,8 @@ export async function deleteOrderItem({
   orderId: string;
   itemId: string;
 }) {
+  await requireRole(["ADMIN", "MODERATOR"]);
+
   try {
     const deletedItem = await prisma.orderItem.delete({
       where: {
@@ -195,6 +201,8 @@ export async function updateOrderInfo({
   orderId: string;
   input: EditOrderInfoInput;
 }) {
+  await requireRole(["ADMIN", "MODERATOR"]);
+
   try {
     const validated = editOrderInfoSchema.parse(input);
 
@@ -276,6 +284,8 @@ export async function updateOrderCosts({
   orderId: string;
   input: EditOrderCostsInput;
 }) {
+  await requireRole(["ADMIN", "MODERATOR"]);
+
   try {
     const validated = editOrderCostsSchema.parse(input);
 
@@ -303,6 +313,7 @@ export async function updateOrderCosts({
     };
   }
 }
+
 export async function updateOrderStatus({
   orderId,
   input,
@@ -310,6 +321,8 @@ export async function updateOrderStatus({
   orderId: string;
   input: EditOrderStatusInput;
 }) {
+  await requireRole(["ADMIN", "MODERATOR"]);
+
   try {
     const validated = editOrderStatusSchema.parse(input);
 
@@ -340,6 +353,8 @@ export async function updateOrderStatus({
 }
 
 export async function deleteOrder({ orderId }: { orderId: string }) {
+  await requireRole(["ADMIN", "MODERATOR"]);
+
   try {
     const deletedItem = await prisma.order.delete({
       where: {

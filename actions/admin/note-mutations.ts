@@ -1,6 +1,6 @@
 "use server";
 
-import { requireAdmin } from "@/lib/admin-auth";
+import { requireRole } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
@@ -17,7 +17,7 @@ export async function addNote({
   orderId: string;
   content: string;
 }) {
-  await requireAdmin();
+  await requireRole(["ADMIN", "MODERATOR"]);
 
   try {
     // FIX: Pass the object { orderId, content } instead of just content
@@ -53,7 +53,7 @@ export async function deleteNote({
   orderId: string;
   noteId: string;
 }) {
-  await requireAdmin();
+  await requireRole(["ADMIN", "MODERATOR"]);
 
   try {
     const deletedNote = await prisma.note.delete({

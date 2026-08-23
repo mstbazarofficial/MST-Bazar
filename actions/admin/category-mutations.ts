@@ -1,6 +1,6 @@
 "use server";
 
-import { requireAdmin } from "@/lib/admin-auth";
+import { requireRole } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 import {
   createCategorySchema,
@@ -35,7 +35,7 @@ async function generateUniqueSlug(base: string, excludeId?: string) {
 }
 
 export async function createCategory(input: CreateCategoryInput) {
-  await requireAdmin();
+  await requireRole(["ADMIN", "MODERATOR"]);
 
   const parsed = createCategorySchema.safeParse(input);
   if (!parsed.success)
@@ -66,7 +66,7 @@ export async function updateCategory(
   categoryId: string,
   input: UpdateCategoryInput,
 ) {
-  await requireAdmin();
+  await requireRole(["ADMIN", "MODERATOR"]);
 
   const parsed = updateCategorySchema.safeParse({ ...input, id: categoryId });
   if (!parsed.success)
@@ -113,7 +113,7 @@ export async function updateCategory(
 }
 
 export async function deleteCategory(categoryId: string) {
-  await requireAdmin();
+  await requireRole(["ADMIN", "MODERATOR"]);
 
   const productCount = await prisma.product.count({ where: { categoryId } });
   if (productCount > 0) {

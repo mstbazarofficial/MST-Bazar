@@ -5,7 +5,6 @@ import {
   getAdminProductStats,
 } from "@/actions/admin/product-actions";
 import { ProductsPageClient } from "@/components/admin/products/products-page-client";
-import { requireAdmin } from "@/lib/admin-auth";
 
 type SearchParams = {
   search?: string;
@@ -19,8 +18,6 @@ export default async function AdminProductsPage({
 }: {
   searchParams: Promise<SearchParams>;
 }) {
-  await requireAdmin();
-
   const params = await searchParams;
   const filters = {
     search: params.search,

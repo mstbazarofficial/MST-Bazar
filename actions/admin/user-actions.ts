@@ -1,10 +1,12 @@
 "use server";
 import { Role } from "@/generated/prisma/enums";
 import { UserWhereInput } from "@/generated/prisma/models";
-import { requireAdmin } from "@/lib/admin-auth";
+import { requireRole } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 
 export async function searchUsersForAdmin(query: string) {
+  await requireRole(["ADMIN", "MODERATOR"]);
+
   if (!query || query.trim().length === 0) return [];
 
   const users = await prisma.user.findMany({
@@ -51,7 +53,8 @@ interface AdminUserFilters {
 const PAGE_SIZE = 20;
 
 export async function getAdminUsers(filters: AdminUserFilters) {
-  await requireAdmin();
+  await requireRole(["ADMIN", "MODERATOR"]);
+
   // 1. Calculate Date Range if month filter is provided
   let startDate: Date | undefined;
   let endDate: Date | undefined;

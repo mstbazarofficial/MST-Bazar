@@ -1,7 +1,14 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { CirclePlus, Flame, Layers, RefreshCw, Star } from "lucide-react";
+import {
+  CirclePlus,
+  Flame,
+  Layers,
+  RefreshCw,
+  Star,
+  TrendingUp,
+} from "lucide-react";
 
 type ProductInfoGridProps = {
   product: {
@@ -16,6 +23,7 @@ type ProductInfoGridProps = {
     isBestDeal: boolean;
     isPopular: boolean;
     isCombo: boolean;
+    isTopSelling: boolean;
     slug: string;
     priority: number;
     createdAt: Date;
@@ -48,7 +56,11 @@ export function ProductInfoGrid({ product }: ProductInfoGridProps) {
     { label: "Last updated", date: product.updatedAt, icon: RefreshCw },
   ];
 
-  const hasFlags = product.isBestDeal || product.isPopular || product.isCombo;
+  const hasFlags =
+    product.isBestDeal ||
+    product.isPopular ||
+    product.isCombo ||
+    product.isTopSelling;
 
   return (
     <div className="space-y-5">
@@ -85,6 +97,12 @@ export function ProductInfoGrid({ product }: ProductInfoGridProps) {
             <Badge className="gap-1 border-amber-500/30 bg-amber-500/10 text-amber-600 hover:bg-amber-500/15 dark:text-amber-400">
               <Star className="size-3.5 fill-amber-500 text-amber-500" />
               Best Deal
+            </Badge>
+          )}
+          {product.isTopSelling && (
+            <Badge className="gap-1 border-green-500/30 bg-green-500/10 text-green-600 hover:bg-green-500/15 dark:text-green-400">
+              <TrendingUp className="size-3.5 text-green-500" />
+              Top Selling
             </Badge>
           )}
           {product.isPopular && (

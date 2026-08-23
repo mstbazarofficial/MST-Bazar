@@ -18,6 +18,9 @@ import {
   type PaymentMethodType,
 } from "@/validation/checkout.validation";
 
+// Import your email utility function
+import { sendOrderConfirmationEmail } from "@/utils/mail-presets";
+
 // ---------------------------------------------------------------------------
 // Input contract
 // ---------------------------------------------------------------------------
@@ -160,6 +163,25 @@ export async function placeOrder(
       },
       select: { orderId: true },
     });
+
+    if (process.env.NODE_ENV === "production") {
+      sendOrderConfirmationEmail({
+        orderId: order.orderId,
+        customerName: customer.fullName,
+        emailAddress: customer.email,
+        fullAddress: customer.address,
+        phoneNumber: customer.phone,
+        shippingCost,
+        discount: 0,
+        orderPaymentMethod: customer.paymentMethod,
+        orderItems: orderItemsData,
+      }).catch((emailError) => {
+        console.error(
+          "Order saved, but confirmation email failed:",
+          emailError,
+        );
+      });
+    }
 
     revalidatePath("/checkout");
 

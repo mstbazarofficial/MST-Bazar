@@ -13,8 +13,8 @@ export function BestDealsSection({ products }: { products: ProductDTO[] }) {
         title="Best Deals for you"
       />
 
-      {/* Product Grid: 2 cols on mobile -> 3 cols on sm -> 6 cols on lg */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+      {/* Product Grid: 2 cols on mobile -> 3 cols on sm -> 5 cols on lg */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
         {products.map((product) => (
           <ProductCard
             key={product.id}

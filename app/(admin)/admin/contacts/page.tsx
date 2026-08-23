@@ -1,7 +1,6 @@
 // app/admin/orders/page.tsx
 import { getAdminContacts } from "@/actions/admin/contact-actions";
 import { ContactsPageClient } from "@/components/admin/contacts/contacts-page-client";
-import { requireAdmin } from "@/lib/admin-auth";
 
 type SearchParams = {
   search?: string;
@@ -15,8 +14,6 @@ export default async function AdminContactsPage({
 }: {
   searchParams: Promise<SearchParams>;
 }) {
-  await requireAdmin();
-
   const params = await searchParams;
   const filters = {
     search: params.search,

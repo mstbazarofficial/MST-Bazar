@@ -3,7 +3,6 @@ import { ProductDescriptions } from "@/components/admin/products/product-descrip
 import { ProductDetailHeader } from "@/components/admin/products/product-detail-header";
 import { ProductImageGallery } from "@/components/admin/products/product-image-gallery";
 import { ProductInfoGrid } from "@/components/admin/products/product-info-grid";
-import { requireAdmin } from "@/lib/admin-auth";
 import { notFound } from "next/navigation";
 
 export default async function AdminProductDetailPage({
@@ -11,8 +10,6 @@ export default async function AdminProductDetailPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  await requireAdmin();
-
   const { slug } = await params;
   const product = await getAdminProductBySlug(decodeURIComponent(slug));
   if (!product) notFound();

@@ -1,10 +1,10 @@
 "use server";
 
-import { requireAdmin } from "@/lib/admin-auth";
+import { requireRole } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 
 export async function getAdminCategories(search?: string) {
-  await requireAdmin();
+  await requireRole(["ADMIN", "MODERATOR"]);
 
   return prisma.category.findMany({
     where: search
@@ -23,7 +23,8 @@ export async function getAdminCategories(search?: string) {
 }
 
 export async function getAdminCategoryById(id: string) {
-  await requireAdmin();
+  await requireRole(["ADMIN", "MODERATOR"]);
+
   return prisma.category.findUnique({
     where: { id },
   });

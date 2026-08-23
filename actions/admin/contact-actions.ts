@@ -1,7 +1,7 @@
 "use server";
 import { ContactStatus } from "@/generated/prisma/enums";
 import { ContactSubmissionWhereInput } from "@/generated/prisma/models";
-import { requireAdmin } from "@/lib/admin-auth";
+import { requireRole } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 
 interface AdminContactFilters {
@@ -14,7 +14,7 @@ interface AdminContactFilters {
 const PAGE_SIZE = 20;
 
 export async function getAdminContacts(filters: AdminContactFilters) {
-  await requireAdmin();
+  await requireRole(["ADMIN", "MODERATOR"]);
 
   const page = filters.page && filters.page > 0 ? filters.page : 1;
 

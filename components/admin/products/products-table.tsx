@@ -20,6 +20,10 @@ type ProductRow = {
   discountPercentage: number;
   unit: string | null;
   isAvailable: boolean;
+  isBestDeal?: boolean;
+  isPopular?: boolean;
+  isCombo?: boolean;
+  isTopSelling?: boolean;
   category: { id: string; name: string };
   image: string | null;
   slug: string;
@@ -90,7 +94,7 @@ export function ProductsTable({
                   </div>
                 </TableCell>
 
-                {/* Product Title Cell with Stretched Link */}
+                {/* Product Title Cell with Stretched Link & Feature Badges */}
                 <TableCell>
                   <Link
                     href={`/admin/products/${product.slug}`}
@@ -103,6 +107,30 @@ export function ProductsTable({
                       {product.unit}
                     </p>
                   )}
+
+                  {/* Feature Badges */}
+                  <div className="flex flex-wrap gap-1 mt-1.5">
+                    {product.isBestDeal && (
+                      <Badge className="bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800 text-[10px] px-1.5 py-0 h-4 hover:bg-amber-500/20 pointer-events-none">
+                        Best Deal
+                      </Badge>
+                    )}
+                    {product.isPopular && (
+                      <Badge className="bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-200 dark:border-purple-800 text-[10px] px-1.5 py-0 h-4 hover:bg-purple-500/20 pointer-events-none">
+                        Popular
+                      </Badge>
+                    )}
+                    {product.isCombo && (
+                      <Badge className="bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800 text-[10px] px-1.5 py-0 h-4 hover:bg-blue-500/20 pointer-events-none">
+                        Combo
+                      </Badge>
+                    )}
+                    {product.isTopSelling && (
+                      <Badge className="bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-200 dark:border-rose-800 text-[10px] px-1.5 py-0 h-4 hover:bg-rose-500/20 pointer-events-none">
+                        Top Selling
+                      </Badge>
+                    )}
+                  </div>
                 </TableCell>
 
                 {/* Category Cell */}
@@ -167,7 +195,11 @@ function TableSkeletonRows() {
           </TableCell>
           <TableCell>
             <Skeleton className="h-4 w-44 mb-1" />
-            <Skeleton className="h-3 w-16" />
+            <Skeleton className="h-3 w-16 mb-1.5" />
+            <div className="flex gap-1">
+              <Skeleton className="h-4 w-16 rounded-full" />
+              <Skeleton className="h-4 w-12 rounded-full" />
+            </div>
           </TableCell>
           <TableCell>
             <Skeleton className="h-4 w-28" />

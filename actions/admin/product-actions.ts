@@ -1,7 +1,7 @@
 "use server";
 
 import { ProductWhereInput } from "@/generated/prisma/models";
-import { requireAdmin } from "@/lib/admin-auth";
+import { requireAdmin, requireRole } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 
 const PAGE_SIZE = 20;
@@ -16,7 +16,7 @@ export type AdminProductFilters = {
 };
 
 export async function getAdminProducts(filters: AdminProductFilters) {
-  await requireAdmin();
+  await requireRole(["ADMIN", "MODERATOR"]);
 
   const page = filters.page && filters.page > 0 ? filters.page : 1;
 
@@ -45,6 +45,9 @@ export async function getAdminProducts(filters: AdminProductFilters) {
         discountPercentage: true,
         unit: true,
         isAvailable: true,
+        isPopular: true,
+        isCombo: true,
+        isTopSelling: true,
         isBestDeal: true,
         priority: true,
         category: { select: { id: true, name: true } },
@@ -70,6 +73,9 @@ export async function getAdminProducts(filters: AdminProductFilters) {
       unit: p.unit,
       isAvailable: p.isAvailable,
       isBestDeal: p.isBestDeal,
+      isPopular: p.isPopular,
+      isCombo: p.isCombo,
+      isTopSelling: p.isTopSelling,
       category: p.category,
       image: p.images[0]?.url ?? null,
       slug: p.slug,
@@ -81,7 +87,7 @@ export async function getAdminProducts(filters: AdminProductFilters) {
   };
 }
 export async function getAdminProductStats() {
-  await requireAdmin();
+  await requireRole(["ADMIN", "MODERATOR"]);
 
   const [total, active, bestDeal] = await prisma.$transaction([
     prisma.product.count(),
@@ -93,7 +99,8 @@ export async function getAdminProductStats() {
 }
 
 export async function getAdminProductById(id: string) {
-  await requireAdmin();
+  await requireRole(["ADMIN", "MODERATOR"]);
+
   return prisma.product.findUnique({
     where: { id },
     include: {
@@ -103,7 +110,8 @@ export async function getAdminProductById(id: string) {
   });
 }
 export async function getAdminProductBySlug(slug: string) {
-  await requireAdmin();
+  await requireRole(["ADMIN", "MODERATOR"]);
+
   return prisma.product.findUnique({
     where: { slug },
     include: {
@@ -112,7 +120,6 @@ export async function getAdminProductBySlug(slug: string) {
     },
   });
 }
-
 export async function getAdminCategories() {
   await requireAdmin();
   return prisma.category.findMany({

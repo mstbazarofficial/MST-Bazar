@@ -8,6 +8,7 @@ const SPECIAL_FILTERS: Record<string, string> = {
   "best-deals": "Best Deals",
   "popular-products": "Popular Products",
   "combo-deals": "Combo Deals",
+  "top-selling": "Top Selling Products",
 };
 
 export async function generateStaticParams() {
@@ -69,6 +70,8 @@ export default async function ProductsPage({
         return product.isPopular; // Adjust to match your data schema
       case "combo-deals":
         return product.isCombo; // Adjust to match your data schema
+      case "top-selling":
+        return product.isTopSelling; // Adjust to match your data schema
       default:
         return true;
     }

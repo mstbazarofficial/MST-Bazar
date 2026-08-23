@@ -1,7 +1,6 @@
 // app/admin/orders/page.tsx
 import { getAdminUsers } from "@/actions/admin/user-actions";
 import { UsersPageClient } from "@/components/admin/users/users-page-client";
-import { requireAdmin } from "@/lib/admin-auth";
 
 type SearchParams = {
   search?: string;
@@ -15,8 +14,6 @@ export default async function AdminUsersPage({
 }: {
   searchParams: Promise<SearchParams>;
 }) {
-  await requireAdmin();
-
   const params = await searchParams;
   const filters = {
     search: params.search,

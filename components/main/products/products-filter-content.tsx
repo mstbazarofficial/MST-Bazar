@@ -25,6 +25,7 @@ const PRICE_MIN = 50;
 const PRICE_MAX = 2500;
 
 const SPECIAL_FILTERS = [
+  { slug: "top-selling", label: "Top Selling" },
   { slug: "best-deals", label: "Best Deals" },
   { slug: "popular-products", label: "Popular Products" },
   { slug: "combo-deals", label: "Combo Deals" },

@@ -2,7 +2,6 @@ import { DashboardHeader } from "@/components/dashboard/layout/dashboard-header"
 import { DashboardNav } from "@/components/dashboard/layout/dashboard-nav";
 import { QueryProvider } from "@/context/query-provider";
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: {
@@ -17,12 +16,6 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const authenticated = true;
-
-  if (!authenticated) {
-    redirect("/login");
-  }
-
   return (
     <QueryProvider>
       <div className="min-h-screen w-full bg-primary/5 flex flex-col">

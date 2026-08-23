@@ -53,9 +53,13 @@ export function ProductInfo({ product }: ProductInfoProps) {
     product;
 
   const hasDiscount = discountPercentage > 0;
-  const originalPrice = hasDiscount
-    ? Math.round(price / (1 - discountPercentage / 100))
-    : null;
+
+  // Calculate the discounted selling price from base price
+  const finalPrice = hasDiscount
+    ? Math.round(price * (1 - discountPercentage / 100))
+    : price;
+
+  const originalPrice = price;
 
   return (
     <div className="space-y-4">
@@ -78,17 +82,19 @@ export function ProductInfo({ product }: ProductInfoProps) {
 
       {/* Price */}
       <div className="flex flex-wrap items-end gap-x-3 gap-y-1 border-b border-border/70 pb-4">
+        {/* Current / Discounted Price */}
         <span className="text-xl font-bold text-primary-dark sm:text-2xl">
-          {formatTaka(price)}
+          {formatTaka(finalPrice)}
         </span>
 
-        {hasDiscount && originalPrice !== null && (
+        {/* Original Price & Discount Tag */}
+        {hasDiscount && (
           <div className="mb-1 flex items-center gap-2">
             <span className="text-base font-normal text-muted-foreground/70 line-through">
               {formatTaka(originalPrice)}
             </span>
             <span className="rounded-md bg-orange-600 px-1.5 py-0.5 text-[10px] font-bold text-white">
-              {discountPercentage}% OFF
+              {Math.round(discountPercentage)}% OFF
             </span>
           </div>
         )}

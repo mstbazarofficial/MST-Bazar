@@ -36,6 +36,7 @@ const productBaseSchema = z.object({
   isAvailable: z.boolean(),
   isPopular: z.boolean(),
   isCombo: z.boolean(),
+  isTopSelling: z.boolean(),
   priority: z.number().int().min(0, "Priority must be a non-negative integer"),
 
   categoryId: z.string().min(1, "Please select a category"),

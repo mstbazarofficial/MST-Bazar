@@ -81,6 +81,7 @@ export function ProductFormPage({
       isBestDeal: false,
       isPopular: false,
       isCombo: false,
+      isTopSelling: false,
       priority: 1,
 
       images: [],
@@ -583,6 +584,25 @@ export function ProductFormPage({
                       <FieldLabel className="mb-0">Popular</FieldLabel>
                       <FieldDescription>
                         Mark as popular product
+                      </FieldDescription>
+                    </div>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </Field>
+                )}
+              />
+              {/* Top Selling Switch */}
+              <Controller
+                name="isTopSelling"
+                control={control}
+                render={({ field }) => (
+                  <Field className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                    <div className="space-y-0.5">
+                      <FieldLabel className="mb-0">Top Selling</FieldLabel>
+                      <FieldDescription>
+                        Mark as top selling product
                       </FieldDescription>
                     </div>
                     <Switch

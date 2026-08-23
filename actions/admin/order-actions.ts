@@ -3,7 +3,7 @@
 
 import { OrderStatus } from "@/generated/prisma/enums";
 import { OrderWhereInput } from "@/generated/prisma/models";
-import { requireAdmin } from "@/lib/admin-auth";
+import { requireRole } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 
 const PAGE_SIZE = 20;
@@ -16,7 +16,7 @@ export interface AdminOrderFilters {
 }
 
 export async function getAdminOrders(filters: AdminOrderFilters) {
-  await requireAdmin();
+  await requireRole(["ADMIN", "MODERATOR"]);
 
   const page = filters.page && filters.page > 0 ? filters.page : 1;
 
@@ -139,7 +139,7 @@ export async function getAdminOrders(filters: AdminOrderFilters) {
 }
 
 export async function getAdminOrderStats() {
-  await requireAdmin();
+  await requireRole(["ADMIN", "MODERATOR"]);
 
   const [total, pending, delivered] = await prisma.$transaction([
     prisma.order.count(),
@@ -151,6 +151,8 @@ export async function getAdminOrderStats() {
 }
 
 export async function searchProductsForOrder(query: string) {
+  await requireRole(["ADMIN", "MODERATOR"]);
+
   if (!query || query.trim().length === 0) return [];
 
   const products = await prisma.product.findMany({

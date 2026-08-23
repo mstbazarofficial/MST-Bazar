@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 
-import { requireAdmin } from "@/lib/admin-auth"; // Adjust to your auth check path
+import { requireRole } from "@/lib/admin-auth"; // Adjust to your auth check path
 import { prisma } from "@/lib/prisma"; // Adjust to your Prisma instance path
 import { PaymentInput, paymentSchema } from "@/validation/payment.validation";
 
@@ -16,7 +16,7 @@ export async function addPayment({
   orderId: string;
   input: PaymentInput;
 }) {
-  await requireAdmin();
+  await requireRole(["ADMIN", "MODERATOR"]);
 
   try {
     const validatedData = paymentSchema.parse(input);
@@ -56,7 +56,7 @@ export async function updatePayment({
   paymentId: string;
   input: PaymentInput;
 }) {
-  await requireAdmin();
+  await requireRole(["ADMIN", "MODERATOR"]);
 
   try {
     const validatedData = paymentSchema.parse(input);
@@ -98,7 +98,7 @@ export async function deletePayment({
   orderId: string;
   paymentId: string;
 }) {
-  await requireAdmin();
+  await requireRole(["ADMIN", "MODERATOR"]);
 
   try {
     const deletedPayment = await prisma.payment.delete({

@@ -4,7 +4,6 @@ import {
   getAdminOrderStats,
 } from "@/actions/admin/order-actions";
 import { OrdersPageClient } from "@/components/admin/orders/orders-page-client";
-import { requireAdmin } from "@/lib/admin-auth";
 
 type SearchParams = {
   search?: string;
@@ -18,8 +17,6 @@ export default async function AdminOrdersPage({
 }: {
   searchParams: Promise<SearchParams>;
 }) {
-  await requireAdmin();
-
   const params = await searchParams;
   const filters = {
     search: params.search,

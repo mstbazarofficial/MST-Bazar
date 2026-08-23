@@ -5,7 +5,6 @@ export async function uploadToCloudinary(
   onProgress?: (progress: number) => void,
 ): Promise<{ secure_url: string; public_id: string }> {
   const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-  console.log("Cloudinary Cloud Name:", cloudName); // Debugging line
   if (!cloudName) throw new Error("Cloudinary cloud name is missing");
 
   return new Promise((resolve, reject) => {

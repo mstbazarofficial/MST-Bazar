@@ -12,22 +12,14 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import type {
-  CheckoutFormValues,
-  PaymentMethodType,
-} from "@/validation/checkout.validation";
-
-type ManualMethod = Exclude<PaymentMethodType, "cod">;
+import type { CheckoutFormValues } from "@/validation/checkout.validation";
 
 export function ManualPaymentFields() {
   const BKASH_NUMBER = process.env.NEXT_PUBLIC_BKASH_NUMBER;
   const NAGAD_NUMBER = process.env.NEXT_PUBLIC_NAGAD_NUMBER;
   const ROCKET_NUMBER = process.env.NEXT_PUBLIC_ROCKET_NUMBER;
-  console.log("BKASH_NUMBER:", BKASH_NUMBER);
-  console.log("NAGAD_NUMBER:", NAGAD_NUMBER);
-  console.log("ROCKET_NUMBER:", typeof ROCKET_NUMBER);
   const METHOD_CONFIG: Record<
-    ManualMethod,
+    string,
     {
       name: string;
       number: string;
@@ -69,7 +61,7 @@ export function ManualPaymentFields() {
 
   if (selectedMethod === "cod") return null;
 
-  const config = METHOD_CONFIG[selectedMethod as ManualMethod];
+  const config = METHOD_CONFIG[selectedMethod];
 
   const handleCopyNumber = async () => {
     try {

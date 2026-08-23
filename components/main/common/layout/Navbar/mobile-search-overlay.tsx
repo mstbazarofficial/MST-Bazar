@@ -9,11 +9,8 @@ interface MobileSearchOverlayProps {
   onClose: () => void;
 }
 
-// Rendered instead of the normal navbar row (absolute inset-0 inside a
-// `relative` header), so it visually covers the logo/cart/avatar row
-// until the user taps the close icon.
 export function MobileSearchOverlay({ onClose }: MobileSearchOverlayProps) {
-  const { query, setQuery, results, setIsOpen, containerRef } =
+  const { query, setQuery, results, isOpen, setIsOpen, containerRef } =
     useProductSearch();
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -22,6 +19,11 @@ export function MobileSearchOverlay({ onClose }: MobileSearchOverlayProps) {
     inputRef.current?.focus();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleNavigate = () => {
+    setIsOpen(false);
+    onClose(); // Closes the mobile overlay on product click
+  };
 
   return (
     <div
@@ -34,8 +36,11 @@ export function MobileSearchOverlay({ onClose }: MobileSearchOverlayProps) {
           type="search"
           placeholder="Search for products..."
           value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          // Added [&::-webkit-search-cancel-button]:appearance-none to hide the native cross
+          onFocus={() => setIsOpen(true)}
+          onChange={(event) => {
+            setQuery(event.target.value);
+            setIsOpen(true);
+          }}
           className="flex h-10 w-full rounded-md border-0 bg-muted px-5 pr-12 text-sm text-foreground shadow-none outline-none placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-primary [&::-webkit-search-cancel-button]:appearance-none"
         />
         <button
@@ -46,11 +51,14 @@ export function MobileSearchOverlay({ onClose }: MobileSearchOverlayProps) {
         >
           <X className="h-5 w-5" strokeWidth={2} />
         </button>
-        <SearchResultsDropdown
-          onNavigate={() => setIsOpen(false)}
-          query={query}
-          searchResults={results}
-        />
+
+        {isOpen && (
+          <SearchResultsDropdown
+            onNavigate={handleNavigate}
+            query={query}
+            searchResults={results}
+          />
+        )}
       </div>
     </div>
   );

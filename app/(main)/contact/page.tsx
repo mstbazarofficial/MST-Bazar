@@ -10,6 +10,16 @@ export const metadata: Metadata = {
   },
   description:
     "Contact MST Bazar for any inquiries or support. We're here to help with fresh grocery products and honey delivery across Bangladesh.",
+  keywords: [
+    "MST Bazar",
+    "Contact Us",
+    "Fresh Grocery Products",
+    "Honey in Bangladesh",
+    "Customer Support",
+    "Inquiries",
+    "Online Grocery Shopping",
+    "Nationwide Delivery",
+  ],
 };
 export default function ContactPage() {
   return (

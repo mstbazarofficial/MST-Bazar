@@ -13,6 +13,16 @@ export const metadata: Metadata = {
   title: "Terms & Conditions",
   description:
     "Read our Terms & Conditions to understand the rules and regulations for using MST Bazar's website and services.",
+  keywords: [
+    "MST Bazar",
+    "Terms & Conditions",
+    "User Agreement",
+    "Website Rules",
+    "Service Regulations",
+    "Customer Support",
+    "Online Grocery Shopping",
+    "Nationwide Delivery",
+  ],
 };
 
 // Mock data that can later be replaced with an API call from the backend

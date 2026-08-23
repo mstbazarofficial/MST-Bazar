@@ -21,9 +21,9 @@ export function HeroSection() {
     <section className="site-container section-y w-full ">
       {/* Card Container */}
       <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-[linear-gradient(110deg,#fcfde3_0%,#dcf1df_50%,#c8eacc_100%)]">
-        <div className="grid items-center gap-6 px-4 py-6 sm:px-8 sm:py-12 lg:grid-cols-2 lg:gap-12 lg:py-16">
+        <div className="grid items-center gap-6 px-4 py-6 sm:px-8 sm:py-12 lg:grid-cols-2 lg:py-16">
           {/* Swiper & Backdrop Column */}
-          <div className="order-first flex w-full items-center justify-center lg:order-last relative lg:top-4 lg:right-2 z-10">
+          <div className="order-first flex w-full max-lg:max-w-lg mx-auto items-center justify-center lg:order-last relative lg:top-4 lg:right-2 z-10">
             {/* Responsive Organic Backdrop Shapes */}
             <div className="absolute hidden sm:block w-48 h-48 lg:w-60 lg:h-60 bg-[#bce3c4] rounded-full right-4 bottom-8 -z-10 pointer-events-none" />
             <div className="absolute hidden sm:block w-32 h-32 lg:w-40 lg:h-40 bg-[#bce3c4] rounded-full left-4 bottom-8 -z-10 pointer-events-none" />
@@ -43,18 +43,18 @@ export function HeroSection() {
                 delay: 5000,
                 disableOnInteraction: false,
               }}
-              className="heroSwiper w-full max-w-55 xs:max-w-[260px] sm:max-w-md lg:max-w-none mx-auto"
+              className="heroSwiper w-full max-w-75 xs:max-w-[260px] sm:max-w-200 lg:max-w-none mx-auto"
             >
               {slides.map((image, index) => (
                 <SwiperSlide key={index}>
-                  <div className="relative w-full aspect-square sm:aspect-16/10">
+                  <div className="relative w-full aspect-16/10">
                     <Image
                       src={image}
                       alt="Daily Fresh Organic Vegetables Basket"
                       fill
                       sizes="(max-width: 640px) 260px, (max-width: 1024px) 50vw, 600px"
                       priority={index === 0}
-                      className="object-contain drop-shadow-md sm:drop-shadow-xl"
+                      className="object-contain object-center drop-shadow-md sm:drop-shadow-xl"
                     />
                   </div>
                 </SwiperSlide>
@@ -68,15 +68,17 @@ export function HeroSection() {
               Fresh & Healthy
             </span>
 
-            <h1 className="mt-3 sm:mt-4 text-2xl font-bold leading-tight tracking-tight sm:text-4xl lg:text-5xl">
-              <span className="text-foreground">Daily Fresh Products</span>
+            <h1 className="mt-3 sm:mt-4 text-2xl font-bold leading-tight tracking-tight sm:text-4xl xl:text-5xl">
+              <span className="text-foreground">
+                Fresh Grocery Products, Honey & Combo Deals
+              </span>
               <br />
-              <span className="text-primary">Delivered to Your Doorstep</span>
+              <span className="text-primary">Delivered Across Bangladesh</span>
             </h1>
 
             <p className="mt-2 sm:mt-3 max-w-md text-xs sm:text-base text-muted-foreground">
-              Best quality grocery items at affordable prices. Fast delivery
-              across Bangladesh.
+              Quality grocery essentials, black seed, and oils delivered to your
+              doorstep at affordable prices.
             </p>
 
             <div className="mt-5 sm:mt-6 flex w-full max-w-xs flex-col gap-2.5 sm:gap-3 sm:max-w-none sm:w-auto sm:flex-row">

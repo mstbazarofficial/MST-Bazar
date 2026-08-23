@@ -1,10 +1,15 @@
+import { SectionHeading } from "@/components/main/common/layout/section-heading";
 import { ContactFormSection } from "@/components/main/contact/ContactFormSection";
 import { ContactInfoSection } from "@/components/main/contact/ContactInfoSection";
 import { FAQSection } from "@/components/main/contact/FAQSection";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contact Us",
+  title: {
+    absolute: "Contact Us | Fresh Grocery Products & Honey in Bangladesh",
+  },
+  description:
+    "Contact MST Bazar for any inquiries or support. We're here to help with fresh grocery products and honey delivery across Bangladesh.",
 };
 export default function ContactPage() {
   return (
@@ -16,6 +21,10 @@ export default function ContactPage() {
         <span className="text-muted-foreground">›</span>
         <span className="text-foreground font-medium">Contact Us</span>
       </div>
+
+      <h1 className="mb-6 text-2xl font-bold tracking-tight text-foreground md:text-3xl">
+        <SectionHeading title="Contact Us" highlightPositions={[1, 2]} />
+      </h1>
 
       {/* Main Content (Contact Info & Form) */}
       <div className="bg-card rounded-md shadow-sm border border-border p-5 md:p-10">

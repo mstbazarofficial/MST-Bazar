@@ -32,8 +32,8 @@ export function AboutHero() {
         <div className="max-w-xl lg:max-w-xl">
           <div className="bg-white/90 sm:bg-white/85 backdrop-blur-md p-5 sm:p-6 lg:p-7 rounded-2xl border border-white/60 shadow-lg space-y-4">
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#111827] leading-tight tracking-tight text-left">
-              Bringing Nature’s Best <br />
-              to <span className="text-[#0B5D2A]">Every Bangladeshi Home</span>
+              MST Bazar: Trusted Natural Quality Products <br />
+              <span className="text-[#0B5D2A]">Delivered All Bangladesh</span>
             </h1>
 
             <p className="text-xs sm:text-sm text-gray-700 font-normal leading-relaxed text-left">

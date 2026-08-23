@@ -33,6 +33,34 @@ const staticLinks = [
   { label: "Contact", href: "/contact" },
 ];
 
+const staticCategoriesLink = [
+  {
+    label: "All Products",
+    href: "/products",
+    icon: ShoppingBag,
+  },
+  {
+    label: "Top Selling",
+    href: "/products/top-selling",
+    icon: ShoppingBag,
+  },
+  {
+    label: "Best Deals",
+    href: "/products/best-deals",
+    icon: ShoppingBag,
+  },
+  {
+    label: "Popular Products",
+    href: "/products/popular-products",
+    icon: ShoppingBag,
+  },
+  {
+    label: "Combo Deals",
+    href: "/products/combo-deals",
+    icon: ShoppingBag,
+  },
+];
+
 export function MobileMenu({
   trigger,
   triggerClassName = "",
@@ -165,24 +193,26 @@ export function MobileMenu({
               </p>
               <ul className="flex flex-col gap-0.5">
                 {/* All Products link: Hidden on md screens */}
-                <li className="md:hidden">
-                  <SheetClose
-                    nativeButton={false}
-                    render={
-                      <Link
-                        href="/products"
-                        className={`flex items-center gap-2.5 rounded-md px-3 py-2.5 text-sm font-semibold transition-colors hover:bg-accent hover:text-accent-foreground ${
-                          pathname === "/products"
-                            ? "bg-accent text-accent-foreground"
-                            : "text-foreground"
-                        }`}
-                      >
-                        <ShoppingBag className="h-4 w-4 shrink-0 text-muted-foreground" />
-                        <span>All Products</span>
-                      </Link>
-                    }
-                  />
-                </li>
+                {staticCategoriesLink.map((link, idx) => (
+                  <li key={idx} className="md:hidden">
+                    <SheetClose
+                      nativeButton={false}
+                      render={
+                        <Link
+                          href={link.href}
+                          className={`flex items-center gap-2.5 rounded-md px-3 py-2.5 text-sm font-semibold transition-colors hover:bg-accent hover:text-accent-foreground ${
+                            pathname === link.href
+                              ? "bg-accent text-accent-foreground"
+                              : "text-foreground"
+                          }`}
+                        >
+                          <ShoppingBag className="h-4 w-4 shrink-0 text-muted-foreground" />
+                          <span>{link.label}</span>
+                        </Link>
+                      }
+                    />
+                  </li>
+                ))}
 
                 {categories.map((category) => {
                   const href = `/products/${category.slug}`;

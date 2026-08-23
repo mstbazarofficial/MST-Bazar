@@ -3,11 +3,21 @@ import Link from "next/link";
 import { FaFacebook, FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
 
 export default function Footer() {
+  // Contact Information from Environment Variables
+  const contactNumber = process.env.NEXT_PUBLIC_CONTACT_NUMBER;
+  const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL;
+  const contactAddress = process.env.NEXT_PUBLIC_CONTACT_ADDRESS;
+  const contactWhatsApp = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
+  // Social Media URLs
+  const facebookUrl = process.env.NEXT_PUBLIC_FACEBOOK_URL;
+  const instagramUrl = process.env.NEXT_PUBLIC_INSTAGRAM_URL;
+  const youtubeUrl = process.env.NEXT_PUBLIC_YOUTUBE_URL;
+
   return (
     <footer className="w-full bg-[#123B2A] border-t border-border text-white pt-6">
       <div className="site-container section-y pb-8">
         {/* Main Footer Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 lg:gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 lg:gap-6">
           {/* Column 1: Brand Info & Socials */}
           <div className="space-y-4">
             {/* Brand Logo */}
@@ -31,7 +41,7 @@ export default function Footer() {
             {/* Social Icons */}
             <div className="flex items-center gap-2 pt-1">
               <Link
-                href="https://facebook.com"
+                href={`${facebookUrl}`}
                 target="_blank"
                 rel="noreferrer"
                 className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 hover:text-amber-300 flex items-center justify-center text-white transition-all"
@@ -40,7 +50,7 @@ export default function Footer() {
                 <FaFacebook className="w-4 h-4" />
               </Link>
               <Link
-                href="https://instagram.com"
+                href={`${instagramUrl}`}
                 target="_blank"
                 rel="noreferrer"
                 className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 hover:text-amber-300 flex items-center justify-center text-white transition-all"
@@ -49,7 +59,7 @@ export default function Footer() {
                 <FaInstagram className="w-4 h-4" />
               </Link>
               <Link
-                href="https://youtube.com"
+                href={`${youtubeUrl}`}
                 target="_blank"
                 rel="noreferrer"
                 className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 hover:text-amber-300 flex items-center justify-center text-white transition-all"
@@ -57,23 +67,14 @@ export default function Footer() {
               >
                 <FaYoutube className="w-4 h-4" />
               </Link>
-              <Link
-                href="https://twitter.com"
-                target="_blank"
-                rel="noreferrer"
-                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 hover:text-amber-300 flex items-center justify-center text-white transition-all"
-                aria-label="Twitter"
-              >
-                <FaTwitter className="w-4 h-4" />
-              </Link>
             </div>
           </div>
 
           {/* Column 2: Quick Links */}
           <div className="space-y-3">
-            <h4 className="text-sm font-extrabold text-white tracking-tight">
+            <h3 className="text-sm font-extrabold text-white tracking-tight">
               Quick Links
-            </h4>
+            </h3>
             <ul className="space-y-2 text-xs font-medium text-white/80">
               <li>
                 <Link
@@ -120,9 +121,9 @@ export default function Footer() {
 
           {/* Column 3: Customer Care */}
           <div className="space-y-3">
-            <h4 className="text-sm font-extrabold text-white tracking-tight">
+            <h3 className="text-sm font-extrabold text-white tracking-tight">
               Customer Care
-            </h4>
+            </h3>
             <ul className="space-y-2 text-xs font-medium text-white/80">
               <li>
                 <Link
@@ -161,9 +162,9 @@ export default function Footer() {
 
           {/* Column 4: Company */}
           <div className="space-y-3">
-            <h4 className="text-sm font-extrabold text-white tracking-tight">
+            <h3 className="text-sm font-extrabold text-white tracking-tight">
               Company
-            </h4>
+            </h3>
             <ul className="space-y-2 text-xs font-medium text-white/80">
               <li>
                 <Link
@@ -191,9 +192,46 @@ export default function Footer() {
               </li>
             </ul>
           </div>
+
+          {/* Column 5: Address */}
+          <div className="space-y-3 col-span-full md:col-span-1 lg:col-span-1 justify-self-center md:justify-self-start">
+            <h3 className="text-sm font-extrabold text-white tracking-tight">
+              Contact Information
+            </h3>
+            <address className="not-italic space-y-2 text-xs font-medium text-white/80">
+              <p>{contactAddress}</p>
+              <p>
+                Phone:{" "}
+                <a
+                  href={`tel:${contactNumber}`}
+                  className="hover:text-amber-300 transition-colors"
+                >
+                  {contactNumber}
+                </a>
+              </p>
+              <p>
+                Email:{" "}
+                <a
+                  href={`mailto:${contactEmail}`}
+                  className="hover:text-amber-300 transition-colors"
+                >
+                  {contactEmail}
+                </a>
+              </p>
+              <p>
+                <a
+                  href={`https://wa.me/${contactWhatsApp}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-amber-300 transition-colors"
+                >
+                  Chat on WhatsApp
+                </a>
+              </p>
+            </address>
+          </div>
         </div>
       </div>
-
       {/* Bottom Bar */}
       <div className="bg-[#0F2E1F] py-4 border-t border-white/10">
         <div className="site-container flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-medium text-white/70">

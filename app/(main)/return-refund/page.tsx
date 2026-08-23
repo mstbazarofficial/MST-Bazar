@@ -77,8 +77,8 @@ const refundPolicyData = {
     title: "Need Help?",
     description:
       "If you have any questions about our return and refund policy, please contact us.",
-    email: "support@mstbazar.com",
-    phone: "+880 1234 567 890",
+    email: process.env.NEXT_PUBLIC_CONTACT_EMAIL,
+    phone: process.env.NEXT_PUBLIC_CONTACT_NUMBER,
   },
 };
 

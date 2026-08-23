@@ -34,7 +34,6 @@ export default async function Home() {
       <BestDealsSection products={bestDeals} />
       <PopularProductsSection products={popularProducts} />
       <ComboProductsSection products={comboProducts} />
-
       <CtaBanner />
       <HomeTrustSection />
       <FaqSection />

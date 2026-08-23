@@ -17,8 +17,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { FaWhatsapp } from "react-icons/fa";
 
-const DEFAULT_WHATSAPP_NUMBER = "8801568409794";
-const DEFAULT_PHONE_NUMBER = "+8801568409794";
+const DEFAULT_WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
+const DEFAULT_PHONE_NUMBER = process.env.NEXT_PUBLIC_CONTACT_NUMBER;
 
 type PurchaseProduct = {
   id: string;
@@ -132,7 +132,10 @@ export function ProductPurchasePanel({
   };
 
   const whatsappHref = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-    `Hello, I would like to order "${product.title}" (Qty: ${currentQty}).`,
+    `Hello MST Bazar..!!,
+I would like to place an order for this product.
+Qty: ${currentQty}
+Product Link: ${process.env.NEXT_PUBLIC_APP_URL}/product/${product.slug}`,
   )}`;
 
   return (
@@ -203,20 +206,22 @@ export function ProductPurchasePanel({
         </div>
 
         <div className="flex gap-3 w-full">
-          <Link
+          <a
+            target="_blank"
             href={whatsappHref}
             className="flex items-center justify-center h-11 bg-blue-500 hover:bg-blue-600 text-white font-extrabold text-xs sm:text-sm rounded-md gap-2 shadow-xs transition-all active:scale-98 cursor-pointer flex-1"
           >
             <FaWhatsapp className="w-4 h-4" />
             <span> Whatsapp</span>
-          </Link>
-          <Link
+          </a>
+          <a
+            target="_blank"
             href={`tel:${phoneNumber}`}
             className="flex items-center justify-center h-11 bg-green-600 hover:bg-green-700 text-white font-extrabold text-xs sm:text-sm rounded-md gap-2 shadow-xs transition-all active:scale-98 cursor-pointer flex-1"
           >
             <Phone className="w-4 h-4" />
             <span>Call to Order</span>
-          </Link>
+          </a>
         </div>
       </div>
     </div>

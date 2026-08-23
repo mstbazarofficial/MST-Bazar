@@ -74,8 +74,8 @@ const privacyPolicyData = {
     title: "Privacy Concerns?",
     description:
       "If you have any questions or concerns about this Privacy Policy or how we handle your data, please reach out to us.",
-    email: "privacy@mstbazar.com",
-    phone: "+880 1234 567 890",
+    email: process.env.NEXT_PUBLIC_CONTACT_EMAIL,
+    phone: process.env.NEXT_PUBLIC_CONTACT_NUMBER,
   },
 };
 

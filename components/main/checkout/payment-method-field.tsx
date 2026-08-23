@@ -35,13 +35,6 @@ const METHOD_COPY: Record<
     badgeClass:
       "bg-orange-500/10 text-orange-600 dark:text-orange-400 font-bold",
   },
-  rocket: {
-    title: "Rocket",
-    subtitle: "Pay securely with Rocket",
-    badgeText: "Rocket",
-    badgeClass:
-      "bg-purple-500/10 text-purple-600 dark:text-purple-400 font-bold italic",
-  },
 };
 
 export function PaymentMethodField() {

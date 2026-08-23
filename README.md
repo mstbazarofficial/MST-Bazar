@@ -41,3 +41,27 @@ npm install
 ```
 
 ### If `prisma/schema.prisma` changed
+
+# .env.local
+
+NEXT_PUBLIC_CONTACT_NUMBER="+8801581172773"
+
+NEXT_PUBLIC_WHATSAPP_NUMBER="+8801581172773"
+
+NEXT_PUBLIC_CONTACT_EMAIL="mstbazarofficial@gmail.com"
+
+NEXT_PUBLIC_CONTACT_ADDRESS="Aftab nagar,Dhaka"
+
+NEXT_PUBLIC_BKASH_NUMBER="01850347720"
+
+NEXT_PUBLIC_ROCKET_NUMBER=""
+
+NEXT_PUBLIC_NAGAD_NUMBER="01850347720"
+
+NEXT_PUBLIC_FACEBOOK_URL="https://www.facebook.com/share/1PwdtnMRjc/"
+
+NEXT_PUBLIC_INSTAGRAM_URL="https://www.instagram.com/mstbazar?igsi=MXE4NTRqYnBqNnJkOA=="
+
+NEXT_PUBLIC_YOUTUBE_URL="https://youtube.com/@mstbazar?si=O-g8hhp1NYgiuW0t"
+
+NEXT_PUBLIC_APP_URL=http://localhost:3000

@@ -13,6 +13,16 @@ export const metadata: Metadata = {
   },
   description:
     "Shop fresh grocery products, honey, black seed, oils, and combo deals from MST Bazar. Quality essentials delivered across Bangladesh.",
+  keywords: [
+    "MST Bazar",
+    "Fresh Grocery Products",
+    "Honey in Bangladesh",
+    "Organic Products",
+    "Combo Deals",
+    "Quality Essentials",
+    "Online Grocery Shopping",
+    "Nationwide Delivery",
+  ],
 };
 
 export default async function RootLayout({

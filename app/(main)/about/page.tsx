@@ -17,6 +17,15 @@ export const metadata: Metadata = {
   },
   description:
     "Learn how MST Bazar sourcing trusted, natural grocery products and serves customers doorstep with quality, care, easy ordering, and delivery across Bangladesh.",
+  keywords: [
+    "MST Bazar",
+    "About MST Bazar",
+    "Trusted Products",
+    "Natural Grocery Products",
+    "Quality Essentials",
+    "Easy Ordering",
+    "Nationwide Delivery",
+  ],
 };
 export default function AboutPage() {
   return (

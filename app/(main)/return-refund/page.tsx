@@ -12,6 +12,16 @@ export const metadata = {
   title: "Return & Refund Policy",
   description:
     "Read our Return & Refund Policy to understand how we handle returns, refunds, and exchanges at MST Bazar.",
+  keywords: [
+    "MST Bazar",
+    "Return & Refund Policy",
+    "Returns",
+    "Refunds",
+    "Exchanges",
+    "Customer Support",
+    "Online Grocery Shopping",
+    "Nationwide Delivery",
+  ],
 };
 
 // Mock data that can later be replaced with an API call from the backend

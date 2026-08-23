@@ -11,6 +11,16 @@ const siteUrl =
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
+  keywords: [
+    "MST Bazar",
+    "Fresh Grocery Products",
+    "Honey in Bangladesh",
+    "Organic Products",
+    "Combo Deals",
+    "Quality Essentials",
+    "Online Grocery Shopping",
+    "Nationwide Delivery",
+  ],
   openGraph: {
     title: "MST Bazar | Fresh Grocery Products & Honey in Bangladesh",
     description:

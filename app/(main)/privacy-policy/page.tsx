@@ -6,6 +6,14 @@ export const metadata = {
   title: "Privacy Policy",
   description:
     "Read our Privacy Policy to understand how we collect, use, and protect your personal information at MST Bazar.",
+  keywords: [
+    "MST Bazar",
+    "Privacy Policy",
+    "Data Protection",
+    "Personal Information",
+    "Online Grocery Shopping",
+    "Nationwide Delivery",
+  ],
 };
 
 // Mock data that can later be replaced with an API call from the backend

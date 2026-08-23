@@ -38,7 +38,7 @@ export function CategoryNav() {
                 className="flex cursor-pointer items-center gap-2 whitespace-nowrap transition-opacity hover:text-primary-yellow"
               >
                 <Menu className="h-4 w-4" />
-                <span>All Categories</span>
+                <span className="hidden xl:inline">All Categories</span>
               </button>
             }
           />
@@ -53,7 +53,7 @@ export function CategoryNav() {
               </Link>
             </li>
           ))}
-          {categories.slice(0, 6).map((category) => (
+          {categories.slice(0, 5).map((category) => (
             <li key={category.id} className="shrink-0">
               <Link
                 href={`/products/${category.slug}`}

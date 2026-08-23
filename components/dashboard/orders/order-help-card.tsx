@@ -1,10 +1,8 @@
 import { MessageCircle, Phone } from "lucide-react";
 
-const SUPPORT_PHONE = "+880 1XXX-XXXXXX"; // ← replace with your number
+const SUPPORT_PHONE = process.env.NEXT_PUBLIC_CONTACT_NUMBER; // ← replace with your number
 
 export function OrderHelpCard() {
-  const tel = SUPPORT_PHONE.replace(/\s|-/g, "");
-
   return (
     <div className="bg-card border border-border rounded-2xl shadow-xs overflow-hidden">
       <div className="px-5 py-4 border-b border-border/60 bg-muted/30">
@@ -16,7 +14,7 @@ export function OrderHelpCard() {
 
       <div className="px-5 py-4 flex flex-col gap-3">
         <a
-          href={`tel:${tel}`}
+          href={`tel:${SUPPORT_PHONE}`}
           className="flex items-center gap-3 p-3 rounded-xl border border-border hover:border-primary/40 hover:bg-primary/5 transition-colors group"
         >
           <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/15 transition-colors">
@@ -29,7 +27,7 @@ export function OrderHelpCard() {
         </a>
 
         <a
-          href={`https://wa.me/${tel.replace("+", "")}`}
+          href={`https://wa.me/${SUPPORT_PHONE}`}
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-3 p-3 rounded-xl border border-border hover:border-emerald-400/50 hover:bg-emerald-50/50 transition-colors group"

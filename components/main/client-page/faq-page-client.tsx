@@ -85,8 +85,8 @@ const faqData = {
     title: "Still Have Questions?",
     description:
       "Can’t find the answer you’re looking for? Our customer care team is ready to help you every day.",
-    email: "support@mstbazar.com",
-    phone: "+880 1234 567 890",
+    email: process.env.NEXT_PUBLIC_CONTACT_EMAIL,
+    phone: process.env.NEXT_PUBLIC_CONTACT_NUMBER,
   },
 };
 

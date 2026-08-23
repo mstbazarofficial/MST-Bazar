@@ -7,26 +7,26 @@ export function ContactInfoSection() {
     {
       icon: Phone,
       title: "Phone",
-      details: "+880 1234 56789",
+      details: process.env.NEXT_PUBLIC_CONTACT_NUMBER,
       sub: "(10 AM - 8 PM, Sat - Thu)",
     },
     {
       icon: Mail,
       title: "Email",
-      details: "support@mstbazar.com",
+      details: process.env.NEXT_PUBLIC_CONTACT_EMAIL,
       sub: "We reply within 24 hours",
     },
     {
       icon: MessageCircle,
       title: "WhatsApp",
-      details: "+880 1234 56789",
+      details: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER,
       sub: "(10 AM - 8 PM, Sat - Thu)",
     },
     {
       icon: MapPin,
       title: "Our Location",
-      details: "House 12, Road 5, Dhanmondi",
-      sub: "Dhaka - 1205, Bangladesh",
+      details: process.env.NEXT_PUBLIC_CONTACT_ADDRESS,
+      sub: "Dhaka, Bangladesh",
     },
   ];
 

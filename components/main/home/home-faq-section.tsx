@@ -69,14 +69,14 @@ export default function FaqSection() {
             payments at MST Bazar. If you need further assistance, feel free to
             reach out to our support team.
           </p>
-          <div className="w-full max-w-xs mx-auto pt-2">
+          <div className="relative w-full max-w-xs aspect-square mx-auto pt-2">
             <Image
               src="/assets/faq.svg"
               alt="Frequently Asked Questions"
-              width={320}
-              height={260}
-              className="w-full  object-contain"
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 400px"
               priority
+              className="w-full  object-contain"
             />
           </div>
         </div>

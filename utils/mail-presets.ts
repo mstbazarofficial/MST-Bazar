@@ -10,14 +10,12 @@ export type OrderItem = {
 export async function sendEmailVerification({
   email,
   name,
-  token,
+  url,
 }: {
   email: string;
   name?: string;
-  token: string;
+  url: string;
 }) {
-  const verifyUrl = `${process.env.NEXT_PUBLIC_APP_URL}/verify-email?token=${token}`;
-
   return sendEmail({
     to: email,
     subject: "Verify your email address",
@@ -28,7 +26,7 @@ export async function sendEmailVerification({
         <p style="color: #475569; font-size: 15px; line-height: 1.5;">Thank you for registering. Please confirm your email address by clicking the button below:</p>
         
         <div style="margin: 28px 0;">
-          <a href="${verifyUrl}" style="background-color: #2563eb; color: #ffffff; padding: 12px 24px; font-weight: 600; border-radius: 8px; text-decoration: none; display: inline-block;">
+          <a href="${url}" style="background-color: #2563eb; color: #ffffff; padding: 12px 24px; font-weight: 600; border-radius: 8px; text-decoration: none; display: inline-block;">
             Verify Email Address
           </a>
         </div>
@@ -42,13 +40,11 @@ export async function sendEmailVerification({
 // 2. Forgot Password Email
 export async function sendPasswordResetEmail({
   email,
-  token,
+  url,
 }: {
   email: string;
-  token: string;
+  url: string;
 }) {
-  const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${token}`;
-
   return sendEmail({
     to: email,
     subject: "Reset your password",
@@ -58,7 +54,7 @@ export async function sendPasswordResetEmail({
         <p style="color: #475569; font-size: 15px; line-height: 1.5;">We received a request to reset your account password. Click the button below to set a new password:</p>
         
         <div style="margin: 28px 0;">
-          <a href="${resetUrl}" style="background-color: #2563eb; color: #ffffff; padding: 12px 24px; font-weight: 600; border-radius: 8px; text-decoration: none; display: inline-block;">
+          <a href="${url}" style="background-color: #2563eb; color: #ffffff; padding: 12px 24px; font-weight: 600; border-radius: 8px; text-decoration: none; display: inline-block;">
             Reset Password
           </a>
         </div>

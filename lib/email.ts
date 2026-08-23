@@ -27,8 +27,6 @@ export async function sendEmail({
   const recipients: EmailRecipient[] =
     typeof to === "string" ? [{ email: to }] : to;
 
-  console.log("Recipients:", recipients);
-
   const payload: Record<string, any> = {
     sender: {
       name: process.env.SENDER_NAME,

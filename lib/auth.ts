@@ -42,11 +42,11 @@ export const auth = betterAuth({
     requireEmailVerification: true, // Users must verify email to login
     autoSignIn: false, // Don't sign in automatically after signup
     revokeSessionsOnPasswordReset: true,
-    sendResetPassword: async ({ user, url, token }, request) => {
+    sendResetPassword: async ({ user, url }, request) => {
       if (process.env.ENABLE_EMAILS === "true") {
         sendPasswordResetEmail({
           email: user.email,
-          token: token,
+          url: url,
         }).catch((emailError) => {
           console.error("Password reset email failed:", emailError);
         });
@@ -57,14 +57,13 @@ export const auth = betterAuth({
   },
   emailVerification: {
     sendOnSignUp: true, // Send verification email on signup
-    sendOnSignIn: true, // Send verification email if user tries to login unverified
     autoSignInAfterVerification: true, // Auto sign in after verification
-    sendVerificationEmail: async ({ user, url, token }, request) => {
+    sendVerificationEmail: async ({ user, url }, request) => {
       if (process.env.ENABLE_EMAILS === "true") {
         sendEmailVerification({
           email: user.email,
           name: user.name || undefined,
-          token: token,
+          url,
         }).catch((emailError) => {
           console.error("Email verification email failed:", emailError);
         });

@@ -8,11 +8,10 @@ import { cn } from "@/lib/utils";
 import {
   PAYMENT_METHODS,
   type CheckoutFormValues,
-  type PaymentMethodType,
 } from "@/validation/checkout.validation";
 
 const METHOD_COPY: Record<
-  PaymentMethodType,
+  string,
   { title: string; subtitle: string; badgeText: string; badgeClass: string }
 > = {
   cod: {

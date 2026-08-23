@@ -22,6 +22,7 @@ export type ProductDTO = {
   isCombo: boolean;
   isTopSelling: boolean;
   categoryId: string;
+  updatedAt: Date;
   category: {
     id: string;
     name: string;
@@ -86,6 +87,7 @@ export const getAllProducts = unstable_cache(
         isPopular: true,
         isCombo: true,
         isTopSelling: true,
+        updatedAt: true,
       },
       orderBy: [{ priority: "asc" }, { createdAt: "desc" }],
     });
@@ -161,6 +163,7 @@ export const getRelatedProducts = (
           isPopular: true,
           isCombo: true,
           isTopSelling: true,
+          updatedAt: true,
         },
 
         orderBy: [{ priority: "asc" }, { title: "asc" }],

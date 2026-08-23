@@ -8,8 +8,7 @@ export function PopularProductsSection({
   products: ProductDTO[];
 }) {
   return (
-    // Full-bleed section using your theme's soft green accent background token
-    <section id="featured" className="w-full bg-muted py-8 sm:py-12">
+    <section id="featured" className="section-y">
       <div className="site-container">
         <SectionHeading
           rightElement={

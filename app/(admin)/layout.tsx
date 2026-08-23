@@ -10,6 +10,10 @@ export const metadata: Metadata = {
     default: "Dashboard | MST Bazar Admin",
   },
   description: "MST Shop administration panel",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default async function AdminLayout({

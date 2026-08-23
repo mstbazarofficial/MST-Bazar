@@ -1,16 +1,16 @@
 "use client";
 
+import { useCategories } from "@/context/catalog-provider";
 import { Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MobileMenu } from "./mobile-menu";
-import { useCategories } from "@/context/catalog-provider";
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
-  { label: "Checkout", href: "/checkout" },
-  { label: "All Products", href: "/products" },
+  { label: "contact", href: "/contact" },
+  { label: "Products", href: "/products" },
 ] as const;
 
 export function CategoryNav() {

@@ -24,7 +24,7 @@ export function TopSellingProductCard({
   return (
     <div
       className={cn(
-        "group relative flex items-center gap-3 sm:gap-5 rounded-2xl border border-border/60 hover:border-primary/60 p-3.5 sm:p-4 shadow-xs hover:shadow-md transition-all duration-300",
+        "group relative flex items-center gap-3 sm:gap-5 bg-card rounded-2xl border border-border/60 hover:border-primary/60 p-3.5 sm:p-4 shadow-xs hover:shadow-md transition-all duration-300",
         className,
       )}
     >

@@ -1,4 +1,3 @@
-// src/components/admin/layout/app-sidebar.tsx  (only the header block changes)
 "use client";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -35,8 +34,12 @@ async function handleLogout() {
 
 export function AppSidebar() {
   const pathname = usePathname();
-  const { state } = useSidebar();
+  const { state, setOpenMobile } = useSidebar();
   const isCollapsed = state === "collapsed";
+
+  const handleMobileNavClick = () => {
+    setOpenMobile(false);
+  };
 
   return (
     <Sidebar collapsible="icon" variant="sidebar">
@@ -48,11 +51,12 @@ export function AppSidebar() {
                 size="lg"
                 tooltip="MST Shop"
                 render={<Link href="/" />}
+                onClick={handleMobileNavClick}
                 className="w-full gap-3 rounded-lg data-[state=open]:bg-sidebar-accent"
               >
                 <div className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-brand-amber/30 bg-brand-amber/20">
                   <Image
-                    src="/assets/logo.png" // Path to your logo file
+                    src="/assets/logo.png"
                     alt="MST Shop Logo"
                     width={16}
                     height={16}
@@ -62,7 +66,7 @@ export function AppSidebar() {
 
                 <div className="min-w-0 flex-1 text-left">
                   <p className="truncate font-heading text-sm font-bold leading-tight text-sidebar-foreground">
-                    MST Shop
+                    MST Bazar
                   </p>
                   <p className="truncate text-[10px] leading-tight text-sidebar-foreground/50">
                     Admin Panel
@@ -95,6 +99,7 @@ export function AppSidebar() {
                       isActive={isActive}
                       tooltip={item.title}
                       render={<Link prefetch={false} href={item.href} />}
+                      onClick={handleMobileNavClick}
                     >
                       <item.icon className="h-4 w-4" />
                       <span>{item.title}</span>

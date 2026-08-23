@@ -1,6 +1,7 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import {
   Sheet,
   SheetClose,
@@ -12,11 +13,19 @@ import {
 import { useCategories } from "@/context/catalog-provider";
 import { authClient } from "@/lib/auth-client";
 import {
-  ChevronRight,
+  Flame,
+  HelpCircle,
+  Info,
+  LayoutDashboard,
+  LogOut,
   Menu,
   PackageSearch,
+  Percent,
+  ShieldAlert,
   ShoppingBag,
-  User,
+  Sparkles,
+  Store,
+  UserCheck,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -27,38 +36,22 @@ interface MobileMenuProps {
   triggerClassName?: string;
 }
 
-const staticLinks = [
-  { label: "Track Order", href: "/track-order", icon: PackageSearch },
-  { label: "About Us", href: "/about" },
-  { label: "Contact", href: "/contact" },
-];
-
-const staticCategoriesLink = [
-  {
-    label: "All Products",
-    href: "/products",
-    icon: ShoppingBag,
-  },
-  {
-    label: "Top Selling",
-    href: "/products/top-selling",
-    icon: ShoppingBag,
-  },
-  {
-    label: "Best Deals",
-    href: "/products/best-deals",
-    icon: ShoppingBag,
-  },
+const staticShopLinks = [
+  { label: "All Products", href: "/products", icon: Store },
+  { label: "Top Selling", href: "/products/top-selling", icon: Flame },
+  { label: "Best Deals", href: "/products/best-deals", icon: Percent },
   {
     label: "Popular Products",
     href: "/products/popular-products",
-    icon: ShoppingBag,
+    icon: Sparkles,
   },
-  {
-    label: "Combo Deals",
-    href: "/products/combo-deals",
-    icon: ShoppingBag,
-  },
+  { label: "Combo Deals", href: "/products/combo-deals", icon: ShoppingBag },
+];
+
+const supportLinks = [
+  { label: "Track Order", href: "/track-order", icon: PackageSearch },
+  { label: "About Us", href: "/about", icon: Info },
+  { label: "Contact Us", href: "/contact", icon: HelpCircle },
 ];
 
 export function MobileMenu({
@@ -70,6 +63,14 @@ export function MobileMenu({
   const pathname = usePathname();
   const user = session?.user;
 
+  // Role detection (Adjust "ADMIN" to match your auth backend if needed)
+  const isAdmin = user?.role === "ADMIN";
+
+  const handleLogout = async () => {
+    await authClient.signOut();
+    window.location.href = "/login";
+  };
+
   return (
     <Sheet>
       <SheetTrigger
@@ -77,7 +78,7 @@ export function MobileMenu({
           trigger ?? (
             <button
               type="button"
-              className={`cursor-pointer lg:hidden ${triggerClassName}`}
+              className={`flex items-center justify-center rounded-lg p-2 text-foreground transition-colors hover:bg-accent lg:hidden ${triggerClassName}`}
               aria-label="Open menu"
             >
               <Menu className="size-5" />
@@ -88,62 +89,105 @@ export function MobileMenu({
 
       <SheetContent
         side="left"
-        className="flex w-72 flex-col gap-0 p-0 sm:w-80"
+        className="flex w-75 flex-col gap-0 p-0 sm:w-85"
       >
-        <SheetHeader className="border-b border-border px-4 py-4">
+        {/* Header */}
+        <SheetHeader className="border-b border-border/60 px-5 py-4 text-left">
           <SheetTitle render={<Logo />} />
         </SheetHeader>
 
-        {/* User section: Hidden on md screens */}
-        <div className="border-b border-border px-4 py-4 md:hidden">
+        {/* User Card Area */}
+        <div className="border-b border-border/60 bg-muted/30 px-4 py-3.5">
           {user ? (
-            <SheetClose
-              nativeButton={false}
-              render={
-                <Link
-                  href="/dashboard"
-                  className={`flex items-center gap-3 rounded-md p-1 transition-colors hover:bg-accent ${
-                    pathname === "/account" ? "bg-accent font-semibold" : ""
-                  }`}
-                >
-                  <Avatar className="h-10 w-10">
-                    <AvatarImage
-                      src={user.image ?? undefined}
-                      alt={user.name}
-                    />
-                    <AvatarFallback className="bg-primary/10 text-sm font-semibold text-primary">
-                      {user.name?.charAt(0).toUpperCase() ?? "U"}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold text-foreground">
+            <div className="space-y-2.5">
+              <div className="flex items-center gap-3">
+                <Avatar className="h-10 w-10 border border-border/80">
+                  <AvatarImage src={user.image ?? undefined} alt={user.name} />
+                  <AvatarFallback className="bg-primary/10 text-xs font-bold text-primary">
+                    {user.name?.charAt(0).toUpperCase() ?? "U"}
+                  </AvatarFallback>
+                </Avatar>
+
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-1.5">
+                    <p className="truncate text-sm font-bold text-foreground">
                       {user.name}
                     </p>
-                    <p className="truncate text-xs text-muted-foreground">
-                      View profile
-                    </p>
+                    {isAdmin && (
+                      <Badge className="bg-amber-500/15 text-[9px] font-semibold text-amber-600 hover:bg-amber-500/15 dark:text-amber-400">
+                        ADMIN
+                      </Badge>
+                    )}
                   </div>
-                  <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
-                </Link>
-              }
-            />
+                  <p className="truncate text-xs text-muted-foreground">
+                    {user.email}
+                  </p>
+                </div>
+              </div>
+
+              {/* Navigation Actions for User */}
+              <div className="grid grid-cols-1 gap-1.5 pt-1">
+                {/* Admin Panel Link (Only visible if ADMIN) */}
+                {isAdmin && (
+                  <SheetClose
+                    nativeButton={false}
+                    render={
+                      <Link
+                        href="/admin"
+                        className={`flex items-center gap-2 rounded-md bg-amber-500/10 px-3 py-1.5 text-xs font-semibold text-amber-700 transition-colors hover:bg-amber-500/20 dark:text-amber-400 ${
+                          pathname.startsWith("/admin")
+                            ? "ring-1 ring-amber-500/50"
+                            : ""
+                        }`}
+                      >
+                        <ShieldAlert className="h-3.5 w-3.5 shrink-0" />
+                        <span>Admin Panel</span>
+                      </Link>
+                    }
+                  />
+                )}
+
+                {/* Dashboard Link */}
+                <SheetClose
+                  nativeButton={false}
+                  render={
+                    <Link
+                      href="/dashboard"
+                      className={`flex items-center gap-2 rounded-md border border-border/60 bg-background px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-accent ${
+                        pathname.startsWith("/dashboard")
+                          ? "border-primary font-semibold text-primary"
+                          : ""
+                      }`}
+                    >
+                      <LayoutDashboard className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                      <span>Customer Dashboard</span>
+                    </Link>
+                  }
+                />
+              </div>
+            </div>
           ) : (
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
-                <User className="h-5 w-5 text-muted-foreground" />
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5">
+                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <UserCheck className="h-4 w-4" />
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-foreground">
+                    Welcome Guest
+                  </p>
+                  <p className="text-[11px] text-muted-foreground">
+                    Manage orders & profile
+                  </p>
+                </div>
               </div>
-              <div className="flex-1">
-                <p className="text-sm font-medium text-foreground">Guest</p>
-                <p className="text-xs text-muted-foreground">
-                  Sign in for a faster checkout
-                </p>
-              </div>
+
               <SheetClose
                 nativeButton={false}
                 render={
                   <Link
                     href="/login"
-                    className="rounded-full bg-primary px-3.5 py-1.5 text-xs font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+                    className="rounded-lg bg-primary px-3.5 py-1.5 text-xs font-medium text-primary-foreground shadow-xs transition-opacity hover:opacity-90"
                   >
                     Login
                   </Link>
@@ -153,67 +197,54 @@ export function MobileMenu({
           )}
         </div>
 
-        {/* Scrollable nav */}
-        <nav className="flex-1 overflow-y-auto px-2 py-3">
-          {/* General links: Hidden on md screens */}
-          <ul className="mb-2 flex flex-col gap-0.5 md:hidden">
-            {staticLinks.map((link) => {
-              const isActive = pathname === link.href;
-              const Icon = link.icon;
-              return (
-                <li key={link.href}>
-                  <SheetClose
-                    nativeButton={false}
-                    render={
-                      <Link
-                        href={link.href}
-                        className={`flex items-center gap-2.5 rounded-md px-3 py-2.5 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground ${
-                          isActive
-                            ? "bg-accent font-semibold text-accent-foreground"
-                            : "text-foreground"
-                        }`}
-                      >
-                        {Icon && (
-                          <Icon className="h-4 w-4 shrink-0 text-muted-foreground" />
-                        )}
-                        <span>{link.label}</span>
-                      </Link>
-                    }
-                  />
-                </li>
-              );
-            })}
-          </ul>
-
-          {/* Categories & Products */}
-          {categories.length > 0 && (
-            <div className="border-t border-border/60 pt-2 md:border-t-0 md:pt-0">
-              <p className="px-3 pb-1.5 pt-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                Shop by Category
-              </p>
-              <ul className="flex flex-col gap-0.5">
-                {/* All Products link: Hidden on md screens */}
-                {staticCategoriesLink.map((link, idx) => (
-                  <li key={idx} className="md:hidden">
+        {/* Scrollable Navigation Body */}
+        <nav className="flex-1 overflow-y-auto px-3 py-3 space-y-4">
+          {/* Quick Shop Links */}
+          <div>
+            <p className="px-2 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80">
+              Explore Store
+            </p>
+            <ul className="space-y-0.5">
+              {staticShopLinks.map((link) => {
+                const isActive = pathname === link.href;
+                const Icon = link.icon;
+                return (
+                  <li key={link.href}>
                     <SheetClose
                       nativeButton={false}
                       render={
                         <Link
                           href={link.href}
-                          className={`flex items-center gap-2.5 rounded-md px-3 py-2.5 text-sm font-semibold transition-colors hover:bg-accent hover:text-accent-foreground ${
-                            pathname === link.href
-                              ? "bg-accent text-accent-foreground"
-                              : "text-foreground"
+                          className={`flex items-center gap-3 rounded-lg px-2.5 py-2 text-xs font-medium transition-colors ${
+                            isActive
+                              ? "bg-primary/10 font-semibold text-primary"
+                              : "text-foreground/80 hover:bg-accent hover:text-foreground"
                           }`}
                         >
-                          <ShoppingBag className="h-4 w-4 shrink-0 text-muted-foreground" />
+                          <Icon
+                            className={`h-4 w-4 shrink-0 ${
+                              isActive
+                                ? "text-primary"
+                                : "text-muted-foreground"
+                            }`}
+                          />
                           <span>{link.label}</span>
                         </Link>
                       }
                     />
                   </li>
-                ))}
+                );
+              })}
+            </ul>
+          </div>
 
+          {/* Dynamic Categories */}
+          {categories.length > 0 && (
+            <div>
+              <p className="px-2 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80">
+                Categories
+              </p>
+              <ul className="space-y-0.5">
                 {categories.map((category) => {
                   const href = `/products/${category.slug}`;
                   const isActive = pathname === href;
@@ -224,14 +255,14 @@ export function MobileMenu({
                         render={
                           <Link
                             href={href}
-                            className={`flex items-center justify-between rounded-md px-3 py-2.5 text-sm transition-colors hover:bg-accent hover:text-accent-foreground ${
+                            className={`flex items-center justify-between rounded-lg px-2.5 py-2 text-xs transition-colors ${
                               isActive
-                                ? "bg-accent font-semibold text-accent-foreground"
-                                : "text-foreground"
+                                ? "bg-primary/10 font-semibold text-primary"
+                                : "text-foreground/80 hover:bg-accent hover:text-foreground"
                             }`}
                           >
                             <span>{category.name}</span>
-                            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                            <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/30" />
                           </Link>
                         }
                       />
@@ -241,7 +272,54 @@ export function MobileMenu({
               </ul>
             </div>
           )}
+
+          {/* Support / Legal Links */}
+          <div className="border-t border-border/50 pt-3">
+            <p className="px-2 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80">
+              Support & Help
+            </p>
+            <ul className="space-y-0.5">
+              {supportLinks.map((link) => {
+                const isActive = pathname === link.href;
+                const Icon = link.icon;
+                return (
+                  <li key={link.href}>
+                    <SheetClose
+                      nativeButton={false}
+                      render={
+                        <Link
+                          href={link.href}
+                          className={`flex items-center gap-3 rounded-lg px-2.5 py-2 text-xs font-medium transition-colors ${
+                            isActive
+                              ? "bg-primary/10 font-semibold text-primary"
+                              : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                          }`}
+                        >
+                          <Icon className="h-4 w-4 shrink-0" />
+                          <span>{link.label}</span>
+                        </Link>
+                      }
+                    />
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
         </nav>
+
+        {/* Optional Logout Footer */}
+        {user && (
+          <div className="border-t border-border/60 p-3">
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="flex w-full items-center justify-center gap-2 rounded-lg border border-destructive/20 bg-destructive/5 py-2 text-xs font-semibold text-destructive transition-colors hover:bg-destructive/10"
+            >
+              <LogOut className="h-3.5 w-3.5" />
+              <span>Sign Out</span>
+            </button>
+          </div>
+        )}
       </SheetContent>
     </Sheet>
   );

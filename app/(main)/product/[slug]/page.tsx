@@ -9,6 +9,7 @@ import {
   getProductBySlug,
   getRelatedProducts,
 } from "@/lib/data/catalog";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 export async function generateStaticParams() {
@@ -16,21 +17,76 @@ export async function generateStaticParams() {
   return slugs.map((slug) => ({ slug }));
 }
 
-const metadata = {
-  title: `mst | MST Bazar`,
-  description:
-    "Shop fresh grocery products, honey, black seed, oils, and combo deals from MST Bazar. Quality essentials delivered across Bangladesh.",
-  keywords: [
-    "MST Bazar",
-    "Fresh Grocery Products",
-    "Honey in Bangladesh",
-    "Organic Products",
-    "Combo Deals",
-    "Quality Essentials",
-    "Online Grocery Shopping",
-    "Nationwide Delivery",
-  ],
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const product = await getProductBySlug(slug);
+
+  if (!product) {
+    return {
+      title: "Product Not Found",
+      description: "The requested product could not be found.",
+    };
+  }
+
+  const siteUrl = process.env.NEXT_PUBLIC_APP_URL;
+
+  // Determine primary featured image
+  const imageUrl =
+    product.images.find((img) => img.isFeatured)?.url || product.images[0]?.url;
+
+  // Generate dynamic SEO description fallback
+  const rawDescription =
+    product.shortDescription ||
+    `Buy ${product.title} at MST Shop. ${
+      product.category?.name ? `Category: ${product.category.name}.` : ""
+    } High quality products with fast delivery across Bangladesh.`;
+
+  const description = rawDescription.slice(0, 160).trim();
+
+  const title = `${product.title}`;
+
+  return {
+    title,
+    description,
+    keywords: [
+      product.title,
+      product.category?.name,
+      product.brand,
+      "online shop Bangladesh",
+      "buy online BD",
+      "MST Shop",
+    ].filter(Boolean) as string[],
+    alternates: {
+      canonical: `${siteUrl}/product/${product.slug}`,
+    },
+    openGraph: {
+      title,
+      description,
+      url: `${siteUrl}/product/${product.slug}`,
+      siteName: "MST Shop",
+      locale: "en_US",
+      type: "website",
+      images: [
+        {
+          url: imageUrl,
+          width: 800,
+          height: 800,
+          alt: product.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [imageUrl],
+    },
+  };
+}
 
 export default async function ProductPage({
   params,
@@ -69,7 +125,7 @@ export default async function ProductPage({
           <ProductInfo product={product} />
         </div>
 
-        <div className="rounded-md mt-6 border border-border/50 bg-card p-4 shadow-xs sm:p-6">
+        <div className="mt-6 rounded-md border border-border/50 bg-card p-4 shadow-xs sm:p-6">
           <ProductDetails longDescription={product.productDetails} />
         </div>
       </div>

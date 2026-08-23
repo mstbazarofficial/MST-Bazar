@@ -9,6 +9,10 @@ export const metadata: Metadata = {
     default: "My Account",
   },
   description: "User dashboard and profile management",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default async function DashboardLayout({

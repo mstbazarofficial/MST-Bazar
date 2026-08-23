@@ -3,10 +3,14 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | MST Shop Admin",
-    default: "Dashboard | MST Shop Admin",
+    template: "%s | MST Bazar",
+    default: "Authentication | MST Bazar",
   },
-  description: "MST Shop administration panel",
+  description: "Secure authentication portal for MST Bazar.",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 /**

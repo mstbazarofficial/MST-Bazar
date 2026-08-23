@@ -39,6 +39,11 @@ const METHOD_COPY: Record<
 export function PaymentMethodField() {
   const { control } = useFormContext<CheckoutFormValues>();
 
+  // Filter out 'rocket' automatically
+  const availableMethods = PAYMENT_METHODS.filter(
+    (method) => method.toLowerCase() !== "rocket",
+  );
+
   return (
     <div className="rounded-xl border bg-card p-5 text-card-foreground shadow-xs">
       <div className="mb-4 flex items-center gap-2.5 border-b pb-3.5">
@@ -61,9 +66,19 @@ export function PaymentMethodField() {
                 aria-label="Payment method"
                 className="grid grid-cols-1 gap-3 sm:grid-cols-2"
               >
-                {PAYMENT_METHODS.map((method) => {
+                {availableMethods.map((method) => {
                   const isSelected = field.value === method;
-                  const copy = METHOD_COPY[method];
+
+                  const methodKey = method.toLowerCase();
+                  const copy = METHOD_COPY[methodKey] ||
+                    METHOD_COPY[method] || {
+                      title: method.toUpperCase(),
+                      subtitle: `Pay using ${method}`,
+                      badgeText: method.toUpperCase(),
+                      badgeClass:
+                        "bg-muted text-muted-foreground font-semibold",
+                    };
+
                   return (
                     <button
                       key={method}

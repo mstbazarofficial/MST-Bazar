@@ -18,7 +18,7 @@ import {
 } from "@/validation/checkout.validation";
 
 import { placeOrder } from "@/actions/main/order-actions";
-import { CheckoutSubmitBar, CheckoutTrustBadges } from "./checkout-submit-bar";
+import { CheckoutSubmitBar } from "./checkout-submit-bar";
 import { ContactInfoFields } from "./contact-info-fields";
 import { DeliveryAddressField } from "./delivery-address-field";
 import { DeliveryOptionsField } from "./delivery-options-field";
@@ -59,16 +59,16 @@ export function CheckoutForm() {
   // Auto-fill user information from Better Auth session
   useEffect(() => {
     if (session?.user) {
-      const user = session.user as Record<string, any>;
+      const user = session.user;
       const currentValues = form.getValues();
 
       form.reset({
         ...currentValues,
         fullName: currentValues.fullName || user.name || "",
         email: currentValues.email || user.email || "",
-        phone: currentValues.phone || user.phone || "",
-        whatsapp: currentValues.whatsapp || user.whatsapp || user.phone || "",
-        address: currentValues.address || user.address || "",
+        phone: currentValues.phone || user.phoneNumber || "",
+        whatsapp: currentValues.whatsapp || user.whatsappNumber || "",
+        address: currentValues.address || user.fullAddress || "",
       });
     }
   }, [session, form]);
@@ -223,7 +223,6 @@ export function CheckoutForm() {
           </div>
         </div>
 
-        <CheckoutTrustBadges />
         <CheckoutSubmitBar isSubmitting={isSubmitting} />
       </form>
 

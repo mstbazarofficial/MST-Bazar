@@ -27,8 +27,8 @@ export default function Footer() {
                 alt="MST Bazar Logo"
                 width={150}
                 height={50}
+                quality={60}
                 className="h-auto w-auto max-h-10 object-contain"
-                priority
               />
             </Link>
 
@@ -169,6 +169,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/about"
+                  prefetch={false}
                   className="hover:text-amber-300 transition-colors"
                 >
                   About Us

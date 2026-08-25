@@ -52,8 +52,11 @@ export function HeroSection() {
                       src={image}
                       alt="Daily Fresh Organic Vegetables Basket"
                       fill
-                      sizes="(max-width: 1024px) 100vw, 50vw"
-                      preload={true}
+                      sizes="(max-width: 1024px) 80vw, 33vw"
+                      preload={index === 0}
+                      fetchPriority={index === 0 ? "high" : "auto"}
+                      loading={index === 0 ? "eager" : "lazy"}
+                      quality={60}
                       className="object-contain object-center drop-shadow-md sm:drop-shadow-xl"
                     />
                   </div>
@@ -94,6 +97,7 @@ export function HeroSection() {
 
               <Link
                 href="/about"
+                prefetch={false}
                 className={cn(
                   "inline-flex items-center justify-center gap-2 bg-[#FFC700] hover:bg-[#E6B400] text-foreground text-xs sm:text-sm font-semibold px-5 sm:px-6 py-3 sm:py-3.5 rounded-md transition-all active:scale-95",
                 )}

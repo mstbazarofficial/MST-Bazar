@@ -30,7 +30,9 @@ export function ProductCard({
             <div className="relative w-20 h-20 sm:w-24 sm:h-24 bg-muted/30 rounded-md overflow-hidden shrink-0 border border-border/40">
               <Image
                 fill
-                sizes="96px"
+                sizes="(max-width: 640px) 80px, 96px"
+                loading="lazy"
+                quality={65}
                 src={product.images[0].url}
                 alt={product.title}
                 className="object-cover group-hover:scale-105 transition-transform duration-200"
@@ -103,7 +105,8 @@ export function ProductCard({
           )}
           <Image
             fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 240px"
+            quality={65}
             src={product.images[0].url}
             alt={product.title}
             className="object-cover group-hover:scale-105 transition-transform duration-200"

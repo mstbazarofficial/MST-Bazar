@@ -23,7 +23,8 @@ export function Logo({
         alt={alt}
         width={120}
         height={48}
-        preload
+        preload={true}
+        quality={60}
         className=" w-auto h-6 sm:h-8 object-contain"
       />
     </Link>

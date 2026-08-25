@@ -1,0 +1,107 @@
+# MST Bazar
+
+> MST Bazar is a Bangladeshi online grocery e-commerce platform that sells fresh grocery products, premium honey, black seed, organic oils, combo deals, and other quality essentials. It offers nationwide delivery across Bangladesh with cash on delivery and mobile banking (bKash, Nagad, Rocket) payment options. The platform is built with Next.js 16 (App Router), React 19, Tailwind CSS 4, Prisma 7 with PostgreSQL (Neon serverless), and uses Better Auth for authentication. The site is hosted at https://mstshop.vercel.app.
+
+Important notes:
+
+- MST Bazar is an e-commerce storefront — not a marketplace. All products are sold directly by MST Bazar.
+- The platform targets Bangladeshi consumers and all prices are in BDT (Bangladeshi Taka ৳).
+- Orders are placed through the website checkout with Cash on Delivery or mobile banking (bKash, Nagad, Rocket, Bank Transfer) payment.
+- The site supports three user roles: Customer, Moderator, and Admin — each with role-based access control.
+- Product images are hosted on Cloudinary. The site uses Brevo (Sendinblue) for transactional emails (order confirmation, email verification, password reset).
+- The platform uses server-side rendering and static generation with Next.js App Router. Data fetching is cached with `unstable_cache` and cache tags for revalidation.
+
+## Storefront Pages
+
+- [Home](https://mstshop.vercel.app/): Landing page featuring hero banner, category browsing, top selling products, best deals, popular products, combo products, CTA banner, trust section, and FAQ section.
+- [All Products](https://mstshop.vercel.app/products): Complete product catalog with search, category filter sidebar, and grid/list view. Supports optional slug-based filtering: `/products/{category-slug}` for categories and `/products/best-deals`, `/products/popular-products`, `/products/combo-deals`, `/products/top-selling` for special filter views.
+- [Product Detail](https://mstshop.vercel.app/product/{slug}): Individual product page with image gallery, pricing with discount info, unit/weight info, short description, rich-text product details (via Tiptap editor), add-to-cart button, breadcrumb navigation, and related products section. URL pattern: `/product/{product-slug}`.
+- [About Us](https://mstshop.vercel.app/about): Company story, values, production journey, trust section, stats, testimonials, and FAQ.
+- [Contact Us](https://mstshop.vercel.app/contact): Contact form (name, email, phone, message) and business contact information including phone, email, and address. Form submissions are stored in the database as `ContactSubmission` records.
+- [FAQ](https://mstshop.vercel.app/faq): Frequently asked questions about products, orders, delivery, and payments.
+- [Track Order](https://mstshop.vercel.app/track-order): Order tracking by Order ID and phone number. Shows real-time order status updates.
+- [Checkout](https://mstshop.vercel.app/checkout): Multi-item checkout form with customer info, delivery address, payment method selection, and order summary from cart.
+
+## Legal & Policy Pages
+
+- [Privacy Policy](https://mstshop.vercel.app/privacy-policy): Data collection, usage, sharing, security, and cookie policies.
+- [Terms & Conditions](https://mstshop.vercel.app/terms): User agreement, account rules, product/order terms, liability limitations, and governing law (Bangladesh).
+- [Return & Refund Policy](https://mstshop.vercel.app/return-refund): 7-day return window, refund process, timeline (3-5 days bKash/Nagad, 7-10 days cards), exchange policy, and shipping cost rules for returns.
+
+## Customer Dashboard
+
+- [Dashboard Home](https://mstshop.vercel.app/dashboard): Authenticated customer dashboard showing welcome section, order stats (total, delivered, in progress, pending), and quick navigation links.
+- [My Orders](https://mstshop.vercel.app/dashboard/orders): List of all customer orders with status tracking.
+- [Profile Settings](https://mstshop.vercel.app/dashboard/profile): Update personal information including name, phone number, WhatsApp number, and delivery address.
+- [Security Settings](https://mstshop.vercel.app/dashboard/security): Password change and account security management.
+
+## Authentication
+
+- [Login](https://mstshop.vercel.app/login): Email and password login with session cookie authentication.
+- [Sign Up](https://mstshop.vercel.app/sign-up): Customer registration with name, email, and password. Email verification is required before login.
+- [Forgot Password](https://mstshop.vercel.app/forgot-password): Password reset flow via email link.
+- [Reset Password](https://mstshop.vercel.app/reset-password): New password entry after reset link verification.
+
+## Admin Panel
+
+- [Admin Dashboard](https://mstshop.vercel.app/admin): Admin-only area (role-based access: ADMIN or MODERATOR required).
+- [Product Management](https://mstshop.vercel.app/admin/products): Full CRUD for products including title, slug, SKU, brand, unit, price, discount percentage, short description, rich-text product details, category assignment, product images (Cloudinary), and flags for Best Deal / Popular / Combo / Top Selling / Available.
+- [Category Management](https://mstshop.vercel.app/admin/categories): Create, edit, delete categories with name, slug, image, and sort priority.
+- [Order Management](https://mstshop.vercel.app/admin/orders): View all orders, update order status (Pending → Confirmed → Processing → Shipped → Delivered / Cancelled / Returned), add payments, add internal notes, manage shipping and product costs.
+- [User Management](https://mstshop.vercel.app/admin/users): View registered users, manage roles, ban/unban users.
+- [Contact Submissions](https://mstshop.vercel.app/admin/contacts): View and manage customer contact form submissions with status tracking (Pending → In Progress → Resolved → Closed).
+
+## Product Data Model
+
+Products have the following key attributes:
+- `title`, `slug` (URL-friendly unique identifier), `sku` (optional warehouse code), `brand` (optional)
+- `unit` (e.g. "500 gm", "1 Kg", "1 Liter", "12 pcs")
+- `price` (base price in BDT), `discountPercentage` (0-100, default 0)
+- `shortDescription`, `productDetails` (rich HTML text)
+- Boolean flags: `isAvailable`, `isBestDeal`, `isPopular`, `isCombo`, `isTopSelling`
+- `categoryId` (belongs to one Category), `priority` (for UI sort order)
+- Multiple `ProductImage` records with `url` and `isFeatured` flag
+
+## Order Lifecycle
+
+Orders follow this status flow: PENDING → CONFIRMED → PROCESSING → SHIPPED → DELIVERED. Orders can also be CANCELLED or RETURNED at any point. Each order contains:
+- Customer details (name, email, phone, WhatsApp, full address)
+- One or more `OrderItem` records with product snapshots (name, image, price, discount at time of purchase)
+- Payment method (Cash on Delivery, bKash, Nagad, Rocket, Bank Transfer, Card)
+- Shipping cost, discount, product cost, delivery cost tracking
+- Payment records and internal admin notes
+
+## Shopping Cart
+
+The cart system uses a dual-storage strategy:
+- **Guest users**: Cart is stored in browser `localStorage` as product IDs and quantities. Product details are resolved via server action on page load.
+- **Logged-in users**: Cart is persisted in the database (`Cart` and `CartItem` models). On login, any guest cart items are merged with the database cart.
+- Cart operations (add, update quantity, remove, clear) use optimistic UI updates with debounced server sync and automatic rollback on failure.
+- Maximum quantity per item: 10.
+
+## Technical Architecture
+
+- **Framework**: Next.js 16 with App Router, React 19, TypeScript 5
+- **Styling**: Tailwind CSS 4 with shadcn/ui components, custom brand green theme (#00a652 primary, #008445 dark), Inter + Geist fonts
+- **Database**: PostgreSQL via Neon serverless adapter, managed with Prisma 7 ORM
+- **Authentication**: Better Auth with email/password, email verification, password reset, role-based access control (Admin plugin)
+- **Image Storage**: Cloudinary for product and category images
+- **Email Service**: Brevo (Sendinblue) API for transactional emails
+- **State Management**: React Context (CartProvider, CatalogProvider, AuthProvider) + TanStack React Query
+- **Rich Text Editor**: Tiptap (admin product descriptions) with image, table, link, YouTube embed, text styling extensions
+- **Image Slider**: Swiper.js for product galleries and carousels
+- **Form Handling**: React Hook Form + Zod validation
+- **Deployment**: Vercel
+
+## SEO & Discoverability
+
+- [Sitemap](https://mstshop.vercel.app/sitemap.xml): Dynamic XML sitemap generated from all products, categories, special filter pages, and static pages.
+- [Robots](https://mstshop.vercel.app/robots.txt): Allows all crawlers on public pages. Disallows `/admin*`, `/api*`, `/cart`, `/checkout`, `/dashboard*`, `/login`, `/signup`, `/forgot-password`, `/reset-password`.
+- Structured Data: JSON-LD Organization and WebSite schema on all pages.
+- OpenGraph and Twitter Card meta tags on all pages with dynamic product images.
+- Canonical URLs and hreflang (en-BD) on all pages.
+
+## Optional
+
+- [GitHub Repository](https://github.com/mostaque121/mst-shop): Source code repository for MST Bazar.
+- [Web App Manifest](https://mstshop.vercel.app/manifest.json): PWA manifest for installable web app experience.

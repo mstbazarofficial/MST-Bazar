@@ -23,7 +23,7 @@ export function Logo({
         alt={alt}
         width={120}
         height={48}
-        priority
+        preload
         className=" w-auto h-6 sm:h-8 object-contain"
       />
     </Link>

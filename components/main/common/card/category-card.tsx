@@ -107,3 +107,45 @@ export function CategoryCard2({
     </Link>
   );
 }
+
+export function CategoryCard3({
+  category,
+  className,
+}: {
+  category?: Category;
+  className?: string;
+}) {
+  return (
+    <Link
+      href={`/products/${category?.slug || ""}`}
+      className={cn(
+        "group relative flex flex-col items-center justify-center p-0 ",
+        className,
+      )}
+    >
+      {/* Image Container */}
+      <div className="relative size-20 sm:size-34 rounded-full overflow-hidden bg-muted/40 flex items-center justify-center border-2 border-border group-hover:border-primary transition-colors duration-300">
+        {category?.image ? (
+          <Image
+            src={category.image}
+            alt={category.name || "Category image"}
+            fill
+            sizes="(max-width: 640px) 80px, 160px"
+            className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
+          />
+        ) : (
+          <div className="flex items-center justify-center w-full h-full text-muted-foreground group-hover:text-primary transition-colors duration-300">
+            <ShoppingBag className="w-8 h-8 stroke-[1.5]" />
+          </div>
+        )}
+      </div>
+
+      {/* Category Name */}
+      <div className="mt-3 text-center w-full">
+        <h3 className="font-semibold text-xs sm:text-sm text-foreground group-hover:text-primary transition-colors duration-300 line-clamp-1">
+          {category?.name || "Category"}
+        </h3>
+      </div>
+    </Link>
+  );
+}

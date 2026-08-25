@@ -52,8 +52,8 @@ export function HeroSection() {
                       src={image}
                       alt="Daily Fresh Organic Vegetables Basket"
                       fill
-                      sizes="(max-width: 640px) 260px, (max-width: 1024px) 50vw, 600px"
-                      priority={index === 0}
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                      preload={true}
                       className="object-contain object-center drop-shadow-md sm:drop-shadow-xl"
                     />
                   </div>

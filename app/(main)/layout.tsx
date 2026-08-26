@@ -51,7 +51,7 @@ export default async function RootLayout({
               rel="noopener noreferrer"
               aria-label="Chat with us on WhatsApp"
               title="Chat with us on WhatsApp"
-              className="fixed right-4 bottom-4 z-50 flex size-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition-transform duration-300 hover:scale-110 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#25D366] sm:right-10 sm:bottom-10"
+              className="fixed right-4 bottom-4 z-50 flex size-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition-transform duration-300 hover:scale-110 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#25D366] sm:right-9 sm:bottom-9"
             >
               <span className="absolute inset-0 rounded-full bg-[#25D366]/70 motion-safe:animate-ping" />
               <FaWhatsapp className="relative size-8" aria-hidden="true" />

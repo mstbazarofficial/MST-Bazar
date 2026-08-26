@@ -25,9 +25,9 @@ export function HeroSection() {
           {/* Swiper & Backdrop Column */}
           <div className="order-first flex w-full items-center justify-center lg:order-last relative md:absolute md:inset-0">
             {/* Responsive Organic Backdrop Shapes */}
-            <div className="absolute hidden sm:block w-48 h-48 lg:w-60 lg:h-60 bg-[#bce3c4] rounded-full right-4 bottom-8 -z-10 pointer-events-none" />
+            {/* <div className="absolute hidden sm:block w-48 h-48 lg:w-60 lg:h-60 bg-[#bce3c4] rounded-full right-4 bottom-8 -z-10 pointer-events-none" />
             <div className="absolute hidden sm:block w-32 h-32 lg:w-40 lg:h-40 bg-[#bce3c4] rounded-full left-4 bottom-8 -z-10 pointer-events-none" />
-            <div className="absolute hidden sm:block w-64 h-64 lg:w-80 lg:h-80 bg-[#bce3c4] rounded-full left-1/2 -translate-x-1/2 bottom-8 -z-10 pointer-events-none" />
+            <div className="absolute hidden sm:block w-64 h-64 lg:w-80 lg:h-80 bg-[#bce3c4] rounded-full left-1/2 -translate-x-1/2 bottom-8 -z-10 pointer-events-none" /> */}
 
             {/* Soft Shadow Base */}
             <div className="absolute w-44 sm:w-full max-w-xs sm:max-w-md h-10 sm:h-24 bg-black/10 rounded-full blur-lg sm:blur-2xl -bottom-2 sm:-bottom-6 -z-10 pointer-events-none" />
@@ -47,7 +47,10 @@ export function HeroSection() {
             >
               {slides.map((image, index) => (
                 <SwiperSlide key={index}>
-                  <div className="relative aspect-video w-full overflow-hidden">
+                  <Link
+                    href="/products"
+                    className="relative aspect-video w-full overflow-hidden block"
+                  >
                     <Image
                       src={image}
                       alt="Daily Fresh Organic Vegetables Basket"
@@ -59,7 +62,7 @@ export function HeroSection() {
                       quality={60}
                       className="object- object-center drop-shadow-md sm:drop-shadow-xl"
                     />
-                  </div>
+                  </Link>
                 </SwiperSlide>
               ))}
             </Swiper>

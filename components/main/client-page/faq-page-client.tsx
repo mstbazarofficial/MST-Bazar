@@ -94,7 +94,7 @@ export default function FaqPageClient() {
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
-    <div className="bg-muted/30 min-h-screen pb-12">
+    <div className="bg-muted/30 pb-12">
       {/* Header Section */}
       <div className="bg-brand-gradient text-white py-12 md:py-16">
         <div className="site-container flex flex-col items-center text-center space-y-4">

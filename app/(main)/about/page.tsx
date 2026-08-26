@@ -29,18 +29,16 @@ export const metadata: Metadata = {
 };
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-background">
+    <main className="bg-background">
       <AboutHero />
       <StoryTimeline />
       <ValuesSection />
       <WhyTrustSection />
       <ProductJourneySection />
       <StatsBar />
-
       <Suspense>
         <TestimonialsSection />
       </Suspense>
-
       <AboutFaqSection />
       <CtaBanner />
     </main>

@@ -7,6 +7,7 @@ import { Suspense, useState } from "react";
 import { OrderResult } from "./order-result";
 import { OrderSearchForm } from "./order-search-form";
 import { SupportCard } from "./support-card";
+import { SectionHeading } from "../common/layout/section-heading";
 
 export function TrackOrderClient() {
   const [search, setSearch] = useState<{
@@ -37,7 +38,9 @@ export function TrackOrderClient() {
       : null;
 
   return (
-    <div className="space-y-5">
+    <section className="space-y-5 site-container section-y ">
+      {/* Header title */}
+      <SectionHeading title="Track Your Order" highlightPositions={[3]} />
       {/* Search card */}
       <Suspense
         fallback={<div className="animate-pulse h-40 bg-muted rounded-lg" />}
@@ -77,6 +80,6 @@ export function TrackOrderClient() {
       {data && !isFetching && <OrderResult order={data} />}
       {/* Support */}
       <SupportCard />
-    </div>
+    </section>
   );
 }

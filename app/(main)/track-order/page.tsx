@@ -1,4 +1,5 @@
 import { SectionHeading } from "@/components/main/common/layout/section-heading";
+import Testimonials from "@/components/main/common/Testimonials";
 import { TrackOrderClient } from "@/components/main/track-order/track-order-client";
 import type { Metadata } from "next";
 
@@ -21,10 +22,9 @@ export const metadata: Metadata = {
 
 export default function TrackOrderPage() {
   return (
-    <main className="min-h-screen site-container bg-muted section-y ">
-      <SectionHeading title="Track Your Order" highlightPositions={[3]} />
-
+    <main className="">
       <TrackOrderClient />
+      <Testimonials />
     </main>
   );
 }

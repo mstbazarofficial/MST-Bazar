@@ -114,7 +114,7 @@ export default async function ProductPage({
   );
 
   return (
-    <main className="min-h-screen bg-muted">
+    <main className="bg-muted">
       <div className="site-container">
         <ProductBreadcrumb items={breadcrumbItems} />
         <div className="grid grid-cols-1 gap-8 rounded-md border border-border/50 bg-card p-4 shadow-xs sm:p-6 lg:grid-cols-2 lg:gap-10">

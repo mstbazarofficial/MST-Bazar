@@ -5,6 +5,7 @@ import { CatalogProvider } from "@/context/catalog-provider";
 import { QueryProvider } from "@/context/query-provider";
 import { getAllCategories, getAllProducts } from "@/lib/data/catalog";
 import type { Metadata } from "next";
+import { FaWhatsapp } from "react-icons/fa";
 
 export const metadata: Metadata = {
   title: {
@@ -34,6 +35,8 @@ export default async function RootLayout({
     getAllCategories(),
     getAllProducts(),
   ]);
+  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
+
   return (
     <QueryProvider>
       <CatalogProvider categories={categories} products={products}>
@@ -41,6 +44,19 @@ export default async function RootLayout({
           <Navbar />
           {children}
           <Footer />
+          {whatsappNumber && (
+            <a
+              href={`https://wa.me/${whatsappNumber}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Chat with us on WhatsApp"
+              title="Chat with us on WhatsApp"
+              className="fixed right-4 bottom-4 z-50 flex size-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition-transform duration-300 hover:scale-110 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#25D366] sm:right-10 sm:bottom-10"
+            >
+              <span className="absolute inset-0 rounded-full bg-[#25D366]/70 motion-safe:animate-ping" />
+              <FaWhatsapp className="relative size-8" aria-hidden="true" />
+            </a>
+          )}
         </CartProvider>
       </CatalogProvider>
     </QueryProvider>

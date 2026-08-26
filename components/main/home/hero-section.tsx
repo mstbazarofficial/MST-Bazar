@@ -81,7 +81,7 @@ export function HeroSection() {
 
             <p className="mt-2 sm:mt-3 max-w-md text-xs md:text-base text-muted-foreground">
               Quality grocery essentials, black seed, and oils delivered to your
-              doorstep at affordable prices.
+              doorstep at affordable prices.{""}
             </p>
 
             <div className="mt-5 lg:mt-6 flex w-full max-w-xs flex-col gap-2.5 sm:gap-3 sm:max-w-none sm:w-auto sm:flex-row">

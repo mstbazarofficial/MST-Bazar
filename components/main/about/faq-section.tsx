@@ -78,7 +78,7 @@ export function AboutFaqSection() {
               alt="Frequently Asked Questions"
               width={320}
               height={260}
-              className="w-full  object-contain"
+              className="w-full h-auto object-contain"
               priority
             />
           </div>

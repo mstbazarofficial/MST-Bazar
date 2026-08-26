@@ -18,12 +18,12 @@ const slides = [
 
 export function HeroSection() {
   return (
-    <section className="site-container section-y w-full ">
+    <section className="site-container section-y max-sm:pb-4 max-sm:pt-1.5 w-full ">
       {/* Card Container */}
-      <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-[linear-gradient(110deg,#fcfde3_0%,#dcf1df_50%,#c8eacc_100%)]">
-        <div className="grid items-center gap-6 px-4 py-6 sm:px-8 sm:py-12 lg:grid-cols-2 lg:py-16">
+      <div className="relative overflow-hidden rounded-2xl lg:rounded-3xl bg-[linear-gradient(110deg,#fcfde3_0%,#dcf1df_50%,#c8eacc_100%)]">
+        <div className="flex md:items-start items-center flex-col gap-6 pb-6 md:px-7 md:py-6 lg:12 xl:py-16 relative w-full">
           {/* Swiper & Backdrop Column */}
-          <div className="order-first flex w-full max-lg:max-w-lg mx-auto items-center justify-center lg:order-last relative lg:top-4 lg:right-2 z-10">
+          <div className="order-first flex w-full items-center justify-center lg:order-last relative md:absolute md:inset-0">
             {/* Responsive Organic Backdrop Shapes */}
             <div className="absolute hidden sm:block w-48 h-48 lg:w-60 lg:h-60 bg-[#bce3c4] rounded-full right-4 bottom-8 -z-10 pointer-events-none" />
             <div className="absolute hidden sm:block w-32 h-32 lg:w-40 lg:h-40 bg-[#bce3c4] rounded-full left-4 bottom-8 -z-10 pointer-events-none" />
@@ -40,24 +40,24 @@ export function HeroSection() {
               speed={1500}
               loop
               autoplay={{
-                delay: 5000,
+                delay: 2000,
                 disableOnInteraction: false,
               }}
-              className="heroSwiper w-full max-w-75 xs:max-w-[260px] sm:max-w-200 lg:max-w-none mx-auto"
+              className="heroSwiper w-full"
             >
               {slides.map((image, index) => (
                 <SwiperSlide key={index}>
-                  <div className="relative w-full aspect-16/10">
+                  <div className="relative aspect-video w-full overflow-hidden">
                     <Image
                       src={image}
                       alt="Daily Fresh Organic Vegetables Basket"
                       fill
-                      sizes="(max-width: 1024px) 80vw, 33vw"
+                      sizes="(max-width: 1024px) 80vw, 60vw"
                       preload={index === 0}
                       fetchPriority={index === 0 ? "high" : "auto"}
-                      loading={index === 0 ? "eager" : "lazy"}
+                      loading="eager"
                       quality={60}
-                      className="object-contain object-center drop-shadow-md sm:drop-shadow-xl"
+                      className="object- object-center drop-shadow-md sm:drop-shadow-xl"
                     />
                   </div>
                 </SwiperSlide>
@@ -66,12 +66,12 @@ export function HeroSection() {
           </div>
 
           {/* Text & Content Column */}
-          <div className="order-last flex flex-col items-center text-center lg:order-first lg:items-start lg:text-left">
+          <div className="order-last flex flex-col items-center text-center lg:order-first md:items-start md:text-left relative z-10 md:max-w-100 xl:max-w-150 lg:max-w-102 max-sm:px-4">
             <span className="inline-flex items-center rounded-md border border-primary/20 bg-white px-3 py-1 text-xs font-medium text-primary shadow-sm">
               Fresh & Healthy
             </span>
 
-            <h1 className="mt-3 sm:mt-4 text-2xl font-bold leading-tight tracking-tight sm:text-4xl xl:text-5xl">
+            <h1 className="mt-3 sm:mt-4 text-2xl font-bold leading-tight tracking-tight sm:text-3xl lg:text-4xl xl:text-5xl">
               <span className="text-foreground">
                 Fresh Grocery Products, Honey & Combo Deals
               </span>
@@ -79,12 +79,12 @@ export function HeroSection() {
               <span className="text-primary">Delivered Across Bangladesh</span>
             </h1>
 
-            <p className="mt-2 sm:mt-3 max-w-md text-xs sm:text-base text-muted-foreground">
+            <p className="mt-2 sm:mt-3 max-w-md text-xs md:text-base text-muted-foreground">
               Quality grocery essentials, black seed, and oils delivered to your
               doorstep at affordable prices.
             </p>
 
-            <div className="mt-5 sm:mt-6 flex w-full max-w-xs flex-col gap-2.5 sm:gap-3 sm:max-w-none sm:w-auto sm:flex-row">
+            <div className="mt-5 lg:mt-6 flex w-full max-w-xs flex-col gap-2.5 sm:gap-3 sm:max-w-none sm:w-auto sm:flex-row">
               <Link
                 href="/products"
                 className={cn(

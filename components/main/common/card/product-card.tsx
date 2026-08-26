@@ -32,7 +32,7 @@ export function ProductCard({
                 fill
                 sizes="(max-width: 640px) 80px, 96px"
                 loading="lazy"
-                quality={65}
+                quality={75}
                 src={product.images[0].url}
                 alt={product.title}
                 className="object-cover group-hover:scale-105 transition-transform duration-200"

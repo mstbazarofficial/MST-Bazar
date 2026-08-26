@@ -9,7 +9,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground w-full h-full;
   }
   html {
     @apply font-sans;
@@ -22,7 +22,7 @@
  * shouldn't add extra vertical spacing (e.g. the navbar).
  */
 @utility site-container {
-  @apply mx-auto w-full max-w-360 px-4 sm:px-8 lg:px-10 xl:px-12;
+  @apply mx-auto w-full max-w-360 px-4 sm:px-6 lg:px-10 xl:px-12;
 }
 
 /*

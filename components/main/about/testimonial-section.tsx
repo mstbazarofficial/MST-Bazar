@@ -6,10 +6,6 @@ import Image from "next/image";
 // Swiper Components & Modules
 import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-
-// Swiper Styles
-import "swiper/css";
-import "swiper/css/pagination";
 import { SectionHeading } from "../common/layout/section-heading";
 
 const REVIEWS = [

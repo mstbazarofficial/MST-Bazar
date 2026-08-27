@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // X-Powered-By header hide korar jonno (2nd issue fix)
+  poweredByHeader: false,
+  
   async headers() {
     return [
       {
@@ -8,8 +11,6 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            // img-src a 'blob:' add kora hoyeche preview er jonno
-            // frame-src add kora hoyeche youtube video iframe er jonno
             value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://lh3.googleusercontent.com https://res.cloudinary.com https://images.unsplash.com; font-src 'self'; connect-src 'self'; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com; frame-ancestors 'none';",
           },
           {
@@ -19,6 +20,15 @@ const nextConfig: NextConfig = {
           {
             key: 'X-Content-Type-Options',
             value: 'nosniff',
+          },
+          // {
+          //   key: 'Strict-Transport-Security',
+          //   value: 'max-age=31536000; includeSubDomains; preload',
+          // },
+          // Referrer-Policy header add kora holo (1st issue fix)
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
           }
         ],
       },

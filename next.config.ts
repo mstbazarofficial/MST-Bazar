@@ -21,10 +21,10 @@ const nextConfig: NextConfig = {
             key: 'X-Content-Type-Options',
             value: 'nosniff',
           },
-          // {
-          //   key: 'Strict-Transport-Security',
-          //   value: 'max-age=31536000; includeSubDomains; preload',
-          // },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains; preload',
+          },
           // Referrer-Policy header add kora holo (1st issue fix)
           {
             key: 'Referrer-Policy',

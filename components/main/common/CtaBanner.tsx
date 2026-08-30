@@ -16,7 +16,7 @@ export function CtaBanner() {
       <div className="absolute inset-0">
         <Image
           src="/assets/cta-bg.png"
-          alt=""
+          alt="CTA Banner Background"
           fill
           priority
           className="object-cover object-right"

@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     locale: "en_BD",
     images: [
       {
-        url: "/assets/banner.png",
+        url: "/assets/banner2.png",
         width: 1536,
         height: 1024,
         alt: "Fresh grocery products delivered by MST Bazar",
@@ -68,11 +68,11 @@ const structuredData = {
       name: "MST Bazar",
       url: siteUrl,
       logo: `${siteUrl}/assets/logo-vertical.png`,
-      email: "support@mstbazar.com",
-      telephone: "+880 1234 56789",
+      email: "mstbazarofficial@gmail.com",
+      telephone: "+8801581172773",
       address: {
         "@type": "PostalAddress",
-        streetAddress: "House 12, Road 5, Dhanmondi",
+        streetAddress: "Aftab nagar, Dhaka",
         addressLocality: "Dhaka",
         postalCode: "1205",
         addressCountry: "BD",

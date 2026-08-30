@@ -6,8 +6,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import "./globals.css";
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://mstshop.vercel.app";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mstbazar.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

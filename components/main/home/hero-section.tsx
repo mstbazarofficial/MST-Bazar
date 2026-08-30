@@ -52,7 +52,7 @@ export function HeroSection() {
                       src={image}
                       alt="Daily Fresh Organic Vegetables Basket"
                       fill
-                      sizes="(max-width: 1024px) 80vw, 60vw"
+                      sizes="(max-width: 1040px) 80vw,(max-width: 880px) 50vw, 100vw"
                       preload={index === 0}
                       fetchPriority={index === 0 ? "high" : "auto"}
                       loading="eager"

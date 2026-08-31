@@ -9,7 +9,7 @@ import { MobileMenu } from "./mobile-menu";
 const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
-  { label: "contact", href: "/contact" },
+  { label: "Contact", href: "/contact" },
   { label: "Products", href: "/products" },
 ] as const;
 

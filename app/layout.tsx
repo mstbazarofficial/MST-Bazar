@@ -74,7 +74,7 @@ const structuredData = {
         "@type": "PostalAddress",
         streetAddress: "Aftab nagar, Dhaka",
         addressLocality: "Dhaka",
-        postalCode: "1205",
+        postalCode: "1212",
         addressCountry: "BD",
       },
     },

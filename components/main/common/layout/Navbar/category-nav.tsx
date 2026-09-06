@@ -27,7 +27,7 @@ export function CategoryNav() {
   };
 
   return (
-    <nav className="hidden bg-primary-dark text-primary-foreground lg:block">
+    <nav className="hidden bg-primary-dark text-primary-foreground lg:block sticky top-50 z-50 border-b border-primary-border">
       <div className="site-container flex  items-center py-2 text-sm">
         {/* Left: All Categories Trigger */}
         <div className="justify-self-start">

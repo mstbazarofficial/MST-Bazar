@@ -15,7 +15,7 @@ export function CtaBanner() {
       {/* Background image */}
       <div className="absolute inset-0">
         <Image
-          src="/assets/cta-bg.png"
+          src="/assets/cta-bg.webp"
           alt="CTA Banner Background"
           fill
           priority
@@ -24,7 +24,7 @@ export function CtaBanner() {
       </div>
 
       {/* 85% solid overlay on mobile | Pure transparent gradient on large screens */}
-      <div className="absolute inset-0 bg-[#0f3d1f]/85 lg:bg-[#0f3d1f]/40" />
+      <div className="absolute inset-0 bg-[#0f3d1f]/85 lg:bg-[#0f3d1f]/0" />
 
       <div className="site-container relative z-10 py-14 sm:py-16 lg:py-10">
         <div className="max-w-xl">

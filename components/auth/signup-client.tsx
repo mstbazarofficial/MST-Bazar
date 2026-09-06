@@ -3,11 +3,11 @@
 import { AuthBg } from "@/components/auth/auth-bg";
 import { Button } from "@/components/ui/button";
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -15,22 +15,23 @@ import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-    AlertCircle,
-    ArrowRight,
-    Eye,
-    EyeOff,
-    Loader2,
-    Lock,
-    Mail,
-    MailCheck,
-    Phone,
-    User,
+  AlertCircle,
+  ArrowRight,
+  Eye,
+  EyeOff,
+  Loader2,
+  Lock,
+  Mail,
+  MailCheck,
+  Phone,
+  User,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { Logo } from "../main/common/layout/Navbar/logo";
 
 const signUpSchema = z
   .object({
@@ -110,20 +111,7 @@ export default function SignUpPageClient() {
         <Card className="w-full min-h-screen sm:min-h-0 sm:max-w-md py-8 sm:py-6 gap-1 border-0 sm:border border-border rounded-none sm:rounded-2xl shadow-none sm:shadow-xl bg-background sm:bg-card text-card-foreground backdrop-blur-sm my-auto flex flex-col justify-center px-2 sm:px-0">
           {/* Logo */}
           <div className="flex justify-center pt-2 pb-1">
-            <Link
-              href="/"
-              className="flex shrink-0 items-center"
-              aria-label="Go to homepage"
-            >
-              <Image
-                src="/assets/logo.png"
-                alt="Logo"
-                width={48}
-                height={48}
-                priority
-                className=" w-auto"
-              />
-            </Link>
+            <Logo className="w-60 lg:w-65"></Logo>
           </div>
 
           {isSubmitted ? (

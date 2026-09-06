@@ -31,6 +31,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { Logo } from "../main/common/layout/Navbar/logo";
 const loginSchema = z.object({
   email: z.email("Please enter a valid email address"),
   password: z.string().min(1, "Password is required"),
@@ -126,20 +127,7 @@ export default function LoginPageClient() {
         <Card className="w-full min-h-screen sm:min-h-0 sm:max-w-md py-8 sm:py-6 gap-1 border-0 sm:border border-border rounded-none sm:rounded-2xl shadow-none sm:shadow-xl bg-background sm:bg-card text-card-foreground backdrop-blur-sm my-auto flex flex-col justify-center px-2 sm:px-0">
           {/* Logo */}
           <div className="flex justify-center pt-2 pb-1">
-            <Link
-              href="/"
-              className="flex shrink-0 items-center"
-              aria-label="Go to homepage"
-            >
-              <Image
-                src="/assets/logo.png"
-                alt="Logo"
-                width={48}
-                height={48}
-                priority
-                className=" w-auto"
-              />
-            </Link>
+            <Logo className="w-60 lg:w-65"></Logo>
           </div>
 
           <CardHeader className="space-y-1 pb-4 px-6 sm:px-6">

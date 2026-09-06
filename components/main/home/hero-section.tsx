@@ -8,9 +8,9 @@ import { Autoplay, EffectFade } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 const slides = [
-  "/assets/banner.png",
-  "/assets/banner2.png",
-  "/assets/banner3.png",
+  "/assets/banner.webp",
+  "/assets/banner-2.webp",
+  "/assets/banner-3.webp",
 ];
 
 export function HeroSection() {
@@ -18,7 +18,7 @@ export function HeroSection() {
     <section className="site-container section-y max-sm:pb-4 max-sm:pt-1.5 w-full ">
       {/* Card Container */}
       <div className="relative overflow-hidden rounded-2xl lg:rounded-3xl bg-[linear-gradient(110deg,#fcfde3_0%,#dcf1df_50%,#c8eacc_100%)]">
-        <div className="flex md:items-start items-center flex-col gap-6 pb-6 md:px-7 md:py-6 lg:12 xl:py-16 relative w-full">
+        <div className="flex md:items-start items-center flex-col gap-6 pb-6 md:px-7 md:py-6 lg:12 xl:py-15 relative w-full">
           {/* Swiper & Backdrop Column */}
           <div className="order-first flex w-full items-center justify-center lg:order-last relative md:absolute md:inset-0">
             {/* Responsive Organic Backdrop Shapes */}
@@ -46,7 +46,7 @@ export function HeroSection() {
                 <SwiperSlide key={index}>
                   <Link
                     href="/products"
-                    className="relative aspect-video w-full overflow-hidden block"
+                    className="relative aspect-4/3 md:aspect-[1.96/1] lg:aspect-[2.3/1] xl:aspect-2.7/1 w-full overflow-hidden block"
                   >
                     <Image
                       src={image}
@@ -57,7 +57,7 @@ export function HeroSection() {
                       fetchPriority={index === 0 ? "high" : "auto"}
                       loading="eager"
                       quality={60}
-                      className="object- object-center drop-shadow-md sm:drop-shadow-xl"
+                      className="object-cover object-bottom-right drop-shadow-md sm:drop-shadow-xl"
                     />
                   </Link>
                 </SwiperSlide>

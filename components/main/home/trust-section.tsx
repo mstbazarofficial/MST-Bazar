@@ -1,11 +1,4 @@
-import {
-  Award,
-  CheckCircle2,
-  Leaf,
-  ShieldCheck,
-  Star,
-  Truck,
-} from "lucide-react";
+import { Award, Leaf, ShieldCheck, Star, Truck } from "lucide-react";
 import Image from "next/image";
 import { SectionHeading } from "../common/layout/section-heading";
 
@@ -82,7 +75,7 @@ export function HomeTrustSection() {
           <div className="lg:col-span-5 relative flex flex-col min-h-90 lg:min-h-0">
             <div className="relative w-full h-full min-h-90 lg:min-h-full rounded-3xl overflow-hidden shadow-lg border border-emerald-100">
               <Image
-                src="/assets/honey-pot.png"
+                src="/assets/honey-pot.webp"
                 alt="100% Pure Organic Products"
                 fill
                 sizes="(max-width: 1024px) 100vw, 40vw"
@@ -107,12 +100,12 @@ export function HomeTrustSection() {
             </div>
 
             {/* Floating Badge 2: Organic Certified */}
-            <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3.5 py-2 rounded-xl shadow-md border border-gray-100 flex items-center gap-2">
+            {/* <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3.5 py-2 rounded-xl shadow-md border border-gray-100 flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600" />
               <span className="text-xs font-bold text-emerald-950">
                 100% Organic Certified
               </span>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

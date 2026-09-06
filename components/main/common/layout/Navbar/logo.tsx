@@ -5,12 +5,14 @@ interface LogoProps {
   href?: string;
   src?: string;
   alt?: string;
+  className?: string;
 }
 
 export function Logo({
   href = "/",
-  src = "/assets/logo-vertical.png",
+  src = "/assets/Mst-Bazar-Nav-Logo.png",
   alt = "Logo",
+  className = "",
 }: LogoProps) {
   return (
     <Link
@@ -21,11 +23,11 @@ export function Logo({
       <Image
         src={src}
         alt={alt}
-        width={120}
-        height={48}
+        width={230}
+        height={58}
         preload={true}
         quality={60}
-        className=" w-auto h-6 sm:h-8 object-contain"
+        className={` object-contain ${className}`}
       />
     </Link>
   );

@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
-import { FaFacebook, FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
+import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
+import { Logo } from "./Navbar/logo";
 
 export default function Footer() {
   // Contact Information from Environment Variables
@@ -21,16 +21,7 @@ export default function Footer() {
           {/* Column 1: Brand Info & Socials */}
           <div className="space-y-4">
             {/* Brand Logo */}
-            <Link href="/" className="inline-block">
-              <Image
-                src="/assets/logo-vertical.png"
-                alt="MST Bazar Logo"
-                width={150}
-                height={50}
-                quality={60}
-                className="h-auto w-auto max-h-10 object-contain"
-              />
-            </Link>
+            <Logo></Logo>
 
             {/* Description */}
             <p className="text-xs text-white/80 font-medium leading-relaxed max-w-xs">

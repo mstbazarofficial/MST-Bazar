@@ -16,11 +16,11 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-40  bg-background">
       {/* `relative` here is what lets the mobile search overlay cover this row */}
-      <div className="site-container relative flex h-14 md:h-16 items-center gap-4">
+      <div className="site-container relative flex h-14 md:h-18 items-center gap-4">
         {!mobileSearchOpen && (
           <>
             <MobileMenu />
-            <Logo />
+            <Logo className="w-40 lg:w-50" />
             <div className="flex flex-1 justify-center">
               <DesktopSearchBar />
             </div>

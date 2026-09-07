@@ -123,7 +123,7 @@ export default function LoginPageClient() {
       <div className="absolute top-0 left-0 w-full h-full bg-primary/10 pointer-events-none" />
       <AuthBg />
 
-      <section className="flex w-full min-h-full items-center justify-center lg:justify-start lg:pl-28 px-0 sm:px-4 py-0 sm:py-12 z-10">
+      <section className="flex w-full min-h-full items-center justify-center lg:pr-58 px-0 sm:px-4 py-0 sm:py-12 z-10">
         <Card className="w-full min-h-screen sm:min-h-0 sm:max-w-md py-8 sm:py-6 gap-1 border-0 sm:border border-border rounded-none sm:rounded-2xl shadow-none sm:shadow-xl bg-background sm:bg-card text-card-foreground backdrop-blur-sm my-auto flex flex-col justify-center px-2 sm:px-0">
           {/* Logo */}
           <div className="flex justify-center pt-2 pb-1">

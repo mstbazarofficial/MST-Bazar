@@ -1,5 +1,7 @@
 FROM node:22-alpine AS base
 
+RUN apk add --no-cache curl
+
 # -------------------------
 # Dependencies
 # -------------------------
@@ -24,7 +26,7 @@ COPY --from=deps /app/node_modules ./node_modules
 
 COPY . .
 
-RUN DIRECT_URL="postgresql://dummy:dummy@localhost:5432/dummy" npx prisma generate
+RUN npx prisma generate
 
 RUN npm run build
 

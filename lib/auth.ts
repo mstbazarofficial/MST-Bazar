@@ -10,9 +10,8 @@ import { admin } from "better-auth/plugins";
 import { ac, adminRole, customerRole, moderatorRole } from "./access-control";
 
 export const auth = betterAuth({
-  trustedOrigins: async () => {
-    return [process.env.BETTER_AUTH_URL];
-  },
+  baseURL: process.env.BETTER_AUTH_URL || "https://mstbazar.com",
+  trustedOrigins: ["https://mstbazar.com", "https://www.mstbazar.com"],
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),

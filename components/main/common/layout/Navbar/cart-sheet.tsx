@@ -149,7 +149,7 @@ function CartRow({ item }: { item: PopulatedCartItem }) {
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <div className="flex items-start justify-between gap-2">
           <Link
-            href={`/product/${item.product.slug}`}
+            href={`/products/${item.product.slug}`}
             className="line-clamp-2 text-sm font-medium leading-tight hover:text-primary"
           >
             {item.product.title}

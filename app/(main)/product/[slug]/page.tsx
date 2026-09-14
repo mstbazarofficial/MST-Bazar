@@ -112,7 +112,6 @@ export default async function ProductPage({
     product.category.id,
     product.id,
   );
-  console.log("Related Products:", product.productDetails); // Debugging line
   return (
     <main className="bg-muted">
       <div className="site-container">

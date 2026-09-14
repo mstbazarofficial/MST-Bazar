@@ -3,6 +3,9 @@ import { ProductCard } from "../common/card/product-card";
 import { SectionHeading, ViewAllLink } from "../common/layout/section-heading";
 
 export function ComboProductsSection({ products }: { products: ProductDTO[] }) {
+  if (products.length === 0) {
+    return null;
+  }
   return (
     <section id="combo-products" className="w-full site-container section-y">
       <SectionHeading

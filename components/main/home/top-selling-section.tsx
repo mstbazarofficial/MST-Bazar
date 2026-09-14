@@ -3,6 +3,9 @@ import { TopSellingProductCard } from "../common/card/top-selling-product-card";
 import { SectionHeading, ViewAllLink } from "../common/layout/section-heading";
 
 export function TopSellingSection({ products }: { products: ProductDTO[] }) {
+  if (products.length === 0) {
+    return null;
+  }
   return (
     <section
       id="top-selling"

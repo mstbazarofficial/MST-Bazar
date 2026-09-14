@@ -4,6 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { AddToCartButton } from "./add-to-cart-button";
 
+// Helper function to round price and format with two decimal places (.00)
+const formatPrice = (price: number) => Math.round(price).toFixed(2);
+
 export function ProductCard({
   product,
   href,
@@ -51,11 +54,11 @@ export function ProductCard({
 
               <div className="flex items-baseline gap-2 pt-0.5">
                 <span className="text-sm sm:text-base font-extrabold text-primary">
-                  ৳{discountedPrice.toFixed(2)}
+                  ৳{formatPrice(discountedPrice)}
                 </span>
                 {!!product.discountPercentage && (
                   <span className="text-xs text-muted-foreground/70 line-through font-medium">
-                    ৳{product.price.toFixed(2)}
+                    ৳{formatPrice(product.price)}
                   </span>
                 )}
               </div>
@@ -123,11 +126,11 @@ export function ProductCard({
           </p>
           <div className="flex items-baseline gap-2 pt-0.5">
             <span className="text-sm sm:text-base font-extrabold text-primary">
-              ৳{discountedPrice.toFixed(2)}
+              ৳{formatPrice(discountedPrice)}
             </span>
             {!!product.discountPercentage && (
               <span className="text-xs text-muted-foreground/70 line-through font-medium">
-                ৳{product.price.toFixed(2)}
+                ৳{formatPrice(product.price)}
               </span>
             )}
           </div>

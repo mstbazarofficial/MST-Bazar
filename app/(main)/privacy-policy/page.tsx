@@ -19,69 +19,68 @@ export const metadata = {
 // Mock data that can later be replaced with an API call from the backend
 const privacyPolicyData = {
   header: {
-    title: "Privacy Policy",
+    title: "গোপনীয়তা নীতি",
     subtitle:
-      "We value your privacy. Read our policy below to understand how we collect, use, and protect your personal information.",
+      "MSTbazar (mstbazar.com)-এ গ্রাহকের ব্যক্তিগত তথ্যের সুরক্ষা এবং গোপনীয়তা রক্ষা করাকে আমরা একটি পবিত্র 'আমানত' হিসেবে গণ্য করি। আমাদের ওয়েবসাইট ব্যবহারের সময় আপনার তথ্য কীভাবে সংগ্রহ, ব্যবহার এবং সুরক্ষিত রাখা হয়—তা স্পষ্টভাবে তুলে ধরতে এই গোপনীয়তা নীতি প্রণয়ন করা হয়েছে।",
     lastUpdated: "August 12, 2026",
   },
   sections: [
     {
       id: "information-collection",
-      title: "1. Information Collection",
+      title: "১. আমরা কী ধরনের তথ্য সংগ্রহ করি? (Information We Collect)",
       icon: Database,
       content: [
-        "We collect information you provide directly to us, such as when you create or modify your account, place an order, contact customer support, or otherwise communicate with us.",
-        "This information may include: name, email address, phone number, delivery address, payment method details, and any other information you choose to provide.",
-        "We also automatically collect certain information when you visit our site, including your IP address, browser type, and operating system.",
+        "ব্যক্তিগত পরিচয়: আপনার নাম।",
+        "যোগাযোগের তথ্য: মোবাইল নম্বর ও ইমেইল অ্যাড্রেস।",
+        "ডেলিভারির ঠিকানা: পণ্য পৌঁছে দেওয়ার পূর্ণাঙ্গ ঠিকানা এবং জেলা/থানা।",
+        "অর্ডার হিস্ট্রি: পূর্বে ক্রয়কৃত পণ্যের বিবরণ ও লেনদেনের সাধারণ তথ্য।",
+        "বিশেষ দ্রষ্টব্য: আমরা গ্রাহকের কোনো প্রকার স্পর্শকাতর আর্থিক তথ্য (যেমন: ডেবিট/ক্রেডিট কার্ডের পিন, বিকাশ/নগদ অ্যাকাউন্টের ওটিপি বা পাসওয়ার্ড) সংগ্রহ বা সংরক্ষণ করি না।",
       ],
     },
     {
       id: "information-use",
-      title: "2. Use of Information",
+      title:
+        "২. সংগৃহীত তথ্য কীভাবে ব্যবহার করা হয়? (How We Use Your Information)",
       icon: FileText,
       content: [
-        "We may use the information we collect about you to provide, maintain, and improve our services.",
-        "To process transactions and send you related information, including order confirmations, delivery updates, and receipts.",
-        "To send you technical notices, security alerts, and support messages.",
-        "To respond to your comments, questions, and requests, and provide customer service.",
-        "To communicate with you about products, services, offers, and promotions offered by MST Bazar (if you have opted in).",
+        "আপনার অর্ডার নিশ্চিতকরণ, প্রক্রিয়াজাতকরণ ও দ্রুত ডেলিভারি সম্পন্ন করতে।",
+        "অর্ডার সংক্রান্ত আপডেট বা স্ট্যাটাস এসএমএস/কলের মাধ্যমে জানাতে।",
+        "কাস্টমার সাপোর্ট ও বিক্রয়োত্তর সেবা নিশ্চিত করতে।",
+        "আমাদের নতুন পণ্য, বিশেষ ছাড় বা সেবার মান উন্নয়নের প্রয়োজনীয় নোটিফিকেশন পাঠাতে (যদি আপনি সম্মত থাকেন)।",
       ],
     },
     {
       id: "information-sharing",
-      title: "3. Sharing of Information",
+      title: "৩. তথ্যের নিরাপত্তা ও আমানতদারিতা (Data Security & Trust)",
       icon: Share2,
       content: [
-        "We may share your information with trusted third-party vendors and service providers who need access to such information to carry out work on our behalf (e.g., delivery partners like Pathao/RedX, payment gateways like bKash).",
-        "We may disclose your information in response to a request by a competent authority if we believe disclosure is in accordance with, or required by, any applicable law or legal process.",
-        "We strictly do not sell, rent, or trade your personal information to third parties for marketing purposes.",
+        "কোনো তথ্য বিক্রি বা শেয়ার নয়: বাণিজ্যিক উদ্দেশ্যে কোনো তৃতীয় পক্ষ, বিজ্ঞাপনদাতা বা এজেন্সির কাছে আপনার ব্যক্তিগত তথ্য বিক্রি, ভাড়া বা হস্তান্তর করা সম্পূর্ণ নিষিদ্ধ।",
+        "লজিস্টিকস শেয়ারিং: কেবল ডেলিভারি সম্পন্ন করার স্বার্থে বিশ্বস্ত কুরিয়ার পার্টনারদের সাথে প্রয়োজনীয় নাম, ঠিকানা ও ফোন নম্বর শেয়ার করা হয়।",
+        "নিরাপদ প্রযুক্তি: ওয়েবসাইটের সব ধরনের লেনদেন ও ডেটা ট্রান্সফার এনক্রিপ্টেড (SSL Secured) সুরক্ষিত সার্ভারে সংরক্ষিত থাকে।",
       ],
     },
     {
       id: "data-security",
-      title: "4. Data Security",
+      title: "৪. কুকিজ ও ট্র্যাকিং পলিসি (Cookies Policy)",
       icon: Shield,
       content: [
-        "We implement robust security measures to protect your personal information from unauthorized access, loss, misuse, alteration, or destruction.",
-        "All payment transactions are encrypted and processed through secure, compliant third-party payment gateways. We do not store your credit card or PIN details on our servers.",
-        "While we strive to protect your data, no method of transmission over the Internet is 100% secure. Therefore, we cannot guarantee its absolute security.",
+        "ওয়েবসাইটের গতি বাড়ানো, কার্ট মেমোরি সংরক্ষণ এবং ইউজার এক্সপেরিয়েন্স উন্নত করতে আমরা স্ট্যান্ডার্ড ইন্টারনেট 'Cookies' প্রযুক্তি ব্যবহার করি। আপনি চাইলে আপনার ব্রাউজার সেটিংস থেকে যেকোনো সময় কুকিজ নিষ্ক্রিয় করতে পারেন।",
       ],
     },
     {
       id: "cookies",
-      title: "5. Cookies and Tracking",
+      title: "৫. গ্রাহকের অধিকার (Customer Rights)",
       icon: Cookie,
       content: [
-        "We use cookies and similar tracking technologies to enhance your browsing experience, remember your preferences, and track the activity on our website.",
-        "Cookies are small files stored on your device. You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent.",
-        "Please note that if you disable cookies, some features of our website (like your shopping cart) may not function properly.",
+        "আপনি যেকোনো সময় আপনার সংরক্ষিত ব্যক্তিগত তথ্য পরিবর্তন, সংশোধন বা ডিলিট করার অনুরোধ জানাতে পারেন।",
+        "প্রমোশনাল মেসেজ বা অফার সংক্রান্ত নোটিফিকেশন গ্রহণ না করতে চাইলে তা আনসাবস্ক্রাইব করার পূর্ণ অধিকার আপনার রয়েছে।",
       ],
     },
   ],
   support: {
-    title: "Privacy Concerns?",
+    title: "গোপনীয়তা সংক্রান্ত জিজ্ঞাসা?",
     description:
-      "If you have any questions or concerns about this Privacy Policy or how we handle your data, please reach out to us.",
+      "আমাদের গোপনীয়তা নীতি সম্পর্কে কোনো জিজ্ঞাসা বা তথ্যের সুরক্ষা সংক্রান্ত বিষয়ে থাকলে আমাদের সাথে যোগাযোগ করুন।",
     email: process.env.NEXT_PUBLIC_CONTACT_EMAIL,
     phone: process.env.NEXT_PUBLIC_CONTACT_NUMBER,
   },

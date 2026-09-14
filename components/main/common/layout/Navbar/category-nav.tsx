@@ -9,7 +9,7 @@ import { MobileMenu } from "./mobile-menu";
 const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
+  { label: "contact", href: "/contact" },
   { label: "Products", href: "/products" },
 ] as const;
 
@@ -27,7 +27,7 @@ export function CategoryNav() {
   };
 
   return (
-    <nav className="hidden bg-primary-dark text-primary-foreground lg:block sticky top-50 z-50 border-b border-primary-border">
+    <nav className="hidden bg-primary-dark text-primary-foreground lg:block">
       <div className="site-container flex  items-center py-2 text-sm">
         {/* Left: All Categories Trigger */}
         <div className="justify-self-start">

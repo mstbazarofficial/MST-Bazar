@@ -1,9 +1,10 @@
 import Footer from "@/components/main/common/layout/app-footer";
-import { Navbar } from "@/components/main/common/layout/Navbar";
+import { SiteHeader } from "@/components/main/common/layout/app-header";
 import { CartProvider } from "@/context/cart-provider";
 import { CatalogProvider } from "@/context/catalog-provider";
 import { QueryProvider } from "@/context/query-provider";
 import { getAllCategories, getAllProducts } from "@/lib/data/catalog";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import { FaWhatsapp } from "react-icons/fa";
 
@@ -41,7 +42,8 @@ export default async function RootLayout({
     <QueryProvider>
       <CatalogProvider categories={categories} products={products}>
         <CartProvider>
-          <Navbar />
+          <SiteHeader />
+
           {children}
           <Footer />
           {whatsappNumber && (
@@ -56,6 +58,9 @@ export default async function RootLayout({
               <span className="absolute inset-0 rounded-full bg-[#25D366]/70 motion-safe:animate-ping" />
               <FaWhatsapp className="relative size-8" aria-hidden="true" />
             </a>
+          )}
+          {process.env.ENABLE_EMAILS === "true" && (
+            <GoogleAnalytics gaId="G-91TTFGEMY6" />
           )}
         </CartProvider>
       </CatalogProvider>

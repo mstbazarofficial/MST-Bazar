@@ -1,4 +1,3 @@
-import Testimonials from "@/components/main/common/Testimonials";
 import ProductsHeader from "@/components/main/products/products-header";
 import { ProductsPageClient } from "@/components/main/products/products-page-client";
 import { getAllCategories, getAllProducts } from "@/lib/data/catalog";
@@ -179,7 +178,6 @@ export default async function ProductsPage({
     <main className="bg-muted">
       <ProductsHeader title={title} />
       <ProductsPageClient products={filteredProducts} />
-      <Testimonials />
     </main>
   );
 }

@@ -28,64 +28,64 @@ export const metadata: Metadata = {
 // Mock data that can later be replaced with an API call from the backend
 const termsData = {
   header: {
-    title: "Terms & Conditions",
+    title: "শর্তাবলী",
     subtitle:
-      "Please read these terms and conditions carefully before using our website and services.",
+      "আমাদের ওয়েবসাইট ও সেবা ব্যবহারের আগে অনুগ্রহ করে এই শর্তাবলী মনোযোগ সহকারে পড়ুন।",
     lastUpdated: "August 12, 2026",
   },
   sections: [
     {
       id: "agreement",
-      title: "1. Agreement to Terms",
+      title: "১. শর্তাবলীতে সম্মতি",
       icon: CheckSquare,
       content: [
-        "By accessing and using this website (MST Bazar), you accept and agree to be bound by the terms and provisions of this agreement.",
-        "In addition, when using this website's particular services, you shall be subject to any posted guidelines or rules applicable to such services.",
-        "If you do not agree to abide by these terms, please do not use our service.",
+        "এই ওয়েবসাইট (MST Bazar) ব্যবহারের মাধ্যমে আপনি এই চুক্তির শর্তাবলী মেনে নিচ্ছেন এবং তা মেনে চলতে সম্মত হচ্ছেন।",
+        "এছাড়াও, এই ওয়েবসাইটের নির্দিষ্ট কোনো সেবা ব্যবহারের সময় সেই সেবার জন্য প্রযোজ্য যেকোনো নিয়মাবলী বা গাইডলাইন আপনার জন্য প্রযোজ্য হবে।",
+        "আপনি যদি এই শর্তাবলী মেনে চলতে সম্মত না হন, তাহলে অনুগ্রহ করে আমাদের সেবা ব্যবহার করবেন না।",
       ],
     },
     {
       id: "user-accounts",
-      title: "2. User Accounts",
+      title: "২. ব্যবহারকারীর অ্যাকাউন্ট",
       icon: FileBadge,
       content: [
-        "When you create an account with us, you must provide information that is accurate, complete, and current at all times. Failure to do so constitutes a breach of the Terms.",
-        "You are responsible for safeguarding the password that you use to access the service and for any activities or actions under your password.",
-        "You agree not to disclose your password to any third party. You must notify us immediately upon becoming aware of any breach of security or unauthorized use of your account.",
+        "আমাদের সাথে অ্যাকাউন্ট তৈরি করার সময় আপনাকে অবশ্যই সঠিক, সম্পূর্ণ এবং হালনাগাদ তথ্য প্রদান করতে হবে। তা না করলে তা শর্তাবলী লঙ্ঘন হিসেবে বিবেচিত হবে।",
+        "সেবা ব্যবহারের জন্য আপনার পাসওয়ার্ড সুরক্ষিত রাখার দায়িত্ব আপনার এবং আপনার পাসওয়ার্ড ব্যবহার করে সংঘটিত যেকোনো কার্যকলাপের জন্য আপনি দায়ী থাকবেন।",
+        "আপনার পাসওয়ার্ড কোনো তৃতীয় পক্ষের কাছে প্রকাশ না করতে আপনি সম্মত হচ্ছেন। কোনো নিরাপত্তা লঙ্ঘন বা অননুমোদিত ব্যবহার সম্পর্কে জানতে পারলে অবিলম্বে আমাদের জানাতে হবে।",
       ],
     },
     {
       id: "products-orders",
-      title: "3. Products and Orders",
+      title: "৩. পণ্য ও অর্ডার",
       icon: AlertTriangle,
       content: [
-        "All products are subject to availability. We reserve the right to discontinue any product at any time.",
-        "We reserve the right to refuse any order you place with us. We may, in our sole discretion, limit or cancel quantities purchased per person, per household, or per order.",
-        "In the event that we make a change to or cancel an order, we may attempt to notify you by contacting the email and/or billing address/phone number provided at the time the order was made.",
+        "সকল পণ্য প্রাপ্যতা সাপেক্ষে সরবরাহ করা হয়। যেকোনো পণ্য যেকোনো সময় বন্ধ করার অধিকার আমরা সংরক্ষণ করি।",
+        "আপনার দেওয়া যেকোনো অর্ডার প্রত্যাখ্যান করার অধিকার আমরা সংরক্ষণ করি। আমরা আমাদের একমাত্র বিবেচনায় প্রতি ব্যক্তি, প্রতি পরিবার বা প্রতি অর্ডারে ক্রয়কৃত পরিমাণ সীমিত বা বাতিল করতে পারি।",
+        "কোনো অর্ডার পরিবর্তন বা বাতিল করা হলে, অর্ডার প্রদানের সময় দেওয়া ইমেইল এবং/অথবা ফোন নম্বরের মাধ্যমে আপনাকে জানানোর চেষ্টা করা হতে পারে।",
       ],
     },
     {
       id: "limitations",
-      title: "4. Limitation of Liability",
+      title: "৪. দায়বদ্ধতার সীমাবদ্ধতা",
       icon: Scale,
       content: [
-        "In no event shall MST Bazar, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the Service.",
+        "কোনো অবস্থাতেই MST Bazar, এর পরিচালক, কর্মচারী, অংশীদার, প্রতিনিধি, সরবরাহকারী বা সংশ্লিষ্ট প্রতিষ্ঠান পরোক্ষ, আকস্মিক, বিশেষ, পরিণতিমূলক বা শাস্তিমূলক ক্ষতির জন্য দায়ী থাকবে না, যার মধ্যে রয়েছে মুনাফা, ডেটা, ব্যবহার, সুনাম বা অন্যান্য অস্পষ্ট ক্ষতি, যা আমাদের সেবা ব্যবহার বা ব্যবহার করতে না পারার কারণে ঘটতে পারে।",
       ],
     },
     {
       id: "governing-law",
-      title: "5. Governing Law",
+      title: "৫. প্রযোজ্য আইন",
       icon: Gavel,
       content: [
-        "These Terms shall be governed and construed in accordance with the laws of Bangladesh, without regard to its conflict of law provisions.",
-        "Our failure to enforce any right or provision of these Terms will not be considered a waiver of those rights. If any provision of these Terms is held to be invalid or unenforceable by a court, the remaining provisions of these Terms will remain in effect.",
+        "এই শর্তাবলী বাংলাদেশের প্রচলিত আইন অনুযায়ী পরিচালিত ও ব্যাখ্যা করা হবে।",
+        "এই শর্তাবলীর কোনো অধিকার বা বিধান প্রয়োগ না করা তার পরিত্যাগ হিসেবে বিবেচিত হবে না। কোনো আদালত কর্তৃক এই শর্তাবলীর কোনো বিধান অবৈধ বা অপ্রযোজ্য বলে বিবেচিত হলে, বাকি বিধানগুলো কার্যকর থাকবে।",
       ],
     },
   ],
   support: {
-    title: "Have Questions?",
+    title: "কোনো প্রশ্ন আছে?",
     description:
-      "If you have any questions or concerns about these Terms & Conditions, please contact us.",
+      "এই শর্তাবলী সম্পর্কে আপনার কোনো প্রশ্ন বা উদ্বেগ থাকলে অনুগ্রহ করে আমাদের সাথে যোগাযোগ করুন।",
     email: process.env.NEXT_PUBLIC_CONTACT_EMAIL,
     phone: process.env.NEXT_PUBLIC_CONTACT_NUMBER,
   },

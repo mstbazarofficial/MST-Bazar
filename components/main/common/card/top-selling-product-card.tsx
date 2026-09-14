@@ -6,6 +6,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { AddToCartButton } from "./add-to-cart-button";
 
+// Helper function to round price and format with two decimal places (.00)
+const formatPrice = (price: number) => Math.round(price).toFixed(2);
+
 export function TopSellingProductCard({
   product,
   className,
@@ -34,7 +37,7 @@ export function TopSellingProductCard({
         {/* Left: Image Container */}
         <Link
           href={productHref}
-          className="relative w-38 h-38 lg:w-56 lg:h-56 aspect-square shrink-0 rounded-md overflow-hidden bg-muted/30  flex items-center justify-center"
+          className="relative w-38 h-38 lg:w-56 lg:h-56 aspect-square shrink-0 rounded-md overflow-hidden bg-muted/30 flex items-center justify-center"
         >
           {imageUrl ? (
             <Image
@@ -69,7 +72,7 @@ export function TopSellingProductCard({
             </div>
 
             {/* Title & Unit */}
-            <Link className="space-y-1 sm:space-y-3 " href={productHref}>
+            <Link className="space-y-1 sm:space-y-3" href={productHref}>
               <h3 className="font-bold text-xs sm:text-lg text-foreground/80 group-hover:text-primary transition-colors line-clamp-2 leading-snug">
                 {product.title}
               </h3>
@@ -81,11 +84,11 @@ export function TopSellingProductCard({
             {/* Pricing */}
             <div className="flex items-baseline gap-1.5 mt-1.5 sm:mt-3">
               <span className="font-extrabold text-sm sm:text-lg text-primary">
-                ৳{Math.round(finalPrice).toLocaleString()}
+                ৳{formatPrice(finalPrice)}
               </span>
               {hasDiscount && (
                 <span className="text-xs text-muted-foreground/70 line-through font-medium">
-                  ৳{Math.round(product.price).toLocaleString()}
+                  ৳{formatPrice(product.price)}
                 </span>
               )}
             </div>

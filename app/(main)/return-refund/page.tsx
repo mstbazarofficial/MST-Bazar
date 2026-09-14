@@ -27,66 +27,67 @@ export const metadata = {
 // Mock data that can later be replaced with an API call from the backend
 const refundPolicyData = {
   header: {
-    title: "Return & Refund Policy",
+    title: "রিটার্ন ও রিফান্ড পলিসি",
     subtitle:
-      "We want you to be completely satisfied with your purchase. Read our policy below to understand how we handle returns and refunds.",
+      "MSTbazar-এ আপনার সন্তুষ্টি ও সুস্বাস্থ্যই আমাদের প্রধান অগ্রাধিকার। আমরা সততা ও আমানতদারিতার সাথে প্রতিটি অর্ডার সরবরাহ করে থাকি। তবুও কোনো কারণে পণ্যে সমস্যা থাকলে বা আপনি সন্তুষ্ট না হলে আমাদের সহজ রিটার্ন ও রিফান্ড সুবিধা গ্রহণ করতে পারবেন।",
     lastUpdated: "August 12, 2026",
   },
   sections: [
     {
       id: "return-policy",
-      title: "1. Return Policy",
+      title: "১. ডেলিভারি গ্রহণের সময় করণীয় (On-Spot Checking)",
       icon: RefreshCcw,
       content: [
-        "We accept returns within 7 days of delivery for most items.",
-        "To be eligible for a return, your item must be unused, in its original packaging, and in the same condition that you received it.",
-        "Perishable goods, such as fresh vegetables, fruits, and meat, are not eligible for return unless they are delivered damaged, spoiled, or incorrect.",
-        "A receipt or proof of purchase is required to complete your return.",
+        "ডেলিভারিম্যানের সামনেই পার্সেল খুলে পণ্যের গুণগত মান, পরিমাণ এবং প্যাকেজিং অক্ষত আছে কি না তা যাচাই করুন।",
+        "পণ্যে কোনো দৃশ্যমান ক্ষতি, ভাঙা বা ভুল পণ্য দেখতে পেলে ডেলিভারিম্যানকে তাৎক্ষণিকভাবে অবহিত করে পণ্যটি সরাসরি রিটার্ন করে দিন।",
       ],
     },
     {
       id: "refund-process",
-      title: "2. Refund Process",
+      title: "২. রিটার্ন ও রিপ্লেসমেন্টের শর্তাবলী (Return Conditions)",
       icon: CreditCard,
       content: [
-        "Once your return is received and inspected by our team, we will send you an email or SMS to notify you that we have received your returned item.",
-        "We will also notify you of the approval or rejection of your refund.",
-        "If approved, your refund will be processed automatically to your original method of payment (e.g., bKash, Nagad, Credit Card, or Bank Transfer).",
+        "পণ্য গ্রহণের পর নিচের যে কোনো সমস্যায় আপনি ২৪ ঘণ্টার মধ্যে আমাদের সাথে যোগাযোগ করে রিটার্ন বা এক্সচেঞ্জ দাবি করতে পারেন।",
+        "ডেলিভারির সময় পণ্য ক্ষতিগ্রস্ত, লিক হওয়া বা ভাঙা অবস্থায় পেলে।",
+        "পণ্যের গুণগত মানে কোনো সুনির্দিষ্ট সমস্যা বা নষ্ট থাকলে।",
+        "অর্ডারের তুলনায় ভুল বা কম পণ্য সরবরাহ করা হলে।",
+        "প্যাকেট খোলার সময় বা কোনো ত্রুটি পেলে প্রমাণস্বরূপ একটি স্পষ্ট ছবি বা ছোট ভিডিও ধারণ করে আমাদের ইনবক্স বা হোয়াটসঅ্যাপে পাঠাতে হবে।",
+        "বিশেষ দ্রষ্টব্য: খাদ্যপণ্য স্বাস্থ্য ও সুরক্ষার সাথে জড়িত হওয়ায় কাস্টমারের অসাবধানতাবশত ক্ষতি হলে, ব্যবহৃত হলে বা মুখ খোলা থাকলে (গুণগত ত্রুটি ছাড়া) পণ্য রিটার্ন গ্রহণযোগ্য হবে না।",
       ],
     },
     {
       id: "timeline",
-      title: "3. Refund Timeline",
+      title: "৩. রিফান্ড প্রক্রিয়া (Refund Policy)",
       icon: Clock,
       content: [
-        "Mobile Banking (bKash/Nagad): 3-5 business days.",
-        "Credit/Debit Cards: 7-10 business days, depending on your card issuer's policies.",
-        "Cash on Delivery (COD) refunds will be issued via mobile banking or bank transfer, as cash refunds are not available.",
+        "রিটার্ন ভেরিফিকেশন: রিটার্নকৃত পণ্য আমাদের স্টোরে পৌঁছানোর পর কোয়ালিটি টিম তা যাচাই করবে।",
+        "রিফান্ড অনুমোদন: সমস্যা প্রমাণিত হলে পরবর্তী ৩ থেকে ৫ কার্যদিবসের মধ্যে আপনার রিফান্ড প্রসেস করা হবে।",
+        "টাকা ফেরতের মাধ্যম: আপনি যে মাধ্যমে পেমেন্ট করেছিলেন (বিকাশ, নগদ, রকেট বা ব্যাংক ট্রান্সফার), ঠিক সেই মাধ্যমেই পুরো টাকা ফেরত পাঠানো হবে।",
+        "অনলাইন পেমেন্টের ক্ষেত্রে রিফান্ডের জন্য কোনো অতিরিক্ত সার্ভিস চার্জ কাটা হবে না।",
       ],
     },
     {
       id: "exchanges",
-      title: "4. Exchanges",
+      title: "৪. রিপ্লেসমেন্ট সুবিধা (Free Replacement)",
       icon: ShieldCheck,
       content: [
-        "We only replace items if they are defective, damaged, or expired at the time of delivery.",
-        "If you need to exchange an item for the same product, please contact our customer support team immediately upon receiving your order.",
+        "যদি আপনি রিফান্ডের পরিবর্তে নতুন পণ্য নিতে চান, তবে আমাদের টিম কোনো অতিরিক্ত ডেলিভারি চার্জ ছাড়াই দ্রুততম সময়ে আপনাকে ফ্রেশ পণ্য রিপ্লেসমেন্ট পৌঁছে দেবে।",
       ],
     },
     {
       id: "shipping",
-      title: "5. Shipping Costs for Returns",
+      title: "৫. অর্ডার বাতিল (Order Cancellation)",
       icon: Truck,
       content: [
-        "You will be responsible for paying your own shipping costs for returning your item unless the return is due to our error (e.g., wrong item sent, damaged product).",
-        "Original shipping costs are non-refundable. If you receive a refund, the cost of return shipping will be deducted from your refund.",
+        "পার্সেল কুরিয়ারে হ্যান্ডওভার করার আগ পর্যন্ত আপনি ফ্রিতে অর্ডার বাতিল করতে পারবেন।",
+        "পার্সেল ডেলিভারির জন্য বের হয়ে যাওয়ার পর অযৌক্তিক কারণে অর্ডার বাতিল করা কাম্য নয়।",
       ],
     },
   ],
   support: {
-    title: "Need Help?",
+    title: "সাহায্য দরকার?",
     description:
-      "If you have any questions about our return and refund policy, please contact us.",
+      "আমাদের রিটার্ন ও রিফান্ড পলিসি সম্পর্কে আপনার কোনো প্রশ্ন থাকলে আমাদের সাথে যোগাযোগ করুন।",
     email: process.env.NEXT_PUBLIC_CONTACT_EMAIL,
     phone: process.env.NEXT_PUBLIC_CONTACT_NUMBER,
   },

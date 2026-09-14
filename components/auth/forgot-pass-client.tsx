@@ -77,9 +77,9 @@ export default function ForgotPasswordPageClient() {
               aria-label="Go to homepage"
             >
               <Image
-                src="/assets/logo.png"
+                src="/assets/logo-vertical.png"
                 alt="Logo"
-                width={48}
+                width={100}
                 height={48}
                 priority
                 className=" w-auto"

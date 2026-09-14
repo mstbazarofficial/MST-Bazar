@@ -1,7 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
 import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
-import { Logo } from "./Navbar/logo";
-
 export default function Footer() {
   // Contact Information from Environment Variables
   const contactNumber = process.env.NEXT_PUBLIC_CONTACT_NUMBER;
@@ -20,8 +19,20 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 lg:gap-6">
           {/* Column 1: Brand Info & Socials */}
           <div className="space-y-4">
-            {/* Brand Logo */}
-            <Logo></Logo>
+            <Link
+              href="/"
+              className="flex shrink-0 items-center"
+              aria-label="Go to homepage"
+            >
+              <Image
+                src={"/assets/logo-vertical.png"}
+                alt={"logo"}
+                width={120}
+                height={48}
+                priority
+                className="w-auto h-6 sm:h-8 object-contain"
+              />
+            </Link>
 
             {/* Description */}
             <p className="text-xs text-white/80 font-medium leading-relaxed max-w-xs">

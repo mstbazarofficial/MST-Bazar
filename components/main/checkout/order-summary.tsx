@@ -22,11 +22,19 @@ interface OrderSummaryProps {
   total: number;
 }
 
-// NOTE: adjust `item.product.title` / `item.product.image` / `item.product.unit`
-// below to match the actual shape of your Product type if it differs.
 function getDiscountedPrice(product: PopulatedCartItem["product"]) {
   const discount = product.price * ((product.discountPercentage ?? 0) / 100);
   return product.price - discount;
+}
+
+/**
+ * Floors the price to strip cents/decimals and formats with 2 fixed decimals (e.g., 110.12 -> 110.00).
+ */
+function formatPrice(amount: number) {
+  return Math.floor(amount).toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 }
 
 export function OrderSummary({
@@ -134,10 +142,10 @@ export function OrderSummary({
                       {item.product.title}
                     </h4>
                     <p className="text-[10px] text-muted-foreground font-medium">
-                      ৳{discountedPrice.toLocaleString()}
+                      ৳{formatPrice(discountedPrice)}
                     </p>
                     <p className="text-xs font-black text-emerald-800 pt-0.5">
-                      ৳{(discountedPrice * item.quantity).toLocaleString()}
+                      ৳{formatPrice(discountedPrice * item.quantity)}
                     </p>
                   </div>
 
@@ -182,13 +190,11 @@ export function OrderSummary({
         <div className="border-t border-border/60 pt-4 space-y-2 text-xs font-semibold">
           <div className="flex justify-between text-foreground">
             <span>Selected Items Subtotal</span>
-            <span className="font-bold">৳{subtotal.toLocaleString()}</span>
+            <span className="font-bold">৳{formatPrice(subtotal)}</span>
           </div>
           <div className="flex justify-between text-foreground">
             <span>Delivery Charge</span>
-            <span className="font-bold">
-              ৳{deliveryCharge.toLocaleString()}
-            </span>
+            <span className="font-bold">৳{formatPrice(deliveryCharge)}</span>
           </div>
         </div>
 
@@ -197,7 +203,7 @@ export function OrderSummary({
             Total Amount
           </span>
           <span className="text-2xl font-black text-emerald-800 tracking-wide">
-            ৳{total.toLocaleString()}
+            ৳{formatPrice(total)}
           </span>
         </div>
       </div>

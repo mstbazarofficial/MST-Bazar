@@ -82,7 +82,7 @@ export default function ForgotPasswordPageClient() {
                 width={100}
                 height={48}
                 priority
-                className=" w-auto"
+                className="h-12 w-auto"
               />
             </Link>
           </div>

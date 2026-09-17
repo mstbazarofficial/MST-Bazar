@@ -1,6 +1,7 @@
+import { SITE_CONFIG } from "@/constants/site";
 import { MessageCircle, Phone } from "lucide-react";
 
-const SUPPORT_PHONE = process.env.NEXT_PUBLIC_CONTACT_NUMBER; // ← replace with your number
+const SUPPORT_PHONE = SITE_CONFIG.phone;
 
 export function OrderHelpCard() {
   return (

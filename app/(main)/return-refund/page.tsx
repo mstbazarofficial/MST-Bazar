@@ -1,4 +1,5 @@
 import { SectionHeading } from "@/components/main/common/layout/section-heading";
+import { SITE_CONFIG } from "@/constants/site";
 import {
   Clock,
   CreditCard,
@@ -88,8 +89,8 @@ const refundPolicyData = {
     title: "সাহায্য দরকার?",
     description:
       "আমাদের রিটার্ন ও রিফান্ড পলিসি সম্পর্কে আপনার কোনো প্রশ্ন থাকলে আমাদের সাথে যোগাযোগ করুন।",
-    email: process.env.NEXT_PUBLIC_CONTACT_EMAIL,
-    phone: process.env.NEXT_PUBLIC_CONTACT_NUMBER,
+    email: SITE_CONFIG.email,
+    phone: SITE_CONFIG.phone,
   },
 };
 

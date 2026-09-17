@@ -39,7 +39,7 @@ export default async function DashboardPage() {
   ]);
 
   return (
-    <div className="space-y-6">
+    <section className="dashboard-container">
       <WelcomeSection />
 
       <StatsSection
@@ -52,6 +52,6 @@ export default async function DashboardPage() {
       />
 
       <QuickLinkSection />
-    </div>
+    </section>
   );
 }

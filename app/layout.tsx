@@ -1,8 +1,8 @@
 import { NavigationProgressBar } from "@/components/my-ui/navigation-progress-bar";
 import { Toaster } from "@/components/ui/toast";
 import { cn } from "@/lib/utils";
-import { Geist, Geist_Mono, Inter } from "next/font/google";
 import type { Metadata } from "next";
+import { Geist, Geist_Mono, Inter } from "next/font/google";
 import { Suspense } from "react";
 import "./globals.css";
 
@@ -119,7 +119,7 @@ export default function RootLayout({
       )}
       data-scroll-behavior="smooth"
     >
-      <body className="min-h-full flex flex-col bg-background">
+      <body>
         {" "}
         <script
           type="application/ld+json"

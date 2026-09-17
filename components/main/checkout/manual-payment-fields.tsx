@@ -12,12 +12,12 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { SITE_CONFIG } from "@/constants/site";
 import type { CheckoutFormValues } from "@/validation/checkout.validation";
 
 export function ManualPaymentFields() {
-  const BKASH_NUMBER = process.env.NEXT_PUBLIC_BKASH_NUMBER;
-  const NAGAD_NUMBER = process.env.NEXT_PUBLIC_NAGAD_NUMBER;
-  const ROCKET_NUMBER = process.env.NEXT_PUBLIC_ROCKET_NUMBER;
+  const BKASH_NUMBER = SITE_CONFIG.bkash;
+  const NAGAD_NUMBER = SITE_CONFIG.nagad;
   const METHOD_CONFIG: Record<
     string,
     {

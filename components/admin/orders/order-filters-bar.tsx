@@ -86,7 +86,7 @@ export function OrderFiltersBar({
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
           placeholder="Search by Order #, customer name, email, or phone..."
-          className="h-10 w-full pl-9"
+          className="h-10 w-full pl-9 bg-card"
         />
       </div>
 

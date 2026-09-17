@@ -7,6 +7,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { SITE_CONFIG } from "@/constants/site";
 import {
   HelpCircle,
   Mail,
@@ -85,8 +86,8 @@ const faqData = {
     title: "Still Have Questions?",
     description:
       "Can’t find the answer you’re looking for? Our customer care team is ready to help you every day.",
-    email: process.env.NEXT_PUBLIC_CONTACT_EMAIL,
-    phone: process.env.NEXT_PUBLIC_CONTACT_NUMBER,
+    email: SITE_CONFIG.email,
+    phone: SITE_CONFIG.phone,
   },
 };
 

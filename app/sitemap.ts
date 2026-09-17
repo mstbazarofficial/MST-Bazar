@@ -1,4 +1,5 @@
 // app/sitemap.ts
+import { SITE_CONFIG } from "@/constants/site";
 import { getAllCategories, getAllProducts } from "@/lib/data/catalog";
 import type { MetadataRoute } from "next";
 
@@ -13,8 +14,7 @@ const SPECIAL_FILTERS = [
 const STATIC_PAGE_DATE = new Date("2026-09-23");
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const rawBaseUrl = process.env.NEXT_PUBLIC_APP_URL!;
-  const baseUrl = rawBaseUrl.replace(/\/$/, "");
+  const baseUrl = SITE_CONFIG.url;
 
   let products: Awaited<ReturnType<typeof getAllProducts>> = [];
   let categories: Awaited<ReturnType<typeof getAllCategories>> = [];

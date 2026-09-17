@@ -1,6 +1,7 @@
+// src/components/admin/layout/app-sidebar.tsx
 "use client";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,29 +18,55 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarRail,
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { ChevronsUpDown, LogOut } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
+import { ChevronsUpDown, Loader2, LogOut } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 import { navGroups } from "./nav-config";
 
-async function handleLogout() {
-  await fetch("/api/auth/logout", { method: "POST" });
-  window.location.href = "/login";
+function getInitials(name?: string | null, email?: string | null) {
+  if (name?.trim()) {
+    const parts = name.trim().split(/\s+/);
+    const initials =
+      parts.length > 1 ? parts[0][0] + parts[1][0] : parts[0].slice(0, 2);
+    return initials.toUpperCase();
+  }
+  if (email) return email.slice(0, 2).toUpperCase();
+  return "AD";
 }
 
 export function AppSidebar() {
   const pathname = usePathname();
-  const { state, setOpenMobile } = useSidebar();
+  const router = useRouter();
+  const { state, isMobile, setOpenMobile } = useSidebar();
   const isCollapsed = state === "collapsed";
 
-  const handleMobileNavClick = () => {
-    setOpenMobile(false);
-  };
+  const { data: session, isPending } = authClient.useSession();
+  const user = session?.user;
+  const [isSigningOut, setIsSigningOut] = useState(false);
+
+  // Close the mobile sheet after navigating to a page
+  function handleNavClick() {
+    if (isMobile) setOpenMobile(false);
+  }
+
+  async function handleSignOut() {
+    setIsSigningOut(true);
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/login");
+          router.refresh();
+        },
+        onError: () => setIsSigningOut(false),
+      },
+    });
+  }
 
   return (
     <Sidebar collapsible="icon" variant="sidebar">
@@ -49,47 +76,41 @@ export function AppSidebar() {
             <SidebarMenuItem className="flex items-center gap-1">
               <SidebarMenuButton
                 size="lg"
-                tooltip="MST Shop"
-                render={<Link href="/" />}
-                onClick={handleMobileNavClick}
-                className="w-full gap-3 rounded-lg data-[state=open]:bg-sidebar-accent"
+                tooltip="MST BAZAR "
+                render={<Link href="/" onClick={handleNavClick} />}
+                className="w-full  gap-3 rounded-lg data-[state=open]:bg-sidebar-accent"
               >
-                <div className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-brand-amber/30 bg-brand-amber/20">
+                <div className="flex size-7 bg-background shrink-0 items-center justify-center rounded-lg border">
                   <Image
-                    src="/assets/logo.png"
-                    alt="MST Shop Logo"
-                    width={16}
-                    height={16}
-                    className="size-4 object-contain"
+                    src="/assets/logo.png" // Path to your logo file
+                    alt="MST BAZAR Logo"
+                    width={24}
+                    height={24}
+                    className="size-6 rounded-lg bg-background object-contain"
                   />
                 </div>
 
                 <div className="min-w-0 flex-1 text-left">
                   <p className="truncate font-heading text-sm font-bold leading-tight text-sidebar-foreground">
-                    MST Bazar
-                  </p>
-                  <p className="truncate text-[10px] leading-tight text-sidebar-foreground/50">
-                    Admin Panel
+                    MST BAZAR
                   </p>
                 </div>
               </SidebarMenuButton>
 
-              <SidebarTrigger className="hidden size-8 shrink-0 text-sidebar-foreground/60 hover:text-sidebar-foreground md:flex" />
+              <SidebarTrigger className="hidden size-8 md:flex" />
             </SidebarMenuItem>
           </SidebarMenu>
         )}
 
         {isCollapsed && (
-          <SidebarTrigger className="mx-auto hidden size-8 text-sidebar-foreground/60 hover:text-sidebar-foreground md:flex" />
+          <SidebarTrigger className="mx-auto hidden size-8 md:flex" />
         )}
       </SidebarHeader>
 
       <SidebarContent className="gap-0">
         {navGroups.map((group) => (
           <SidebarGroup key={group.label}>
-            <SidebarGroupLabel className="px-3 text-[10px] uppercase tracking-widest text-sidebar-foreground/40">
-              {group.label}
-            </SidebarGroupLabel>
+            <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
             <SidebarMenu>
               {group.items.map((item) => {
                 const isActive = pathname === item.href;
@@ -98,8 +119,9 @@ export function AppSidebar() {
                     <SidebarMenuButton
                       isActive={isActive}
                       tooltip={item.title}
-                      render={<Link prefetch={false} href={item.href} />}
-                      onClick={handleMobileNavClick}
+                      render={
+                        <Link href={item.href} onClick={handleNavClick} />
+                      }
                     >
                       <item.icon className="h-4 w-4" />
                       <span>{item.title}</span>
@@ -125,17 +147,21 @@ export function AppSidebar() {
                 }
               >
                 <Avatar className="size-8 shrink-0 rounded-lg">
-                  <AvatarFallback className="rounded-lg bg-brand-amber/20 text-xs font-semibold text-brand-amber">
-                    AD
+                  <AvatarImage
+                    src={user?.image || undefined}
+                    alt={user?.name || "Admin"}
+                  />
+                  <AvatarFallback className="rounded-lg bg-sidebar-accent text-xs font-semibold text-sidebar-foreground">
+                    {getInitials(user?.name, user?.email)}
                   </AvatarFallback>
                 </Avatar>
                 {!isCollapsed && (
                   <div className="min-w-0 flex-1 text-left">
                     <p className="truncate text-sm font-medium leading-tight text-sidebar-foreground">
-                      Admin
+                      {isPending ? "Loading…" : user?.name || "Admin"}
                     </p>
                     <p className="truncate text-[11px] leading-tight text-sidebar-foreground/50">
-                      admin@example.com
+                      {isPending ? "" : user?.email}
                     </p>
                   </div>
                 )}
@@ -145,10 +171,15 @@ export function AppSidebar() {
               </DropdownMenuTrigger>
               <DropdownMenuContent side="top" align="end" className="w-48">
                 <DropdownMenuItem
-                  onClick={handleLogout}
+                  disabled={isSigningOut}
+                  onClick={handleSignOut}
                   className="cursor-pointer gap-2 text-destructive focus:text-destructive"
                 >
-                  <LogOut className="size-4" />
+                  {isSigningOut ? (
+                    <Loader2 className="size-4 animate-spin" />
+                  ) : (
+                    <LogOut className="size-4" />
+                  )}
                   Sign out
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -156,8 +187,6 @@ export function AppSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
-
-      <SidebarRail />
     </Sidebar>
   );
 }

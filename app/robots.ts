@@ -1,9 +1,9 @@
 // app/robots.ts
+import { SITE_CONFIG } from "@/constants/site";
 import type { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
-  const rawBaseUrl = process.env.NEXT_PUBLIC_APP_URL!;
-  const baseUrl = rawBaseUrl.replace(/\/$/, "");
+  const baseUrl = SITE_CONFIG.url;
 
   return {
     rules: [

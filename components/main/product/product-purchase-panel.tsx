@@ -3,6 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
+import { SITE_CONFIG } from "@/constants/site";
 import { useCart, useCartItemError } from "@/context/cart-provider";
 import {
   Check,
@@ -12,13 +13,12 @@ import {
   ShoppingBag,
   ShoppingCart,
 } from "lucide-react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { FaWhatsapp } from "react-icons/fa";
 
-const DEFAULT_WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
-const DEFAULT_PHONE_NUMBER = process.env.NEXT_PUBLIC_CONTACT_NUMBER;
+const DEFAULT_WHATSAPP_NUMBER = SITE_CONFIG.whatsapp;
+const DEFAULT_PHONE_NUMBER = SITE_CONFIG.phone;
 
 type PurchaseProduct = {
   id: string;
@@ -135,7 +135,7 @@ export function ProductPurchasePanel({
     `Hello MST Bazar..!!,
 I would like to place an order for this product.
 Qty: ${currentQty}
-Product Link: ${process.env.NEXT_PUBLIC_APP_URL}/product/${product.slug}`,
+Product Link: ${SITE_CONFIG.url}/product/${product.slug}`,
   )}`;
 
   return (

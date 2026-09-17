@@ -4,6 +4,7 @@ import { ProductDetails } from "@/components/main/product/product-details";
 import { ProductGallery } from "@/components/main/product/product-gallery";
 import { ProductInfo } from "@/components/main/product/product-info";
 import { RelatedProductsSection } from "@/components/main/product/related-products";
+import { SITE_CONFIG } from "@/constants/site";
 import {
   getAllProductSlugs,
   getProductBySlug,
@@ -32,7 +33,7 @@ export async function generateMetadata({
     };
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_APP_URL;
+  const siteUrl = SITE_CONFIG.url;
 
   // Determine primary featured image
   const imageUrl =

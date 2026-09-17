@@ -61,7 +61,7 @@ export function CategoryPageClient({
           value={search}
           onChange={(e) => handleSearch(e.target.value)}
           placeholder="Search categories..."
-          className="w-full"
+          className="w-full bg-card"
         />
       </div>
 

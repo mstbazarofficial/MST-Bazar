@@ -1,5 +1,6 @@
 import ProductsHeader from "@/components/main/products/products-header";
 import { ProductsPageClient } from "@/components/main/products/products-page-client";
+import { SITE_CONFIG } from "@/constants/site";
 import { getAllCategories, getAllProducts } from "@/lib/data/catalog";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -85,7 +86,7 @@ export async function generateMetadata({
   const rawOgImage =
     categoryImage || fallbackProductImage || "/assets/logo.png";
 
-  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://yourdomain.com";
+  const siteUrl = SITE_CONFIG.url;
   const canonicalUrl = currentSlug
     ? `${siteUrl}/products/${currentSlug}`
     : `${siteUrl}/products`;

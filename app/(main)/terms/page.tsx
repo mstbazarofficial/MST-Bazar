@@ -1,4 +1,5 @@
 import { SectionHeading } from "@/components/main/common/layout/section-heading";
+import { SITE_CONFIG } from "@/constants/site";
 import {
   AlertTriangle,
   CheckSquare,
@@ -86,8 +87,8 @@ const termsData = {
     title: "কোনো প্রশ্ন আছে?",
     description:
       "এই শর্তাবলী সম্পর্কে আপনার কোনো প্রশ্ন বা উদ্বেগ থাকলে অনুগ্রহ করে আমাদের সাথে যোগাযোগ করুন।",
-    email: process.env.NEXT_PUBLIC_CONTACT_EMAIL,
-    phone: process.env.NEXT_PUBLIC_CONTACT_NUMBER,
+    email: SITE_CONFIG.email,
+    phone: SITE_CONFIG.phone,
   },
 };
 

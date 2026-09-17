@@ -1,4 +1,5 @@
 import { SectionHeading } from "@/components/main/common/layout/section-heading";
+import { SITE_CONFIG } from "@/constants/site";
 import { Cookie, Database, FileText, Share2, Shield } from "lucide-react";
 import Link from "next/link";
 
@@ -81,8 +82,8 @@ const privacyPolicyData = {
     title: "গোপনীয়তা সংক্রান্ত জিজ্ঞাসা?",
     description:
       "আমাদের গোপনীয়তা নীতি সম্পর্কে কোনো জিজ্ঞাসা বা তথ্যের সুরক্ষা সংক্রান্ত বিষয়ে থাকলে আমাদের সাথে যোগাযোগ করুন।",
-    email: process.env.NEXT_PUBLIC_CONTACT_EMAIL,
-    phone: process.env.NEXT_PUBLIC_CONTACT_NUMBER,
+    email: SITE_CONFIG.email,
+    phone: SITE_CONFIG.phone,
   },
 };
 

@@ -1,7 +1,8 @@
+import type { Metadata } from "next";
+
 import { DashboardHeader } from "@/components/dashboard/layout/dashboard-header";
 import { DashboardNav } from "@/components/dashboard/layout/dashboard-nav";
 import { QueryProvider } from "@/context/query-provider";
-import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: {
@@ -15,28 +16,25 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function DashboardLayout({
+export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
     <QueryProvider>
-      <div className="min-h-screen w-full bg-primary/5 flex flex-col">
-        {/* Full Width Top Header */}
-        <DashboardHeader />
-
-        {/* Main Centered Body Layout */}
-        <div className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 py-6 lg:py-8">
-          <div className="flex flex-col lg:flex-row gap-6 items-start">
-            {/* Desktop Left Navigation Card */}
-            <aside className="hidden lg:block w-64 shrink-0 sticky top-24">
+      <DashboardHeader />
+      <div className="min-h-[calc(100vh-4rem)] bg-dashboard-background">
+        <div className="max-w-360 w-full mx-auto flex gap-6 px-4 py-6 md:px-6">
+          {/* Desktop sidebar */}
+          <aside className="hidden w-64 shrink-0 lg:block">
+            <div className="sticky top-22">
               <DashboardNav />
-            </aside>
+            </div>
+          </aside>
 
-            {/* Page Content Area */}
-            <main className="flex-1 min-w-0 w-full">{children}</main>
-          </div>
+          {/* Main content — flex-1 + min-w-0 is the fix for the overflow/squish issue */}
+          <main className="flex-1 min-w-0">{children}</main>
         </div>
       </div>
     </QueryProvider>

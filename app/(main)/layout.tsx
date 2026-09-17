@@ -1,5 +1,6 @@
 import Footer from "@/components/main/common/layout/app-footer";
 import { SiteHeader } from "@/components/main/common/layout/app-header";
+import { SITE_CONFIG } from "@/constants/site";
 import { CartProvider } from "@/context/cart-provider";
 import { CatalogProvider } from "@/context/catalog-provider";
 import { QueryProvider } from "@/context/query-provider";
@@ -36,7 +37,7 @@ export default async function RootLayout({
     getAllCategories(),
     getAllProducts(),
   ]);
-  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
+  const whatsappNumber = SITE_CONFIG.whatsapp;
 
   return (
     <QueryProvider>
@@ -59,7 +60,7 @@ export default async function RootLayout({
               <FaWhatsapp className="relative size-8" aria-hidden="true" />
             </a>
           )}
-          {process.env.ENABLE_EMAILS === "true" && (
+          {process.env.NEXT_PUBLIC_ENVIRONVENT === "production" && (
             <GoogleAnalytics gaId="G-91TTFGEMY6" />
           )}
         </CartProvider>

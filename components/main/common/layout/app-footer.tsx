@@ -1,16 +1,17 @@
+import { SITE_CONFIG } from "@/constants/site";
 import Image from "next/image";
 import Link from "next/link";
 import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
 export default function Footer() {
   // Contact Information from Environment Variables
-  const contactNumber = process.env.NEXT_PUBLIC_CONTACT_NUMBER;
-  const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL;
-  const contactAddress = process.env.NEXT_PUBLIC_CONTACT_ADDRESS;
-  const contactWhatsApp = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
+  const contactNumber = SITE_CONFIG.phone;
+  const contactEmail = SITE_CONFIG.email;
+  const contactAddress = SITE_CONFIG.address;
+  const contactWhatsApp = SITE_CONFIG.whatsapp;
   // Social Media URLs
-  const facebookUrl = process.env.NEXT_PUBLIC_FACEBOOK_URL;
-  const instagramUrl = process.env.NEXT_PUBLIC_INSTAGRAM_URL;
-  const youtubeUrl = process.env.NEXT_PUBLIC_YOUTUBE_URL;
+  const facebookUrl = SITE_CONFIG.facebook;
+  const instagramUrl = SITE_CONFIG.instagram;
+  const youtubeUrl = SITE_CONFIG.youtube;
 
   return (
     <footer className="w-full bg-[#123B2A] border-t border-border text-white pt-6">

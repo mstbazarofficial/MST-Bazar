@@ -28,7 +28,9 @@ export default async function AdminLayout({
       <SidebarProvider defaultOpen>
         <AppSidebar />
         <SidebarInset className="flex flex-col min-h-screen">
-          {children}
+          <main className="overflow-y-auto bg-dashboard-background min-h-screen">
+            {children}
+          </main>
         </SidebarInset>
       </SidebarProvider>
     </QueryProvider>

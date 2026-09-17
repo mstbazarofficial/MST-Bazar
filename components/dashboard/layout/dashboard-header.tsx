@@ -1,16 +1,8 @@
 "use client";
 
-import {
-  ChevronDown,
-  LayoutDashboard,
-  LogOut,
-  Menu,
-  ShieldCheck,
-  ShoppingBag,
-  User as UserIcon,
-} from "lucide-react";
+import { ChevronDown, Menu } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -25,51 +17,29 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useLogout } from "@/hooks/use-logout";
 import { authClient } from "@/lib/auth-client";
-import Image from "next/image";
 
-const navItems = [
-  { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { title: "Profile Information", href: "/dashboard/profile", icon: UserIcon },
-  { title: "My Orders", href: "/dashboard/orders", icon: ShoppingBag },
-  {
-    title: "Security Settings",
-    href: "/dashboard/security",
-    icon: ShieldCheck,
-  },
-];
+import { DashboardNav } from "./dashboard-nav";
+
+function getInitials(name?: string) {
+  if (!name) return "U";
+  const parts = name.trim().split(" ");
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
 
 export function DashboardHeader() {
-  const router = useRouter();
-  const pathname = usePathname();
   const [openSheet, setOpenSheet] = useState(false);
+  const logout = useLogout();
 
-  // Better Auth session hook
-  const { data: session } = authClient.useSession();
+  const { data: session, isPending } = authClient.useSession();
   const user = session?.user;
 
-  // Extract initials for Avatar Fallback
-  const getInitials = (name?: string) => {
-    if (!name) return "U";
-    const parts = name.trim().split(" ");
-    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-  };
-
-  const handleLogout = async () => {
-    await authClient.signOut({
-      fetchOptions: {
-        onSuccess: () => {
-          router.push("/");
-        },
-      },
-    });
-  };
-
   return (
-    <header className="sticky top-0 z-30 w-full border-b border-border bg-background/95 backdrop-blur-sm shadow-sm">
-      <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
-        {/* Left: Mobile menu + Responsive Logo */}
+    <header className="sticky top-0 z-30 w-full border-b border-header-border bg-header backdrop-blur-sm shadow-sm">
+      <div className="mx-auto w-full max-w-360 flex h-16 items-center justify-between px-4 sm:px-6">
+        {/* Left: Mobile menu + Logo */}
         <div className="flex items-center gap-3 sm:gap-4">
           <Sheet open={openSheet} onOpenChange={setOpenSheet}>
             <SheetTrigger
@@ -77,10 +47,10 @@ export function DashboardHeader() {
                 <Button
                   variant="ghost"
                   size="icon"
+                  aria-label="Open menu"
                   className="lg:hidden h-9 w-9 text-muted-foreground hover:text-foreground hover:bg-accent"
                 >
                   <Menu className="h-5 w-5" />
-                  <span className="sr-only">Open menu</span>
                 </Button>
               }
             />
@@ -89,7 +59,6 @@ export function DashboardHeader() {
               side="left"
               className="w-72 p-0 bg-background border-r border-border flex flex-col"
             >
-              {/* Sheet Header */}
               <div className="flex items-center px-5 h-16 border-b border-border shrink-0">
                 <Link
                   href="/"
@@ -107,7 +76,6 @@ export function DashboardHeader() {
                 </Link>
               </div>
 
-              {/* User Info Block */}
               <div className="px-5 py-4 border-b border-border/60">
                 <div className="flex items-center gap-3">
                   <Avatar className="h-10 w-10 border border-border">
@@ -120,51 +88,28 @@ export function DashboardHeader() {
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col truncate">
-                    <span className="text-sm font-semibold text-foreground leading-tight truncate">
-                      {user?.name || "Guest User"}
-                    </span>
-                    <span className="text-xs text-muted-foreground mt-0.5 truncate">
-                      {user?.email || ""}
-                    </span>
+                    {isPending ? (
+                      <>
+                        <span className="h-3.5 w-24 rounded bg-muted animate-pulse" />
+                        <span className="mt-1.5 h-3 w-32 rounded bg-muted animate-pulse" />
+                      </>
+                    ) : (
+                      <>
+                        <span className="text-sm font-semibold text-foreground leading-tight truncate">
+                          {user?.name || "Guest User"}
+                        </span>
+                        <span className="text-xs text-muted-foreground mt-0.5 truncate">
+                          {user?.email || ""}
+                        </span>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
 
-              {/* Navigation Links */}
-              <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-                <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60 px-3 pb-2">
-                  Navigation
-                </p>
-                {navItems.map((item) => {
-                  const isActive = pathname === item.href;
-                  const Icon = item.icon;
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={() => setOpenSheet(false)}
-                      className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                        isActive
-                          ? "bg-primary text-primary-foreground shadow-sm"
-                          : "text-muted-foreground hover:bg-accent hover:text-foreground"
-                      }`}
-                    >
-                      <Icon className="h-4 w-4 shrink-0" />
-                      <span>{item.title}</span>
-                    </Link>
-                  );
-                })}
-              </nav>
-
-              {/* Logout at bottom */}
-              <div className="px-3 py-4 border-t border-border">
-                <button
-                  onClick={handleLogout}
-                  className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-destructive hover:bg-destructive/10 transition-colors"
-                >
-                  <LogOut className="h-4 w-4 shrink-0" />
-                  <span>Log out</span>
-                </button>
+              {/* Same component as the desktop sidebar — can never drift apart */}
+              <div className="flex-1 overflow-y-auto p-4">
+                <DashboardNav onItemClick={() => setOpenSheet(false)} />
               </div>
             </SheetContent>
           </Sheet>
@@ -176,12 +121,12 @@ export function DashboardHeader() {
               width={180}
               height={48}
               priority
-              className="h-8  w-auto object-contain transition-all"
+              className="h-8 w-auto object-contain"
             />
           </Link>
         </div>
 
-        {/* Right: Account dropdown (Only Logout option) */}
+        {/* Right: Account dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger
             render={
@@ -200,12 +145,16 @@ export function DashboardHeader() {
                 </Avatar>
 
                 <div className="hidden sm:flex flex-col text-left leading-tight max-w-30">
-                  <span className="text-[10px] text-muted-foreground font-medium tracking-wide uppercase">
-                    My Account
+                  <span className="text-[10px] text-muted-foreground font-medium">
+                    My account
                   </span>
-                  <span className="text-xs font-semibold text-foreground truncate">
-                    {user?.name?.split(" ")[0] || "User"}
-                  </span>
+                  {isPending ? (
+                    <span className="mt-0.5 h-3 w-16 rounded bg-muted animate-pulse" />
+                  ) : (
+                    <span className="text-xs font-semibold text-foreground truncate">
+                      {user?.name?.split(" ")[0] || "User"}
+                    </span>
+                  )}
                 </div>
 
                 <ChevronDown className="h-3.5 w-3.5 text-muted-foreground ml-0.5" />
@@ -228,11 +177,10 @@ export function DashboardHeader() {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={handleLogout}
+              onClick={logout}
               className="cursor-pointer text-destructive focus:bg-destructive/10 focus:text-destructive"
             >
-              <LogOut className="mr-2 h-4 w-4" />
-              <span>Log out</span>
+              Log out
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

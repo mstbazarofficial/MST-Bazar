@@ -1,3 +1,4 @@
+import { SITE_CONFIG } from "@/constants/site";
 import { Leaf, Package, Scale, ShieldCheck } from "lucide-react";
 import { Metadata } from "next";
 import {
@@ -234,7 +235,7 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Website */}
             <a
-              href="https://mstbazar.com"
+              href="https://www.mstbazar.com"
               target="_blank"
               rel="noopener noreferrer"
               className="group bg-[#F7F2E3] border border-[#20281D]/10 rounded-xl p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
@@ -256,7 +257,7 @@ export default function AboutPage() {
 
             {/* Facebook */}
             <a
-              href={process.env.NEXT_PUBLIC_FACEBOOK_URL}
+              href={SITE_CONFIG.facebook}
               target="_blank"
               rel="noopener noreferrer"
               className="group bg-[#F7F2E3] border border-[#20281D]/10 rounded-xl p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
@@ -278,7 +279,7 @@ export default function AboutPage() {
 
             {/* Hotline */}
             <a
-              href={`tel:${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}`}
+              href={`tel:${SITE_CONFIG.whatsapp}`}
               className="group bg-[#F7F2E3] border border-[#20281D]/10 rounded-xl p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
             >
               <div className="w-11 h-11 rounded-full bg-[#243B2D] flex items-center justify-center text-[#DDAE5C] mb-4 group-hover:bg-[#1B2E22] transition-colors">
@@ -294,13 +295,13 @@ export default function AboutPage() {
               </h3>
 
               <p className="text-sm text-[#5C6353] mt-1">
-                {process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}
+                {SITE_CONFIG.whatsapp}
               </p>
             </a>
 
             {/* Email */}
             <a
-              href={`mailto:${process.env.NEXT_PUBLIC_CONTACT_EMAIL}`}
+              href={`mailto:${SITE_CONFIG.email}`}
               className="group bg-[#F7F2E3] border border-[#20281D]/10 rounded-xl p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
             >
               <div className="w-11 h-11 rounded-full bg-[#243B2D] flex items-center justify-center text-[#DDAE5C] mb-4 group-hover:bg-[#1B2E22] transition-colors">
@@ -316,7 +317,7 @@ export default function AboutPage() {
               </h3>
 
               <p className="text-sm text-[#5C6353] mt-1 break-all">
-                {process.env.NEXT_PUBLIC_CONTACT_EMAIL}
+                {SITE_CONFIG.email}
               </p>
             </a>
           </div>
@@ -336,9 +337,7 @@ export default function AboutPage() {
                 আমাদের ঠিকানা
               </h3>
 
-              <p className="text-sm text-[#5C6353]">
-                {process.env.NEXT_PUBLIC_CONTACT_ADDRESS}
-              </p>
+              <p className="text-sm text-[#5C6353]">{SITE_CONFIG.address}</p>
             </div>
           </div>
         </div>

@@ -77,13 +77,13 @@ export function UserFiltersBar({
   return (
     <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
       {/* Search Input */}
-      <div className="relative w-full lg:flex-1 bg-background">
+      <div className="relative w-full lg:flex-1 ">
         <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2" />
         <Input
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
           placeholder="Search by Contact Name, Email, or Phone..."
-          className="h-10 w-full pl-9"
+          className="h-10 w-full pl-9 bg-card"
         />
       </div>
 

@@ -49,7 +49,7 @@ export function ProductFiltersBar({
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
           placeholder="Search by title or SKU..."
-          className="pl-9 h-10 w-full"
+          className="pl-9 h-10 w-full bg-card"
         />
       </div>
 

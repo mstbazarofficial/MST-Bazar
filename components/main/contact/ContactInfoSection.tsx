@@ -1,32 +1,32 @@
+import { SITE_CONFIG } from "@/constants/site";
 import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
 import { SectionHeading } from "../common/layout/section-heading";
-import Link from "next/link";
 
 export function ContactInfoSection() {
   const contactMethods = [
     {
       icon: Phone,
       title: "Phone",
-      details: process.env.NEXT_PUBLIC_CONTACT_NUMBER,
+      details: SITE_CONFIG.phone,
       sub: "(10 AM - 8 PM, Sat - Thu)",
     },
     {
       icon: Mail,
       title: "Email",
-      details: process.env.NEXT_PUBLIC_CONTACT_EMAIL,
+      details: SITE_CONFIG.email,
       sub: "We reply within 24 hours",
     },
     {
       icon: MessageCircle,
       title: "WhatsApp",
-      details: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER,
+      details: SITE_CONFIG.whatsapp,
       sub: "(10 AM - 8 PM, Sat - Thu)",
     },
     {
       icon: MapPin,
       title: "Our Location",
-      details: process.env.NEXT_PUBLIC_CONTACT_ADDRESS,
+      details: SITE_CONFIG.address,
       sub: "Dhaka, Bangladesh",
     },
   ];
@@ -68,34 +68,34 @@ export function ContactInfoSection() {
       <div className="flex items-center gap-4 pt-4 border-t border-primary/45">
         <span className="font-bold text-gray-900">Follow Us</span>
         <div className="flex gap-2">
-          <Link
-            href={`${process.env.NEXT_PUBLIC_FACEBOOK_URL}`}
+          <a
+            href={`${SITE_CONFIG.facebook}`}
             target="_blank"
             className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary-dark hover:bg-primary-dark hover:text-white transition-colors"
           >
             <FaFacebook className="w-4 h-4" />
-          </Link>
-          <Link
-            href={`${process.env.NEXT_PUBLIC_INSTAGRAM_URL}`}
+          </a>
+          <a
+            href={`${SITE_CONFIG.instagram}`}
             target="_blank"
             className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary-dark hover:bg-primary-dark hover:text-white transition-colors"
           >
             <FaInstagram className="w-4 h-4" />
-          </Link>
-          <Link
-            href={`${process.env.NEXT_PUBLIC_YOUTUBE_URL}`}
+          </a>
+          <a
+            href={`${SITE_CONFIG.whatsapp}`}
             target="_blank"
             className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary-dark hover:bg-primary-dark hover:text-white transition-colors"
           >
             <FaYoutube className="w-4 h-4" />
-          </Link>
-          <Link
-            href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}`}
+          </a>
+          <a
+            href={`https://wa.me/${SITE_CONFIG.whatsapp.replace(/\D/g, "")}`}
             target="_blank"
             className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary-dark hover:bg-primary-dark hover:text-white transition-colors"
           >
             <MessageCircle className="w-4 h-4" />
-          </Link>
+          </a>
         </div>
       </div>
     </div>

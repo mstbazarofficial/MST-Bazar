@@ -1,5 +1,6 @@
 import {
   BookOpen,
+  ChartNoAxesCombined,
   ContactRound,
   FileText,
   LayoutDashboard,
@@ -28,6 +29,11 @@ export const navGroups: NavGroup[] = [
         title: "Dashboard",
         href: "/admin",
         icon: LayoutDashboard,
+      },
+      {
+        title: "Analytics",
+        href: "/admin/analytics",
+        icon: ChartNoAxesCombined,
       },
     ],
   },
@@ -61,14 +67,4 @@ export const navGroups: NavGroup[] = [
       },
     ],
   },
-  /*   {
-    label: "System",
-    items: [
-      {
-        title: "Settings",
-        href: "/admin/settings",
-        icon: Settings,
-      },
-    ],
-  }, */
 ];

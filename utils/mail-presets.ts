@@ -1,3 +1,4 @@
+import { SITE_CONFIG } from "@/constants/site";
 import { sendEmail } from "@/lib/email";
 
 export type OrderItem = {
@@ -85,7 +86,7 @@ export type OrderConfirmationPayload = {
 export async function sendOrderConfirmationEmail(
   order: OrderConfirmationPayload,
 ) {
-  const trackUrl = `${process.env.NEXT_PUBLIC_APP_URL}/track-order?orderId=${encodeURIComponent(order.orderId)}&phone=${encodeURIComponent(order.phoneNumber)}`;
+  const trackUrl = `${SITE_CONFIG.url}/track-order?orderId=${encodeURIComponent(order.orderId)}&phone=${encodeURIComponent(order.phoneNumber)}`;
   // Calculate items total with discount snapshot considered
   const subtotal = order.orderItems.reduce((acc, item) => {
     const finalPrice = item.price * (1 - (item.discountPercentage || 0) / 100);

@@ -27,8 +27,10 @@ export default async function AdminLayout({
     <QueryProvider>
       <SidebarProvider defaultOpen>
         <AppSidebar />
-        <SidebarInset className="flex flex-col min-h-screen">
-          <main className="overflow-y-auto bg-dashboard-background min-h-screen">
+        {/* Lock height and hide overflow on the inset container */}
+        <SidebarInset className="flex flex-col h-svh overflow-hidden">
+          {/* Main becomes the actual scroll container */}
+          <main className="flex-1 overflow-y-auto bg-dashboard-background">
             {children}
           </main>
         </SidebarInset>

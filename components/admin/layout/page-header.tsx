@@ -23,10 +23,10 @@ export function PageHeader({
   className,
 }: PageHeaderProps) {
   return (
-    <header className="bg-header border-b border-header-border sticky top-0 z-5">
+    <header className="border-border border-b sticky top-0 z-5 bg-card">
       <div
         className={cn(
-          "  flex h-14 shrink-0 items-center justify-between gap-3   mx-auto w-full max-w-360 px-4 sm:px-6 backdrop-blur-sm",
+          " mx-auto max-w-360  flex h-14 shrink-0 items-center justify-between gap-3  px-4 sm:px-6 backdrop-blur-sm",
           className,
         )}
       >

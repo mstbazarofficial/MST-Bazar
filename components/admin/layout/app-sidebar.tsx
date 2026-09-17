@@ -80,13 +80,13 @@ export function AppSidebar() {
                 render={<Link href="/" onClick={handleNavClick} />}
                 className="w-full  gap-3 rounded-lg data-[state=open]:bg-sidebar-accent"
               >
-                <div className="flex size-7 bg-background shrink-0 items-center justify-center rounded-lg border">
+                <div className="flex size-8 bg-card shrink-0 items-center justify-center rounded-lg border">
                   <Image
-                    src="/assets/logo.png" // Path to your logo file
+                    src="/assets/fav-icon.png"
                     alt="MST BAZAR Logo"
-                    width={24}
-                    height={24}
-                    className="size-6 rounded-lg bg-background object-contain"
+                    width={32}
+                    height={32}
+                    className="size-8 rounded-lg p-1 bg-card object-contain"
                   />
                 </div>
 

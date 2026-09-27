@@ -1,7 +1,11 @@
 import { CategorySection } from "@/components/main/home/category-section";
-import { HeroSection } from "@/components/main/home/hero-section";
+import { HeroSection2 } from "@/components/main/home/hero-section-2";
 import { TopSellingSection } from "@/components/main/home/top-selling-section";
-import { getAllCategories, getAllProducts } from "@/lib/data/catalog";
+import {
+  getActiveBanners,
+  getAllCategories,
+  getAllProducts,
+} from "@/lib/data/catalog";
 import dynamic from "next/dynamic";
 
 const BestDealsSection = dynamic(() =>
@@ -34,14 +38,21 @@ const CtaBanner = dynamic(() =>
 export default async function Home() {
   const categories = await getAllCategories();
   const products = await getAllProducts();
+  const banners = await getActiveBanners();
+
   const bestDeals = products.filter((p) => p.isBestDeal).slice(0, 5);
   const popularProducts = products.filter((p) => p.isPopular).slice(0, 10);
   const comboProducts = products.filter((p) => p.isCombo).slice(0, 10);
   const topSellingProducts = products.filter((p) => p.isTopSelling).slice(0, 4);
 
+  const sliderBanners = banners.filter((b) => b.placement === "HERO_SLIDER");
+  const sideBanner =
+    banners.find((b) => b.placement === "HERO_SIDE_BANNER") ?? null;
+
   return (
     <main>
-      <HeroSection />
+      <HeroSection2 sliderBanners={sliderBanners} sideBanner={sideBanner} />
+
       <CategorySection categories={categories} />
       <TopSellingSection products={topSellingProducts} />
       <BestDealsSection products={bestDeals} />

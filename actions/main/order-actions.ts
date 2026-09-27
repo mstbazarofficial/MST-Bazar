@@ -19,6 +19,7 @@ import {
 } from "@/validation/checkout.validation";
 
 // Import your email utility function
+import { sendCapiEvent } from "@/lib/meta-capi";
 import { sendOrderConfirmationEmail } from "@/utils/mail-presets";
 
 // ---------------------------------------------------------------------------
@@ -40,7 +41,7 @@ const placeOrderInputSchema = z.object({
 export type PlaceOrderInput = z.infer<typeof placeOrderInputSchema>;
 
 export type PlaceOrderResult =
-  | { success: true; orderId: string }
+  | { success: true; orderId: string; metaEventId: string }
   | {
       success: false;
       error: string;
@@ -138,6 +139,13 @@ export async function placeOrder(
   const shippingCost = getShippingCost(customer.deliveryOption);
   const isManualPayment = customer.paymentMethod !== "cod";
   const orderId = createUniqueId("MST");
+  const orderTotal =
+    orderItemsData.reduce((sum, item) => {
+      const discount = item.price * ((item.discountPercentage ?? 0) / 100);
+      return sum + (item.price - discount) * item.quantity;
+    }, 0) + shippingCost;
+
+  const eventId = crypto.randomUUID();
 
   try {
     const order = await prisma.order.create({
@@ -161,10 +169,10 @@ export async function placeOrder(
           create: orderItemsData,
         },
       },
-      select: { orderId: true },
+      select: { orderId: true, id: true },
     });
 
-    if (process.env.NEXT_PUBLIC_ENVIRONVENT === "production") {
+    if (process.env.NEXT_PUBLIC_ENVIRONMENT === "production") {
       sendOrderConfirmationEmail({
         orderId: order.orderId,
         customerName: customer.fullName,
@@ -181,11 +189,35 @@ export async function placeOrder(
           emailError,
         );
       });
+
+      await sendCapiEvent({
+        eventName: "Purchase",
+        eventId,
+        actionSource: "website",
+        userData: {
+          email: customer.email,
+          phone: customer.phone,
+          externalId: order.id,
+        },
+        customData: {
+          value: orderTotal,
+          currency: "BDT",
+          content_ids: orderItemsData.map((i) => i.productId),
+          contents: JSON.stringify(
+            orderItemsData.map((i) => ({
+              id: i.productId,
+              quantity: i.quantity,
+            })),
+          ),
+          num_items: orderItemsData.length,
+          order_id: order.orderId,
+        },
+      });
     }
 
     revalidatePath("/checkout");
 
-    return { success: true, orderId: order.orderId };
+    return { success: true, orderId: order.orderId, metaEventId: eventId };
   } catch (error) {
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&

@@ -1,5 +1,6 @@
 import Footer from "@/components/main/common/layout/app-footer";
 import { SiteHeader } from "@/components/main/common/layout/app-header";
+import MetaPixel from "@/components/main/common/layout/meta-pixel";
 import { SITE_CONFIG } from "@/constants/site";
 import { CartProvider } from "@/context/cart-provider";
 import { CatalogProvider } from "@/context/catalog-provider";
@@ -60,8 +61,11 @@ export default async function RootLayout({
               <FaWhatsapp className="relative size-8" aria-hidden="true" />
             </a>
           )}
-          {process.env.NEXT_PUBLIC_ENVIRONVENT === "production" && (
-            <GoogleAnalytics gaId="G-91TTFGEMY6" />
+          {process.env.NEXT_PUBLIC_ENVIRONMENT === "production" && (
+            <>
+              <GoogleAnalytics gaId="G-91TTFGEMY6" />
+              <MetaPixel />
+            </>
           )}
         </CartProvider>
       </CatalogProvider>

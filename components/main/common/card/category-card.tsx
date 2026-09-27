@@ -119,19 +119,19 @@ export function CategoryCard3({
     <Link
       href={`/products/${category?.slug || ""}`}
       className={cn(
-        "group relative flex flex-col items-center justify-center p-0 ",
+        "group relative flex flex-col items-center justify-center gap-3 p-3 rounded-xl transition-all duration-300 hover:bg-muted/50",
         className,
       )}
     >
       {/* Image Container */}
-      <div className="relative size-20 sm:size-34 rounded-full overflow-hidden bg-muted/40 flex items-center justify-center border-2 border-border group-hover:border-primary transition-colors duration-300">
+      <div className="relative w-full aspect-square max-w-35 shadow-sm rounded-lg overflow-hidden bg-muted flex items-center justify-center border border-border group-hover:border-primary group-hover:shadow-md transition-all duration-300">
         {category?.image ? (
           <Image
             src={category.image}
             alt={category.name || "Category image"}
             fill
-            sizes="(max-width: 640px) 80px, 160px"
-            className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
+            sizes="(max-width: 640px) 45vw, 140px"
+            className="object-cover transition-transform duration-300 ease-out group-hover:scale-110"
           />
         ) : (
           <div className="flex items-center justify-center w-full h-full text-muted-foreground group-hover:text-primary transition-colors duration-300">
@@ -141,7 +141,7 @@ export function CategoryCard3({
       </div>
 
       {/* Category Name */}
-      <div className="mt-3 text-center w-full">
+      <div className="text-center w-full">
         <h3 className="font-semibold text-xs sm:text-sm text-foreground group-hover:text-primary transition-colors duration-300 line-clamp-1">
           {category?.name || "Category"}
         </h3>

@@ -26,6 +26,7 @@ import { ManualPaymentFields } from "./manual-payment-fields";
 import { OrderSuccessDialog, type PlacedOrder } from "./order-success-dialog";
 import { OrderSummary } from "./order-summary";
 import { PaymentMethodField } from "./payment-method-field";
+import { PurchaseConfirmTracker } from "./purchase-confirm-tracker";
 
 export function CheckoutForm() {
   const { items, errors: cartErrors, clearError, removeItem } = useCart();
@@ -158,6 +159,11 @@ export function CheckoutForm() {
         email: values.email,
         total,
         phone: values.phone,
+        metaEventId: result.metaEventId,
+        items: selectedItems.map((item) => ({
+          id: item.productId,
+          quantity: item.quantity,
+        })),
       });
       form.reset(checkoutDefaultValues);
     } catch (error) {
@@ -232,6 +238,17 @@ export function CheckoutForm() {
           if (!open) setPlacedOrder(null);
         }}
       />
+      {placedOrder && (
+        <PurchaseConfirmTracker
+          orderId={placedOrder.orderId}
+          eventId={placedOrder.metaEventId}
+          value={placedOrder.total}
+          items={placedOrder.items.map((item) => ({
+            id: item.id,
+            qty: item.quantity,
+          }))}
+        />
+      )}
     </FormProvider>
   );
 }

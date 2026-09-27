@@ -28,6 +28,8 @@ export interface PlacedOrder {
   email: string;
   phone: string;
   total: number;
+  metaEventId: string;
+  items: { id: string; quantity: number }[];
 }
 
 interface OrderSuccessDialogProps {

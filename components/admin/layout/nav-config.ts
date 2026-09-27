@@ -3,6 +3,7 @@ import {
   ChartNoAxesCombined,
   ContactRound,
   FileText,
+  Images,
   LayoutDashboard,
   Users,
   UsersRound,
@@ -54,6 +55,11 @@ export const navGroups: NavGroup[] = [
         title: "Orders",
         href: "/admin/orders",
         icon: FileText,
+      },
+      {
+        title: "Banners",
+        href: "/admin/banners",
+        icon: Images,
       },
       {
         title: "Users",

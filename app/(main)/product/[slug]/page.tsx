@@ -3,6 +3,7 @@ import { ProductBreadcrumb } from "@/components/main/product/product-breadcrumb"
 import { ProductDetails } from "@/components/main/product/product-details";
 import { ProductGallery } from "@/components/main/product/product-gallery";
 import { ProductInfo } from "@/components/main/product/product-info";
+import { ProductViewTracker } from "@/components/main/product/product-view-tracker";
 import { RelatedProductsSection } from "@/components/main/product/related-products";
 import { SITE_CONFIG } from "@/constants/site";
 import {
@@ -130,6 +131,9 @@ export default async function ProductPage({
         </div>
       </div>
       <RelatedProductsSection products={relatedProducts} />
+      <ProductViewTracker
+        product={{ id: product.id, name: product.title, price: product.price }}
+      />
     </main>
   );
 }

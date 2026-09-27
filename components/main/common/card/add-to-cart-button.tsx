@@ -4,6 +4,7 @@
 import { Button } from "@/components/ui/button";
 import { useCart, useCartItemError } from "@/context/cart-provider";
 import { ProductDTO } from "@/lib/data/catalog";
+import { trackEvent } from "@/lib/track-event";
 import { cn } from "@/lib/utils";
 import { AlertCircle, Check, ShoppingCart } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -73,6 +74,16 @@ export function AddToCartButton({
     };
 
     addItem(cartItem, productId, qty);
+
+    trackEvent({
+      eventName: "AddToCart",
+      customData: {
+        content_ids: [product.id],
+        content_type: "product",
+        value: product.price * qty,
+        currency: "BDT",
+      },
+    });
 
     setStatus("added");
   };

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
 import { SITE_CONFIG } from "@/constants/site";
 import { useCart, useCartItemError } from "@/context/cart-provider";
+import { trackEvent } from "@/lib/track-event";
 import {
   Check,
   Minus,
@@ -114,6 +115,16 @@ export function ProductPurchasePanel({
     // Only dispatch addItem if it isn't already in the cart
     if (!isInCart) {
       addItem(createCartItemPayload(), product.id, currentQty);
+
+      trackEvent({
+        eventName: "AddToCart",
+        customData: {
+          content_ids: [product.id],
+          content_type: "product",
+          value: product.price * currentQty,
+          currency: "BDT",
+        },
+      });
     }
 
     setIsAdded(true);
@@ -128,6 +139,16 @@ export function ProductPurchasePanel({
     if (!isInCart) {
       addItem(createCartItemPayload(), product.id, currentQty);
     }
+    trackEvent({
+      eventName: "InitiateCheckout",
+      customData: {
+        content_ids: [product.id],
+        content_type: "product",
+        value: product.price * currentQty,
+        currency: "BDT",
+        num_items: currentQty,
+      },
+    });
     router.push("/checkout");
   };
 

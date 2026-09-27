@@ -48,6 +48,7 @@ import { useCategories } from "@/context/catalog-provider";
 import { useProductSearch } from "@/hooks/use-product-search";
 import { authClient } from "@/lib/auth-client";
 import type { ProductDTO } from "@/lib/data/catalog";
+import { trackEvent } from "@/lib/track-event";
 import { formatPrice } from "@/utils/format-price";
 import {
   ArrowRight,
@@ -74,7 +75,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -730,7 +731,7 @@ function CartRow({ item }: { item: PopulatedCartItem }) {
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <div className="flex items-start justify-between gap-2">
           <Link
-            href={`/products/${item.product.slug}`}
+            href={`/product/${item.product.slug}`}
             className="line-clamp-2 text-sm font-medium leading-tight hover:text-primary"
           >
             {item.product.title}
@@ -816,7 +817,26 @@ function EmptyCart() {
 }
 
 function CartSheet() {
+  const router = useRouter();
   const { items, isLoading, totalItems, totalPrice } = useCart();
+  const handleCheckout = () => {
+    trackEvent({
+      eventName: "InitiateCheckout",
+      customData: {
+        content_ids: items.map((item) => item.productId),
+        contents: items.map((item) => ({
+          id: item.productId,
+          quantity: item.quantity,
+        })),
+        content_type: "product",
+        value: totalPrice,
+        currency: "BDT",
+        num_items: totalItems,
+      },
+    });
+
+    router.push("/checkout");
+  };
 
   return (
     <Sheet>
@@ -884,13 +904,10 @@ function CartSheet() {
               <span>{formatPrice(totalPrice)}</span>
             </div>
             <SheetClose
-              nativeButton={false}
               render={
-                <Link href="/checkout" className="block w-full">
-                  <Button className="w-full" size="lg">
-                    Checkout
-                  </Button>
-                </Link>
+                <Button onClick={handleCheckout} className="w-full" size="lg">
+                  Checkout
+                </Button>
               }
             />
           </div>

@@ -172,3 +172,14 @@ export const getRelatedProducts = (
     ["related-products", categoryId, currentProductId, String(limit)],
     { tags: [`category-${categoryId}`] },
   )();
+
+export const getActiveBanners = unstable_cache(
+  async () => {
+    return prisma.banner.findMany({
+      where: { isActive: true },
+      orderBy: { order: "asc" },
+    });
+  },
+  ["all-banners"],
+  { tags: ["banners"] },
+);

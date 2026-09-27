@@ -87,6 +87,25 @@ model Verification {
   @@index([identifier])
 }
 
+enum BannerPlacement {
+  HERO_SLIDER // Left carousel slides
+  HERO_SIDE_BANNER // Right standalone image
+}
+
+model Banner {
+  id        String          @id @default(cuid())
+  title     String? // Optional title or alt text
+  imageUrl  String // Image URL (e.g., Cloudinary, S3)
+  linkUrl   String? // Target link when clicked
+  placement BannerPlacement
+  order     Int             @default(1) // Sorting order for slider slides
+  isActive  Boolean         @default(true)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  @@index([placement, isActive])
+}
+
 model Product {
   id    String  @id @default(cuid())
   title String

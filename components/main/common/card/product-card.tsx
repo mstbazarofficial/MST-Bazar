@@ -44,7 +44,7 @@ export function ProductCard({
 
             {/* Title, Unit, Price & Bottom Badges */}
             <div className="flex flex-col min-w-0 flex-1 space-y-0.5">
-              <h3 className="text-sm sm:text-lg font-bold text-foreground line-clamp-2 leading-snug group-hover:text-primary transition-colors">
+              <h3 className="text-sm sm:text-base font-medium text-foreground line-clamp-2 leading-snug group-hover:text-primary transition-colors">
                 {product.title}
               </h3>
 
@@ -118,7 +118,7 @@ export function ProductCard({
 
         {/* Title, Unit & Price */}
         <div className="flex flex-col space-y-2">
-          <h3 className="text-xs sm:text-sm font-bold text-foreground line-clamp-2 leading-snug group-hover:text-primary transition-colors">
+          <h3 className="text-xs sm:text-sm font-semibold text-foreground line-clamp-2  group-hover:text-primary transition-colors">
             {product.title}
           </h3>
           <p className="text-[11px] text-muted-foreground font-normal">

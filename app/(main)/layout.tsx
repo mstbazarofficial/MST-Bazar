@@ -8,6 +8,7 @@ import { QueryProvider } from "@/context/query-provider";
 import { getAllCategories, getAllProducts } from "@/lib/data/catalog";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { FaWhatsapp } from "react-icons/fa";
 
 export const metadata: Metadata = {
@@ -64,7 +65,10 @@ export default async function RootLayout({
           {process.env.NEXT_PUBLIC_ENVIRONMENT === "production" && (
             <>
               <GoogleAnalytics gaId="G-91TTFGEMY6" />
-              <MetaPixel />
+              <Suspense fallback={null}>
+                {" "}
+                <MetaPixel />
+              </Suspense>
             </>
           )}
         </CartProvider>

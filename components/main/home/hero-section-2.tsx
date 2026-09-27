@@ -46,7 +46,7 @@ export function HeroSection2({ sliderBanners, sideBanner }: HeroSectionProps) {
       >
         {/* Left Slider Column */}
         {hasSlider && (
-          <div className="group relative aspect-[5/2] w-full overflow-hidden rounded-2xl bg-muted lg:rounded-3xl">
+          <div className="group relative aspect-5/2 w-full overflow-hidden rounded-2xl bg-muted lg:rounded-3xl">
             <Swiper
               modules={[Autoplay]}
               speed={600}

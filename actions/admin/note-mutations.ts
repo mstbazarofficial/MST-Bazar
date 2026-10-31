@@ -2,7 +2,7 @@
 
 import { requireRole } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
+import { revalidateOrderPages } from "@/lib/revalidate-orders";
 import { z } from "zod";
 
 const addNoteSchema = z.object({
@@ -34,7 +34,7 @@ export async function addNote({
       },
     });
 
-    revalidatePath(`/orders/${orderId}`);
+    revalidateOrderPages();
 
     return { success: true, data: newNote };
   } catch (error) {
@@ -63,7 +63,7 @@ export async function deleteNote({
       },
     });
 
-    revalidatePath(`/orders/${orderId}`);
+    revalidateOrderPages();
 
     return { success: true, data: deletedNote };
   } catch (error) {

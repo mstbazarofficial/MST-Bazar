@@ -1,7 +1,14 @@
 "use server";
 
+import { getBdPhoneVariants } from "@/utils/phone";
 import { OrderStatus, PaymentMethod } from "@/generated/prisma/enums";
 import { prisma } from "@/lib/prisma";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { headers } from "next/headers";
+
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
+const MAX_LOOKUPS_PER_IP = 30;
+const MAX_LOOKUPS_PER_ORDER = 10;
 
 export type TrackedOrderItem = {
   id: string;
@@ -23,7 +30,7 @@ export type TrackedOrder = {
   TrxNumber: string | null;
   shippingCost: number;
   discount: number;
-  productCost: number | null;
+  promoCode: string | null;
   orderDate: string;
   orderItems: TrackedOrderItem[];
 };
@@ -43,11 +50,30 @@ export async function trackOrderAction(
     };
   }
 
+  const isWithinLimit =
+    checkRateLimit(
+      `track:ip:${getClientIp(await headers())}`,
+      MAX_LOOKUPS_PER_IP,
+      RATE_LIMIT_WINDOW_MS,
+    ) &&
+    checkRateLimit(
+      `track:order:${orderId.trim()}`,
+      MAX_LOOKUPS_PER_ORDER,
+      RATE_LIMIT_WINDOW_MS,
+    );
+
+  if (!isWithinLimit) {
+    return {
+      success: false,
+      error: "Too many attempts. Please wait a few minutes and try again.",
+    };
+  }
+
   try {
     const order = await prisma.order.findFirst({
       where: {
         orderId: orderId.trim(),
-        phoneNumber: phoneNumber.trim(),
+        phoneNumber: { in: getBdPhoneVariants(phoneNumber) },
       },
       select: {
         id: true,
@@ -60,7 +86,7 @@ export async function trackOrderAction(
         TrxNumber: true,
         shippingCost: true,
         discount: true,
-        productCost: true,
+        promoCode: true,
         orderDate: true,
         orderItems: {
           select: {

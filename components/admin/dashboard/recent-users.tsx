@@ -1,5 +1,6 @@
 "use client";
 
+import { EmptyState } from "@/components/admin/layout/empty-state";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Table,
@@ -9,6 +10,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { formatDateTime } from "@/utils/format-date";
+import { UsersRound } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -19,18 +22,6 @@ export type RecentUser = {
   createdAt: Date | string;
   image: string | null;
 };
-
-function formatDate(dateInput: Date | string): string {
-  const date = new Date(dateInput);
-  if (isNaN(date.getTime())) return String(dateInput);
-
-  return date.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
 
 function getInitials(name: string) {
   return name
@@ -57,9 +48,7 @@ export function RecentUsers({ users }: { users: RecentUser[] }) {
       </div>
 
       {users.length === 0 ? (
-        <p className="p-6 text-center text-sm text-muted-foreground">
-          No users found.
-        </p>
+        <EmptyState icon={UsersRound} title="No users found." />
       ) : (
         <Table>
           <TableHeader>
@@ -67,7 +56,7 @@ export function RecentUsers({ users }: { users: RecentUser[] }) {
               <TableHead className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                 USER
               </TableHead>
-              <TableHead className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              <TableHead className="hidden text-xs font-bold uppercase tracking-wider text-muted-foreground sm:table-cell">
                 EMAIL
               </TableHead>
               <TableHead className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
@@ -92,11 +81,11 @@ export function RecentUsers({ users }: { users: RecentUser[] }) {
                   </Avatar>
                   <span>{user.name ?? "N/A"}</span>
                 </TableCell>
-                <TableCell className="text-sm text-muted-foreground">
+                <TableCell className="hidden text-sm text-muted-foreground sm:table-cell">
                   {user.email}
                 </TableCell>
                 <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
-                  {formatDate(user.createdAt)}
+                  {formatDateTime(user.createdAt)}
                 </TableCell>
               </TableRow>
             ))}

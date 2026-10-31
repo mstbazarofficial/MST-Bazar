@@ -57,10 +57,12 @@ export function ContactCard({
   const [savedStatus, setSavedStatus] = useState<ContactStatus>(contact.status);
   const [isSaving, startTransition] = useTransition();
 
-  useEffect(() => {
+  const [syncedStatus, setSyncedStatus] = useState(contact.status);
+  if (contact.status !== syncedStatus) {
+    setSyncedStatus(contact.status);
     setSelectedStatus(contact.status);
     setSavedStatus(contact.status);
-  }, [contact.status]);
+  }
 
   const isStatusChanged = selectedStatus !== savedStatus;
 

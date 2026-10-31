@@ -54,7 +54,7 @@ export function ContactFormSection() {
       <div>
         <SectionHeading title="Send us a message" highlightPositions={[4]} />
         <p className="text-gray-600 text-sm">
-          Fill out the form below and we'll get back to you as soon as possible.
+          Fill out the form below and we&apos;ll get back to you as soon as possible.
         </p>
       </div>
 

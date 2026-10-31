@@ -11,7 +11,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Role } from "@/generated/prisma/enums";
-import { useModalParam } from "@/hooks/use-modal-param";
 import { authClient } from "@/lib/auth-client";
 import { useQueryClient } from "@tanstack/react-query";
 import { Lock, MoreVertical, Pencil, ShieldAlert, Trash2 } from "lucide-react";
@@ -28,19 +27,28 @@ type UserDetailHeaderProps = {
     whatsappNumber?: string | null;
     fullAddress?: string | null;
   };
+  // URL search param manages modal state: ?edit=general | role | password
+  editParam: string | null;
+  setEditParam: (value: string | null) => void;
 };
 
-export function UserDetailHeader({ user }: UserDetailHeaderProps) {
+export function UserDetailHeader({
+  user,
+  editParam,
+  setEditParam,
+}: UserDetailHeaderProps) {
   const { data: session } = authClient.useSession();
   const queryClient = useQueryClient();
   const router = useRouter();
 
-  // URL search param manages modal state: ?edit=general | role | password
-  const [editParam, setEditParam] = useModalParam("edit");
-  const editMode = (editParam as EditMode) || null;
-
   const currentUserRole = session?.user?.role?.toString().toUpperCase();
   const isAdmin = currentUserRole === Role.ADMIN || currentUserRole === "ADMIN";
+
+  // Moderators can edit a user's info. Roles, passwords and deletion stay with
+  // the admin, even if the edit param is typed into the URL.
+  const requestedEditMode = (editParam as EditMode) || null;
+  const editMode =
+    isAdmin || requestedEditMode === "general" ? requestedEditMode : null;
 
   const handleDeleteUser = async () => {
     await authClient.admin.removeUser({ userId: user.id });
@@ -51,10 +59,11 @@ export function UserDetailHeader({ user }: UserDetailHeaderProps) {
   return (
     <>
       <PageHeader
-        title={user.name}
+        title="Users"
         backHref="/admin/users"
+        className="max-w-none"
         actions={
-          isAdmin && (
+          session && (
             <div className="flex items-center">
               <DropdownMenu>
                 <DropdownMenuTrigger
@@ -73,34 +82,41 @@ export function UserDetailHeader({ user }: UserDetailHeaderProps) {
                     Edit Info
                   </DropdownMenuItem>
 
-                  <DropdownMenuItem onClick={() => setEditParam("role")}>
-                    <ShieldAlert className="size-4 mr-2 text-muted-foreground" />
-                    Change Role
-                  </DropdownMenuItem>
+                  {isAdmin && (
+                    <>
+                      <DropdownMenuItem onClick={() => setEditParam("role")}>
+                        <ShieldAlert className="size-4 mr-2 text-muted-foreground" />
+                        Change Role
+                      </DropdownMenuItem>
 
-                  <DropdownMenuItem onClick={() => setEditParam("password")}>
-                    <Lock className="size-4 mr-2 text-muted-foreground" />
-                    Set Password
-                  </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => setEditParam("password")}
+                      >
+                        <Lock className="size-4 mr-2 text-muted-foreground" />
+                        Set Password
+                      </DropdownMenuItem>
 
-                  <DropdownMenuSeparator />
+                      <DropdownMenuSeparator />
 
-                  <DeleteDialog
-                    title="Delete user?"
-                    description={`Are you sure you want to delete "${user.name}"? This action cannot be undone.`}
-                    action={handleDeleteUser}
-                    successMessage="User deleted successfully."
-                  >
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      className="w-full justify-start gap-2"
-                      aria-label="Delete User"
-                    >
-                      <Trash2 className="size-4" />
-                      Delete User
-                    </Button>
-                  </DeleteDialog>
+                      <DeleteDialog
+                        title="Delete user?"
+                        description={`Are you sure you want to delete "${user.name}"? This action cannot be undone.`}
+                        action={handleDeleteUser}
+                        refreshData={false}
+                        successMessage="User deleted successfully."
+                      >
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          className="w-full justify-start gap-2"
+                          aria-label="Delete User"
+                        >
+                          <Trash2 className="size-4" />
+                          Delete User
+                        </Button>
+                      </DeleteDialog>
+                    </>
+                  )}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>

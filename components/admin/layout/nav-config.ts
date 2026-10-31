@@ -1,12 +1,14 @@
 import {
-  BookOpen,
   ChartNoAxesCombined,
   ContactRound,
-  FileText,
   Images,
   LayoutDashboard,
-  Users,
+  Package,
+  ShoppingCart,
+  Tags,
+  TicketPercent,
   UsersRound,
+  Wallet,
   type LucideIcon,
 } from "lucide-react";
 
@@ -39,28 +41,53 @@ export const navGroups: NavGroup[] = [
     ],
   },
   {
-    label: "Manage",
+    label: "Sales",
+    items: [
+      {
+        title: "Orders",
+        href: "/admin/orders",
+        icon: ShoppingCart,
+      },
+      {
+        title: "Promo Codes",
+        href: "/admin/promo-codes",
+        icon: TicketPercent,
+      },
+    ],
+  },
+  {
+    label: "Catalog",
     items: [
       {
         title: "Products",
         href: "/admin/products",
-        icon: BookOpen,
+        icon: Package,
       },
       {
         title: "Categories",
         href: "/admin/categories",
-        icon: Users,
-      },
-      {
-        title: "Orders",
-        href: "/admin/orders",
-        icon: FileText,
+        icon: Tags,
       },
       {
         title: "Banners",
         href: "/admin/banners",
         icon: Images,
       },
+    ],
+  },
+  {
+    label: "Finance",
+    items: [
+      {
+        title: "Finance",
+        href: "/admin/finance",
+        icon: Wallet,
+      },
+    ],
+  },
+  {
+    label: "People",
+    items: [
       {
         title: "Users",
         href: "/admin/users",
@@ -74,3 +101,10 @@ export const navGroups: NavGroup[] = [
     ],
   },
 ];
+
+/** The dashboard is the parent of every admin path, so it must match exactly. */
+export function isNavItemActive(href: string, pathname: string) {
+  if (href === "/admin") return pathname === href;
+
+  return pathname === href || pathname.startsWith(`${href}/`);
+}

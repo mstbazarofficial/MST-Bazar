@@ -1,5 +1,6 @@
 import SignUpPageClient from "@/components/auth/signup-client";
 import { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Create Account",
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
     "Create an account with MST Bazar to easily order fresh groceries, organic products, track deliveries, and unlock exclusive deal discounts.",
 };
 export default function SignUpPage() {
-  return <SignUpPageClient />;
+  return (
+    <Suspense>
+      <SignUpPageClient />
+    </Suspense>
+  );
 }

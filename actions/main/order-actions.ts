@@ -1,11 +1,14 @@
 "use server";
 
 // ADJUST THESE TWO IMPORTS to match your project:
+import { MAX_ITEM_QTY } from "@/constants/site";
+import { calculateOrderTotal } from "@/utils/calculate-order-total";
 import { auth } from "@/lib/auth"; // your better-auth server instance
 import { prisma } from "@/lib/prisma"; // your Prisma client singleton
 
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
+import { after } from "next/server";
 import { z } from "zod";
 
 import { Prisma } from "@/generated/prisma/client";
@@ -17,10 +20,20 @@ import {
   type DeliveryOptionType,
   type PaymentMethodType,
 } from "@/validation/checkout.validation";
+import {
+  normalizePromoCode,
+  PROMO_CODE_MAX_LENGTH,
+} from "@/validation/promo-code.validation";
 
 // Import your email utility function
 import { sendCapiEvent } from "@/lib/meta-capi";
+import { claimPromoCode, PromoCodeError } from "@/lib/promo-code";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { sendOrderConfirmationEmail } from "@/utils/mail-presets";
+
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
+const MAX_ORDERS_PER_IP = 10;
+const MAX_ORDERS_PER_PHONE = 5;
 
 // ---------------------------------------------------------------------------
 // Input contract
@@ -28,7 +41,7 @@ import { sendOrderConfirmationEmail } from "@/utils/mail-presets";
 
 const orderItemInputSchema = z.object({
   productId: z.string().min(1),
-  quantity: z.number().int().min(1).max(10),
+  quantity: z.number().int().min(1).max(MAX_ITEM_QTY),
 });
 
 const placeOrderInputSchema = z.object({
@@ -36,12 +49,13 @@ const placeOrderInputSchema = z.object({
   items: z
     .array(orderItemInputSchema)
     .min(1, "Select at least one item to order"),
+  promoCode: z.string().max(PROMO_CODE_MAX_LENGTH).optional(),
 });
 
 export type PlaceOrderInput = z.infer<typeof placeOrderInputSchema>;
 
 export type PlaceOrderResult =
-  | { success: true; orderId: string; metaEventId: string }
+  | { success: true; orderId: string; metaEventId: string; total: number }
   | {
       success: false;
       error: string;
@@ -82,10 +96,31 @@ export async function placeOrder(
     };
   }
 
-  const { customer, items } = parsed.data;
+  const { customer, items, promoCode } = parsed.data;
+  const requestHeaders = await headers();
+
+  const isWithinLimit =
+    checkRateLimit(
+      `order:ip:${getClientIp(requestHeaders)}`,
+      MAX_ORDERS_PER_IP,
+      RATE_LIMIT_WINDOW_MS,
+    ) &&
+    checkRateLimit(
+      `order:phone:${customer.phone}`,
+      MAX_ORDERS_PER_PHONE,
+      RATE_LIMIT_WINDOW_MS,
+    );
+
+  if (!isWithinLimit) {
+    return {
+      success: false,
+      error:
+        "Too many orders in a short time. Please wait a few minutes or contact us for help.",
+    };
+  }
 
   // Orders can be placed as a guest — userId is optional on the Order model.
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await auth.api.getSession({ headers: requestHeaders });
   const userId = session?.user?.id ?? null;
 
   const productIds = items.map((item) => item.productId);
@@ -105,6 +140,7 @@ export async function placeOrder(
       },
       price: true,
       discountPercentage: true,
+      isAvailable: true,
     },
   });
 
@@ -116,6 +152,16 @@ export async function placeOrder(
       success: false,
       error:
         "Some items in your cart are no longer available. Please refresh your cart and try again.",
+    };
+  }
+
+  const unavailableTitles = products
+    .filter((product) => !product.isAvailable)
+    .map((product) => product.title);
+  if (unavailableTitles.length > 0) {
+    return {
+      success: false,
+      error: `Currently out of stock: ${unavailableTitles.join(", ")}. Please remove ${unavailableTitles.length === 1 ? "it" : "them"} to continue.`,
     };
   }
 
@@ -139,86 +185,64 @@ export async function placeOrder(
   const shippingCost = getShippingCost(customer.deliveryOption);
   const isManualPayment = customer.paymentMethod !== "cod";
   const orderId = createUniqueId("MST");
-  const orderTotal =
-    orderItemsData.reduce((sum, item) => {
-      const discount = item.price * ((item.discountPercentage ?? 0) / 100);
-      return sum + (item.price - discount) * item.quantity;
-    }, 0) + shippingCost;
+  const { itemsSubtotal } = calculateOrderTotal({
+    orderItems: orderItemsData,
+    discount: 0,
+    shippingCost,
+  });
 
   const eventId = crypto.randomUUID();
 
+  let order: {
+    orderId: string;
+    id: string;
+    discount: number;
+    promoCode: string | null;
+  };
+
   try {
-    const order = await prisma.order.create({
-      data: {
-        orderId,
-        userId,
+    order = await prisma.$transaction(async (tx) => {
+      const promo = promoCode
+        ? await claimPromoCode(
+            tx,
+            normalizePromoCode(promoCode),
+            { phone: customer.phone, userId },
+            itemsSubtotal,
+          )
+        : null;
 
-        customerName: customer.fullName,
-        emailAddress: customer.email,
-        phoneNumber: customer.phone,
-        whatsappNumber: customer.whatsapp || null,
-        fullAddress: customer.address,
+      return tx.order.create({
+        data: {
+          orderId,
+          userId,
 
-        orderPaymentMethod: PAYMENT_METHOD_MAP[customer.paymentMethod],
-        TrxNumber: isManualPayment ? customer.paymentPhone || null : null,
-        TrxID: isManualPayment ? customer.transactionId || null : null,
+          customerName: customer.fullName,
+          emailAddress: customer.email || null,
+          phoneNumber: customer.phone,
+          whatsappNumber: customer.whatsapp || null,
+          fullAddress: customer.address,
 
-        shippingCost,
+          orderPaymentMethod: PAYMENT_METHOD_MAP[customer.paymentMethod],
+          TrxNumber: isManualPayment ? customer.paymentPhone || null : null,
+          TrxID: isManualPayment ? customer.transactionId || null : null,
 
-        orderItems: {
-          create: orderItemsData,
+          shippingCost,
+          discount: promo?.discount ?? 0,
+          promoCodeId: promo?.id,
+          promoCode: promo?.code,
+
+          orderItems: {
+            create: orderItemsData,
+          },
         },
-      },
-      select: { orderId: true, id: true },
+        select: { orderId: true, id: true, discount: true, promoCode: true },
+      });
     });
-
-    if (process.env.NEXT_PUBLIC_ENVIRONMENT === "production") {
-      sendOrderConfirmationEmail({
-        orderId: order.orderId,
-        customerName: customer.fullName,
-        emailAddress: customer.email,
-        fullAddress: customer.address,
-        phoneNumber: customer.phone,
-        shippingCost,
-        discount: 0,
-        orderPaymentMethod: customer.paymentMethod,
-        orderItems: orderItemsData,
-      }).catch((emailError) => {
-        console.error(
-          "Order saved, but confirmation email failed:",
-          emailError,
-        );
-      });
-
-      await sendCapiEvent({
-        eventName: "Purchase",
-        eventId,
-        actionSource: "website",
-        userData: {
-          email: customer.email,
-          phone: customer.phone,
-          externalId: order.id,
-        },
-        customData: {
-          value: orderTotal,
-          currency: "BDT",
-          content_ids: orderItemsData.map((i) => i.productId),
-          contents: JSON.stringify(
-            orderItemsData.map((i) => ({
-              id: i.productId,
-              quantity: i.quantity,
-            })),
-          ),
-          num_items: orderItemsData.length,
-          order_id: order.orderId,
-        },
-      });
+  } catch (error) {
+    if (error instanceof PromoCodeError) {
+      return { success: false, error: error.message };
     }
 
-    revalidatePath("/checkout");
-
-    return { success: true, orderId: order.orderId, metaEventId: eventId };
-  } catch (error) {
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === "P2002"
@@ -235,4 +259,80 @@ export async function placeOrder(
       error: "Something went wrong while placing your order. Please try again.",
     };
   }
+
+  const { finalTotal: orderTotal } = calculateOrderTotal({
+    orderItems: orderItemsData,
+    discount: order.discount,
+    shippingCost,
+  });
+
+  // The order is saved from here on. Email and tracking run after the response
+  // so a failure in either can never make a saved order look like it failed.
+  if (process.env.NEXT_PUBLIC_ENVIRONMENT === "production") {
+    const {
+      orderId: placedOrderId,
+      id: placedOrderDbId,
+      discount,
+      promoCode: placedPromoCode,
+    } = order;
+
+    after(async () => {
+      const results = await Promise.allSettled([
+        customer.email &&
+          sendOrderConfirmationEmail({
+            orderId: placedOrderId,
+            customerName: customer.fullName,
+            emailAddress: customer.email,
+            fullAddress: customer.address,
+            phoneNumber: customer.phone,
+            shippingCost,
+            discount,
+            promoCode: placedPromoCode,
+            orderPaymentMethod: PAYMENT_METHOD_MAP[customer.paymentMethod],
+            orderItems: orderItemsData,
+          }),
+        sendCapiEvent({
+          eventName: "Purchase",
+          eventId,
+          actionSource: "website",
+          userData: {
+            email: customer.email,
+            phone: customer.phone,
+            externalId: placedOrderDbId,
+          },
+          customData: {
+            value: orderTotal,
+            currency: "BDT",
+            content_ids: orderItemsData.map((i) => i.productId),
+            contents: JSON.stringify(
+              orderItemsData.map((i) => ({
+                id: i.productId,
+                quantity: i.quantity,
+              })),
+            ),
+            num_items: orderItemsData.length,
+            order_id: placedOrderId,
+          },
+        }),
+      ]);
+
+      results.forEach((result) => {
+        if (result.status === "rejected") {
+          console.error(
+            `Order ${placedOrderId} saved, but a follow-up task failed:`,
+            result.reason,
+          );
+        }
+      });
+    });
+  }
+
+  revalidatePath("/checkout");
+
+  return {
+    success: true,
+    orderId: order.orderId,
+    metaEventId: eventId,
+    total: orderTotal,
+  };
 }

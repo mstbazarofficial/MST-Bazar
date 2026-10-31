@@ -1,3 +1,4 @@
+import { calculateOrderTotal } from "@/utils/calculate-order-total";
 import { TrackedOrder } from "@/actions/main/track-order";
 import { Calendar, CreditCard, Hash, MapPin, User } from "lucide-react";
 
@@ -16,12 +17,7 @@ interface OrderOverviewProps {
 }
 
 export function OrderOverview({ order }: OrderOverviewProps) {
-  const subtotal = order.orderItems.reduce((acc, item) => {
-    const discounted = item.price * (1 - item.discountPercentage / 100);
-    return acc + discounted * item.quantity;
-  }, 0);
-
-  const total = subtotal + order.shippingCost - order.discount;
+  const { finalTotal: total } = calculateOrderTotal(order);
 
   const placed = new Date(order.orderDate).toLocaleDateString("en-GB", {
     day: "2-digit",

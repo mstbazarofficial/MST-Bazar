@@ -34,8 +34,9 @@ export function ProductDetailHeader({ product }: ProductDetailHeaderProps) {
   };
   return (
     <PageHeader
-      title={product.title}
+      title="Products"
       backHref="/admin/products"
+      className="max-w-none"
       actions={
         <div className="flex items-center ">
           {/* More Actions Dropdown */}
@@ -69,13 +70,14 @@ export function ProductDetailHeader({ product }: ProductDetailHeaderProps) {
                 title="Delete product?"
                 description={`Are you sure you want to delete "${product.title}"? This action cannot be undone.`}
                 action={() => handleDelete()}
+                refreshData={false}
                 successMessage="Product deleted successfully."
               >
                 <Button
                   variant="destructive"
                   size="sm"
                   className="w-full justify-start gap-2"
-                  aria-label="Delete category"
+                  aria-label="Delete product"
                 >
                   <Trash2 className="size-4" />
                   Delete Product

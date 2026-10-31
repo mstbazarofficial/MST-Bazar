@@ -1,7 +1,7 @@
 // lib/analytics/chart-colors.ts
 // One small, deliberate palette reused across every chart so the page
 // reads as one system rather than each card picking its own colors.
-// Swap these to match Edugen's brand marks if they differ.
+// Swap these to match MST Bazar's brand marks if they differ.
 export const CHART_COLORS = {
   primary: "#0E7C6B", // deep emerald — users / primary series
   secondary: "#2F6FED", // clear blue — sessions / secondary series
@@ -27,3 +27,8 @@ export const DEVICE_COLORS: Record<string, string> = {
   desktop: "#2F6FED",
   tablet: "#D9A441",
 };
+
+export const FINANCE_COLORS = {
+  income: "#00866D",
+  expenses: "#2F6FED",
+} as const;

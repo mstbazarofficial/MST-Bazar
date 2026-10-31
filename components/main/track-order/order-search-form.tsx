@@ -11,25 +11,21 @@ interface OrderSearchFormProps {
 
 export function OrderSearchForm({ onSearch, isPending }: OrderSearchFormProps) {
   const searchParams = useSearchParams();
-  const [orderId, setOrderId] = useState("");
-  const [phone, setPhone] = useState("");
+  const paramOrderId = searchParams.get("orderId")?.trim() || "";
+  const paramPhone = searchParams.get("phone")?.trim() || "";
+  const [orderId, setOrderId] = useState(paramOrderId);
+  const [phone, setPhone] = useState(paramPhone);
 
   // Track auto-search execution to prevent duplicate requests
   const hasAutoSearched = useRef(false);
 
   useEffect(() => {
-    const paramOrderId = searchParams.get("orderId")?.trim() || "";
-    const paramPhone = searchParams.get("phone")?.trim() || "";
-
-    if (paramOrderId) setOrderId(paramOrderId);
-    if (paramPhone) setPhone(paramPhone);
-
     // Auto-trigger search on load if both parameters exist and hasn't searched yet
     if (paramOrderId && paramPhone && !hasAutoSearched.current) {
       hasAutoSearched.current = true;
       onSearch(paramOrderId, paramPhone);
     }
-  }, [searchParams, onSearch]);
+  }, [paramOrderId, paramPhone, onSearch]);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();

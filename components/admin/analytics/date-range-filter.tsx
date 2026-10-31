@@ -1,5 +1,6 @@
 "use client";
 
+import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -55,8 +56,8 @@ export function DateRangeFilter({
     setCalendarValue(range);
     if (range?.from && range?.to) {
       onChange("custom", {
-        startDate: range.from.toISOString().slice(0, 10),
-        endDate: range.to.toISOString().slice(0, 10),
+        startDate: format(range.from, "yyyy-MM-dd"),
+        endDate: format(range.to, "yyyy-MM-dd"),
       });
       setPopoverOpen(false);
     }

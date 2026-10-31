@@ -1,11 +1,12 @@
 import Footer from "@/components/main/common/layout/app-footer";
 import { SiteHeader } from "@/components/main/common/layout/app-header";
+import { HideOnCheckout } from "@/components/main/common/layout/hide-on-checkout";
 import MetaPixel from "@/components/main/common/layout/meta-pixel";
 import { SITE_CONFIG } from "@/constants/site";
 import { CartProvider } from "@/context/cart-provider";
 import { CatalogProvider } from "@/context/catalog-provider";
 import { QueryProvider } from "@/context/query-provider";
-import { getAllCategories, getAllProducts } from "@/lib/data/catalog";
+import { getAllCategories } from "@/lib/data/catalog";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import { Suspense } from "react";
@@ -35,33 +36,34 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [categories, products] = await Promise.all([
-    getAllCategories(),
-    getAllProducts(),
-  ]);
+  const categories = await getAllCategories();
   const whatsappNumber = SITE_CONFIG.whatsapp;
 
   return (
     <QueryProvider>
-      <CatalogProvider categories={categories} products={products}>
+      <CatalogProvider categories={categories}>
         <CartProvider>
-          <SiteHeader />
+          <HideOnCheckout>
+            <SiteHeader />
+          </HideOnCheckout>
 
           {children}
-          <Footer />
-          {whatsappNumber && (
-            <a
-              href={`https://wa.me/${whatsappNumber}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Chat with us on WhatsApp"
-              title="Chat with us on WhatsApp"
-              className="fixed right-4 bottom-4 z-50 flex size-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition-transform duration-300 hover:scale-110 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#25D366] sm:right-9 sm:bottom-9"
-            >
-              <span className="absolute inset-0 rounded-full bg-[#25D366]/70 motion-safe:animate-ping" />
-              <FaWhatsapp className="relative size-8" aria-hidden="true" />
-            </a>
-          )}
+          <HideOnCheckout>
+            <Footer />
+            {whatsappNumber && (
+              <a
+                href={`https://wa.me/${whatsappNumber}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Chat with us on WhatsApp"
+                title="Chat with us on WhatsApp"
+                className="fixed right-4 bottom-4 z-50 flex size-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition-transform duration-300 hover:scale-110 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#25D366] sm:right-9 sm:bottom-9"
+              >
+                <span className="absolute inset-0 rounded-full bg-[#25D366]/70 motion-safe:animate-ping" />
+                <FaWhatsapp className="relative size-8" aria-hidden="true" />
+              </a>
+            )}
+          </HideOnCheckout>
           {process.env.NEXT_PUBLIC_ENVIRONMENT === "production" && (
             <>
               <GoogleAnalytics gaId="G-91TTFGEMY6" />

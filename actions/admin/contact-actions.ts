@@ -2,6 +2,7 @@
 import { ContactStatus } from "@/generated/prisma/enums";
 import { ContactSubmissionWhereInput } from "@/generated/prisma/models";
 import { requireRole } from "@/lib/admin-auth";
+import { getDhakaMonthRange } from "@/lib/dhaka-time";
 import { prisma } from "@/lib/prisma";
 
 interface AdminContactFilters {
@@ -19,21 +20,7 @@ export async function getAdminContacts(filters: AdminContactFilters) {
   const page = filters.page && filters.page > 0 ? filters.page : 1;
 
   // 1. Calculate Date Range if month filter is provided
-  let startDate: Date | undefined;
-  let endDate: Date | undefined;
-
-  if (filters.month) {
-    const [yearStr, monthStr] = filters.month.split("-");
-    const year = parseInt(yearStr, 10);
-    const month = parseInt(monthStr, 10);
-
-    if (!isNaN(year) && !isNaN(month)) {
-      // First day of the month 00:00:00
-      startDate = new Date(year, month - 1, 1);
-      // Last day of the month 23:59:59
-      endDate = new Date(year, month, 0, 23, 59, 59, 999);
-    }
-  }
+  const monthRange = getDhakaMonthRange(filters.month);
 
   // 2. Build Where Clauses
   const where: ContactSubmissionWhereInput = {
@@ -48,13 +35,7 @@ export async function getAdminContacts(filters: AdminContactFilters) {
       filters.status !== "all" && {
         status: filters.status as ContactStatus,
       }),
-    ...(startDate &&
-      endDate && {
-        orderDate: {
-          gte: startDate,
-          lte: endDate,
-        },
-      }),
+    ...(monthRange && { createdAt: monthRange }),
   };
 
   // 3. Query Prisma Transaction

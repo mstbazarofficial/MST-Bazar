@@ -1,26 +1,20 @@
 "use client";
 
+import AdminCategoriesSkeleton from "@/app/(admin)/admin/categories/skeleton";
+import { CategoriesPageHeader } from "@/components/admin/categories/categories-page-header";
 import { CategoriesTable } from "@/components/admin/categories/categories-table";
 import { Input } from "@/components/ui/input";
+import { adminFetch } from "@/lib/admin-fetch";
+import { useQuery } from "@tanstack/react-query";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 
-type Category = {
-  id: string;
-  name: string;
-  slug: string;
-  priority: number | null;
-  image: string | null;
-  _count: {
-    products: number;
-  };
-};
+export function CategoryPageClient() {
+  const { data: categories } = useQuery({
+    queryKey: ["admin-categories"],
+    queryFn: () => adminFetch("categories"),
+  });
 
-export function CategoryPageClient({
-  initialCategories,
-}: {
-  initialCategories: Category[];
-}) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
@@ -45,27 +39,35 @@ export function CategoryPageClient({
 
   // Instant in-memory filtering
   const filteredCategories = useMemo(() => {
-    if (!search.trim()) return initialCategories;
+    const all = categories ?? [];
+    if (!search.trim()) return all;
     const query = search.toLowerCase().trim();
-    return initialCategories.filter(
+    return all.filter(
       (cat) =>
         cat.name.toLowerCase().includes(query) ||
         cat.slug.toLowerCase().includes(query),
     );
-  }, [initialCategories, search]);
+  }, [categories, search]);
+
+  if (!categories) return <AdminCategoriesSkeleton />;
 
   return (
-    <div className="space-y-6">
-      <div>
-        <Input
-          value={search}
-          onChange={(e) => handleSearch(e.target.value)}
-          placeholder="Search categories..."
-          className="w-full bg-card"
-        />
-      </div>
+    <>
+      <CategoriesPageHeader />
+      <main className="flex-1 space-y-6 overflow-y-auto bg-muted/30 p-4 md:p-6">
+        <div className="space-y-6">
+          <div>
+            <Input
+              value={search}
+              onChange={(e) => handleSearch(e.target.value)}
+              placeholder="Search categories..."
+              className="w-full bg-card"
+            />
+          </div>
 
-      <CategoriesTable categories={filteredCategories} />
-    </div>
+          <CategoriesTable categories={filteredCategories} />
+        </div>
+      </main>
+    </>
   );
 }

@@ -13,6 +13,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth-client";
+import { getSafeRedirectPath } from "@/lib/safe-redirect";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   AlertCircle,
@@ -28,9 +29,11 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
+import * as z from "zod";
+import { getErrorMessage } from "@/utils/get-error-message";
 
 const signUpSchema = z
   .object({
@@ -52,6 +55,11 @@ const signUpSchema = z
 type SignUpFormValues = z.infer<typeof signUpSchema>;
 
 export default function SignUpPageClient() {
+  const redirectTo = getSafeRedirectPath(useSearchParams().get("redirect"));
+  const loginHref =
+    redirectTo === "/"
+      ? "/login"
+      : `/login?redirect=${encodeURIComponent(redirectTo)}`;
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -83,7 +91,7 @@ export default function SignUpPageClient() {
         email: values.email,
         password: values.password,
         phoneNumber: values.phone || undefined,
-        callbackURL: "/",
+        callbackURL: redirectTo,
       });
 
       if (authError) {
@@ -94,9 +102,9 @@ export default function SignUpPageClient() {
         setSubmittedEmail(values.email);
         setIsSubmitted(true);
       }
-    } catch (err: any) {
+    } catch (err) {
       setServerError(
-        err?.message || "An unexpected error occurred. Please try again.",
+        getErrorMessage(err, "An unexpected error occurred. Please try again."),
       );
     }
   };
@@ -152,7 +160,7 @@ export default function SignUpPageClient() {
 
               <div className="p-4 bg-muted border border-border rounded-xl text-xs text-muted-foreground text-left space-y-1">
                 <p className="font-semibold text-foreground">
-                  ⚡ Didn't get the email?
+                  ⚡ Didn&apos;t get the email?
                 </p>
                 <p>
                   Please check your <strong>Spam</strong> or{" "}
@@ -161,7 +169,7 @@ export default function SignUpPageClient() {
                 </p>
               </div>
 
-              <Link href="/login" className="block w-full">
+              <Link href={loginHref} className="block w-full">
                 <Button className="w-full bg-primary hover:bg-primary-dark text-primary-foreground rounded-lg h-11 text-base font-semibold">
                   Go to Login
                 </Button>
@@ -389,7 +397,7 @@ export default function SignUpPageClient() {
                   <div className="text-center text-sm text-muted-foreground pt-1">
                     Already have an account?{" "}
                     <Link
-                      href="/login"
+                      href={loginHref}
                       className="text-primary font-semibold hover:underline"
                     >
                       Login Now

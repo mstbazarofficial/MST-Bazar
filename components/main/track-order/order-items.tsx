@@ -1,3 +1,4 @@
+import { getUnitPrice } from "@/utils/calculate-order-total";
 import { TrackedOrder } from "@/actions/main/track-order";
 import { Package } from "lucide-react";
 import Image from "next/image";
@@ -14,8 +15,10 @@ export function OrderItems({ items }: OrderItemsProps) {
       </h3>
       <div className="flex flex-col gap-3">
         {items.map((item) => {
-          const discountedPrice =
-            item.price * (1 - item.discountPercentage / 100);
+          const discountedPrice = getUnitPrice(
+            item.price,
+            item.discountPercentage,
+          );
           const lineTotal = discountedPrice * item.quantity;
 
           return (

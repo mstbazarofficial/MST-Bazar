@@ -97,7 +97,7 @@ export async function updateCategory(
     });
 
     revalidatePath("/admin/categories");
-    revalidatePath(`/admin/categories/${categoryId}`);
+    revalidatePath("/(admin)/admin/categories/[id]/edit", "page");
     // After editing category...
     updateTag("categories");
     updateTag("products"); // Refreshes product lists displaying the updated category name/slug

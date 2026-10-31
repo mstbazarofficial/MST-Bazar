@@ -1,10 +1,13 @@
 "use server";
 
+import type { OrderStatus } from "@/generated/prisma/enums";
 import { ProductWhereInput } from "@/generated/prisma/models";
-import { requireAdmin, requireRole } from "@/lib/admin-auth";
+import { requireRole } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 
 const PAGE_SIZE = 20;
+const RECENT_ORDERS_LIMIT = 20;
+const CLOSED_ORDER_STATUSES: OrderStatus[] = ["CANCELLED", "RETURNED"];
 
 export type ProductAvailabilityFilter = "all" | "available" | "unavailable";
 
@@ -120,8 +123,52 @@ export async function getAdminProductBySlug(slug: string) {
     },
   });
 }
+
+export async function getAdminProductOrders(productId: string) {
+  await requireRole(["ADMIN", "MODERATOR"]);
+
+  const counted = { status: { notIn: CLOSED_ORDER_STATUSES } };
+
+  const [items, total, orderCount, units] = await Promise.all([
+    prisma.orderItem.findMany({
+      where: { productId },
+      orderBy: { order: { orderDate: "desc" } },
+      take: RECENT_ORDERS_LIMIT,
+      select: {
+        id: true,
+        quantity: true,
+        price: true,
+        discountPercentage: true,
+        order: {
+          select: {
+            orderId: true,
+            status: true,
+            customerName: true,
+            orderDate: true,
+          },
+        },
+      },
+    }),
+    prisma.order.count({ where: { orderItems: { some: { productId } } } }),
+    prisma.order.count({
+      where: { ...counted, orderItems: { some: { productId } } },
+    }),
+    prisma.orderItem.aggregate({
+      where: { productId, order: counted },
+      _sum: { quantity: true },
+    }),
+  ]);
+
+  return {
+    items,
+    total,
+    orderCount,
+    unitsSold: units._sum.quantity ?? 0,
+  };
+}
+
 export async function getAdminCategories() {
-  await requireAdmin();
+  await requireRole(["ADMIN", "MODERATOR"]);
   return prisma.category.findMany({
     select: { id: true, name: true, slug: true },
     orderBy: { name: "asc" },

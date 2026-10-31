@@ -1,4 +1,5 @@
 import { CategoryRowActions } from "@/components/admin/categories/category-row-actions";
+import { TableEmptyRow } from "@/components/admin/layout/empty-state";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -8,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Tags } from "lucide-react";
 import Image from "next/image";
 
 type Category = {
@@ -43,14 +45,11 @@ export function CategoriesTable({ categories }: { categories: Category[] }) {
 
           <TableBody>
             {categories.length === 0 ? (
-              <TableRow>
-                <TableCell
-                  colSpan={6}
-                  className="h-32 text-center text-muted-foreground"
-                >
-                  No categories found.
-                </TableCell>
-              </TableRow>
+              <TableEmptyRow
+                colSpan={6}
+                icon={Tags}
+                title="No categories found."
+              />
             ) : (
               categories.map((category) => (
                 <TableRow

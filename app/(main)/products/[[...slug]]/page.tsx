@@ -2,6 +2,7 @@ import ProductsHeader from "@/components/main/products/products-header";
 import { ProductsPageClient } from "@/components/main/products/products-page-client";
 import { SITE_CONFIG } from "@/constants/site";
 import { getAllCategories, getAllProducts } from "@/lib/data/catalog";
+import { getFeaturedImageUrl } from "@/utils/get-featured-image";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -74,17 +75,11 @@ export async function generateMetadata({
     }
   });
 
-  // Priority: 1. Category image -> 2. First filtered product image -> 3. Site logo fallback
-  const categoryImage =
-    (existedCategory as { image?: string; imageUrl?: string } | null)?.image ||
-    (existedCategory as { image?: string; imageUrl?: string } | null)?.imageUrl;
-
-  const fallbackProductImage =
-    matchingProduct?.images?.find((img) => img.isFeatured)?.url ||
-    matchingProduct?.images?.[0]?.url;
-
+  // Priority: 1. Category image -> 2. First filtered product image -> 3. Site share image
   const rawOgImage =
-    categoryImage || fallbackProductImage || "/assets/logo.png";
+    existedCategory?.image ||
+    getFeaturedImageUrl(matchingProduct?.images ?? []) ||
+    SITE_CONFIG.ogImage;
 
   const siteUrl = SITE_CONFIG.url;
   const canonicalUrl = currentSlug
@@ -105,7 +100,8 @@ export async function generateMetadata({
       title: `${pageTitle} | MST Bazar`,
       description,
       url: canonicalUrl,
-      siteName: "MST Bazar",
+      siteName: SITE_CONFIG.name,
+      locale: "en_BD",
       type: "website",
       images: [
         {

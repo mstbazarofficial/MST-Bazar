@@ -1,5 +1,12 @@
 import { SITE_CONFIG } from "@/constants/site";
+import type { PaymentMethod } from "@/generated/prisma/enums";
 import { sendEmail } from "@/lib/email";
+import {
+  calculateOrderTotal,
+  getUnitPrice,
+} from "@/utils/calculate-order-total";
+import { escapeHtml } from "@/utils/escape-html";
+import { formatPaymentMethod } from "@/utils/format-payment-method";
 
 export type OrderItem = {
   title: string;
@@ -23,7 +30,7 @@ export async function sendEmailVerification({
     htmlContent: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 12px; background-color: #ffffff;">
         <h2 style="color: #0f172a; margin-top: 0;">Verify Your Email</h2>
-        <p style="color: #475569; font-size: 15px; line-height: 1.5;">Hi ${name || "there"},</p>
+        <p style="color: #475569; font-size: 15px; line-height: 1.5;">Hi ${escapeHtml(name || "there")},</p>
         <p style="color: #475569; font-size: 15px; line-height: 1.5;">Thank you for registering. Please confirm your email address by clicking the button below:</p>
         
         <div style="margin: 28px 0;">
@@ -74,7 +81,8 @@ export type OrderConfirmationPayload = {
   fullAddress: string;
   shippingCost: number;
   discount: number;
-  orderPaymentMethod: string;
+  promoCode?: string | null;
+  orderPaymentMethod: PaymentMethod;
   orderItems: {
     productName: string;
     quantity: number;
@@ -87,24 +95,18 @@ export async function sendOrderConfirmationEmail(
   order: OrderConfirmationPayload,
 ) {
   const trackUrl = `${SITE_CONFIG.url}/track-order?orderId=${encodeURIComponent(order.orderId)}&phone=${encodeURIComponent(order.phoneNumber)}`;
-  // Calculate items total with discount snapshot considered
-  const subtotal = order.orderItems.reduce((acc, item) => {
-    const finalPrice = item.price * (1 - (item.discountPercentage || 0) / 100);
-    return acc + finalPrice * item.quantity;
-  }, 0);
-
-  const grandTotal = subtotal + order.shippingCost - order.discount;
+  const { itemsSubtotal: subtotal, finalTotal: grandTotal } =
+    calculateOrderTotal(order);
 
   const itemsRows = order.orderItems
     .map((item) => {
-      const finalUnitPrice =
-        item.price * (1 - (item.discountPercentage || 0) / 100);
-      const itemTotal = finalUnitPrice * item.quantity;
+      const itemTotal =
+        getUnitPrice(item.price, item.discountPercentage) * item.quantity;
 
       return `
       <tr>
         <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; color: #334155;">
-          ${item.productName} <span style="color: #64748b; font-size: 12px;">(x${item.quantity})</span>
+          ${escapeHtml(item.productName)} <span style="color: #64748b; font-size: 12px;">(x${item.quantity})</span>
         </td>
         <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; font-weight: 600; color: #0f172a; text-align: right;">
           ৳${Math.round(itemTotal).toLocaleString()}
@@ -122,13 +124,13 @@ export async function sendOrderConfirmationEmail(
         <!-- Header -->
         <h2 style="color: #0f172a; margin-top: 0; font-size: 20px;">Order Received!</h2>
         <p style="color: #475569; font-size: 14px; line-height: 1.5; margin-bottom: 20px;">
-          Hi <strong>${order.customerName}</strong>, thank you for your purchase. We have received your order <strong${order.orderId}</strong>.
+          Hi <strong>${escapeHtml(order.customerName)}</strong>, thank you for your purchase. We have received your order <strong>${escapeHtml(order.orderId)}</strong>.
         </p>
 
         <!-- Order Tracking Box -->
         <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; padding: 14px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
           <p style="margin: 0 0 8px 0; font-size: 13px; color: #166534;">
-            You can track your order live anytime using your Order ID: <strong>${order.orderId}</strong>
+            You can track your order live anytime using your Order ID: <strong>${escapeHtml(order.orderId)}</strong>
           </p>
           <a href="${trackUrl}" style="background-color: #16a34a; color: #ffffff; padding: 8px 16px; font-size: 12px; font-weight: 700; border-radius: 6px; text-decoration: none; display: inline-block;">
             Track Order
@@ -162,7 +164,7 @@ export async function sendOrderConfirmationEmail(
             order.discount > 0
               ? `
           <tr>
-            <td style="font-size: 13px; color: #16a34a; padding-bottom: 4px;">Discount:</td>
+            <td style="font-size: 13px; color: #16a34a; padding-bottom: 4px;">Discount${order.promoCode ? ` (${escapeHtml(order.promoCode)})` : ""}:</td>
             <td style="font-size: 13px; color: #16a34a; text-align: right; padding-bottom: 4px;">-৳${Math.round(order.discount).toLocaleString()}</td>
           </tr>
           `
@@ -176,8 +178,8 @@ export async function sendOrderConfirmationEmail(
 
         <!-- Payment & Delivery Info -->
         <p style="font-size: 12px; color: #64748b; margin: 0;">
-          <strong>Payment Method:</strong> ${order.orderPaymentMethod.replace(/_/g, " ")}<br />
-          <strong>Delivery Address:</strong> ${order.fullAddress}
+          <strong>Payment Method:</strong> ${formatPaymentMethod(order.orderPaymentMethod)}<br />
+          <strong>Delivery Address:</strong> ${escapeHtml(order.fullAddress)}
         </p>
       </div>
     `,

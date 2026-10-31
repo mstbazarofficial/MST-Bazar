@@ -1,10 +1,11 @@
 "use client";
 
-import { AdminUsersResult, getAdminUsers } from "@/actions/admin/user-actions";
+import AdminUsersSkeleton from "@/app/(admin)/admin/users/skeleton";
 import { PageHeader } from "@/components/admin/layout/page-header";
 import { DataTablePagination } from "@/components/my-ui/data-table-pagination";
 import { Button } from "@/components/ui/button";
 import { useModalParam } from "@/hooks/use-modal-param";
+import { adminFetch } from "@/lib/admin-fetch";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
@@ -13,18 +14,7 @@ import { UserFiltersBar } from "./user-filters-bar";
 import { CreateUserFormModal } from "./user-form";
 import { UsersTable } from "./users-table";
 
-export function UsersPageClient({
-  initialData,
-  initialFilters,
-}: {
-  initialData: AdminUsersResult;
-  initialFilters: {
-    search?: string;
-    role?: string;
-    page: number;
-    month?: string;
-  };
-}) {
+export function UsersPageClient() {
   const pathname = usePathname();
   const [createUser, setCreateUser] = useModalParam("new");
   const searchParams = useSearchParams();
@@ -39,16 +29,9 @@ export function UsersPageClient({
     [searchParams],
   );
 
-  const isInitial =
-    filters.search === (initialFilters.search ?? "") &&
-    filters.role === (initialFilters.role ?? "") &&
-    filters.month === (initialFilters.month ?? "") &&
-    filters.page === initialFilters.page;
-
   const { data, isFetching, refetch } = useQuery({
     queryKey: ["admin-users", filters],
-    queryFn: () => getAdminUsers(filters),
-    initialData: isInitial ? initialData : undefined,
+    queryFn: () => adminFetch("users", filters),
     placeholderData: keepPreviousData,
   });
 
@@ -65,6 +48,8 @@ export function UsersPageClient({
     },
     [pathname, searchParams],
   );
+
+  if (!data) return <AdminUsersSkeleton />;
 
   return (
     <>

@@ -1,5 +1,6 @@
 // lib/analytics/date-range.ts
 
+import { getDhakaNow } from "@/lib/dhaka-time";
 import { DateRange, RangeKey } from "./types";
 
 function fmt(d: Date): string {
@@ -7,7 +8,7 @@ function fmt(d: Date): string {
 }
 
 function daysAgo(n: number): Date {
-  const d = new Date();
+  const d = getDhakaNow();
   d.setUTCHours(0, 0, 0, 0);
   d.setUTCDate(d.getUTCDate() - n);
   return d;

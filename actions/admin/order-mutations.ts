@@ -2,12 +2,12 @@
 "use server";
 
 import { requireRole } from "@/lib/admin-auth";
+import { syncCodPayment } from "@/lib/order-payments";
 import { prisma } from "@/lib/prisma";
+import { revalidateOrderPages } from "@/lib/revalidate-orders";
 import { createUniqueId } from "@/utils/create-unique-id";
 import {
   createOrderSchema,
-  EditOrderCostsInput,
-  editOrderCostsSchema,
   EditOrderInfoInput,
   editOrderInfoSchema,
   EditOrderStatusInput,
@@ -18,7 +18,6 @@ import {
   orderItemSchema,
   type CreateOrderInput,
 } from "@/validation/orders.validation";
-import { revalidatePath } from "next/cache";
 
 export async function createOrder(data: CreateOrderInput) {
   await requireRole(["ADMIN", "MODERATOR"]);
@@ -37,38 +36,46 @@ export async function createOrder(data: CreateOrderInput) {
     const { orderItems, ...orderData } = parsed.data;
 
     // 2. Create the order and nested order items in the database
-    const order = await prisma.order.create({
-      data: {
-        orderId: createUniqueId("MST"),
-        customerName: orderData.customerName,
-        emailAddress: orderData.emailAddress,
-        phoneNumber: orderData.phoneNumber,
-        whatsappNumber: orderData.whatsappNumber,
-        fullAddress: orderData.fullAddress,
-        status: orderData.status,
-        orderPaymentMethod: orderData.orderPaymentMethod,
-        TrxID: orderData.TrxID,
-        TrxNumber: orderData.TrxNumber,
-        shippingCost: orderData.shippingCost,
-        discount: orderData.discount,
+    const order = await prisma.$transaction(async (tx) => {
+      const created = await tx.order.create({
+        data: {
+          orderId: createUniqueId("MST"),
+          customerName: orderData.customerName,
+          emailAddress: orderData.emailAddress || null,
+          phoneNumber: orderData.phoneNumber,
+          whatsappNumber: orderData.whatsappNumber,
+          fullAddress: orderData.fullAddress,
+          status: orderData.status,
+          orderPaymentMethod: orderData.orderPaymentMethod,
+          TrxID: orderData.TrxID,
+          TrxNumber: orderData.TrxNumber,
+          shippingCost: orderData.shippingCost,
+          discount: orderData.discount,
 
-        userId: orderData.userId,
+          userId: orderData.userId,
 
-        orderItems: {
-          create: orderItems.map((item) => ({
-            productId: item.productId,
-            productName: item.productName,
-            productImage: item.productImage,
-            quantity: item.quantity,
-            price: item.price,
-            discountPercentage: item.discountPercentage,
-          })),
+          orderItems: {
+            create: orderItems.map((item) => ({
+              productId: item.productId,
+              productName: item.productName,
+              productImage: item.productImage,
+              quantity: item.quantity,
+              price: item.price,
+              discountPercentage: item.discountPercentage,
+            })),
+          },
         },
-      },
+      });
+
+      await syncCodPayment(tx, created.id, {
+        onDelivery: created.status === "DELIVERED",
+      });
+
+      return created;
     });
 
-    // 3. Revalidate the orders list page
-    revalidatePath("/admin/orders");
+    // 3. Revalidate the order pages
+    revalidateOrderPages();
 
     return { success: true, data: order.id };
   } catch (error: unknown) {
@@ -96,16 +103,21 @@ export async function addOrderItem({
   try {
     const validatedData = orderItemSchema.parse(input);
 
-    const newItem = await prisma.orderItem.create({
-      data: {
-        orderId,
-        ...validatedData,
-        productId: validatedData.productId || null,
-      },
+    const newItem = await prisma.$transaction(async (tx) => {
+      const item = await tx.orderItem.create({
+        data: {
+          orderId,
+          ...validatedData,
+          productId: validatedData.productId || null,
+        },
+      });
+
+      await syncCodPayment(tx, orderId);
+
+      return item;
     });
 
-    revalidatePath(`/orders/${orderId}`);
-    revalidatePath("/orders");
+    revalidateOrderPages();
 
     return { success: true, data: newItem };
   } catch (error) {
@@ -135,19 +147,24 @@ export async function updateOrderItem({
   try {
     const validatedData = orderItemSchema.parse(input);
 
-    const updatedItem = await prisma.orderItem.update({
-      where: {
-        id: itemId,
-        orderId, // Ensures the item belongs to this specific order
-      },
-      data: {
-        ...validatedData,
-        productId: validatedData.productId || null,
-      },
+    const updatedItem = await prisma.$transaction(async (tx) => {
+      const item = await tx.orderItem.update({
+        where: {
+          id: itemId,
+          orderId, // Ensures the item belongs to this specific order
+        },
+        data: {
+          ...validatedData,
+          productId: validatedData.productId || null,
+        },
+      });
+
+      await syncCodPayment(tx, orderId);
+
+      return item;
     });
 
-    revalidatePath(`/orders/${orderId}`);
-    revalidatePath("/orders");
+    revalidateOrderPages();
 
     return { success: true, data: updatedItem };
   } catch (error) {
@@ -173,15 +190,20 @@ export async function deleteOrderItem({
   await requireRole(["ADMIN", "MODERATOR"]);
 
   try {
-    const deletedItem = await prisma.orderItem.delete({
-      where: {
-        id: itemId,
-        orderId, // Ensures the item belongs to this specific order
-      },
+    const deletedItem = await prisma.$transaction(async (tx) => {
+      const item = await tx.orderItem.delete({
+        where: {
+          id: itemId,
+          orderId, // Ensures the item belongs to this specific order
+        },
+      });
+
+      await syncCodPayment(tx, orderId);
+
+      return item;
     });
 
-    revalidatePath(`/orders/${orderId}`);
-    revalidatePath("/orders");
+    revalidateOrderPages();
 
     return { success: true, data: deletedItem };
   } catch (error) {
@@ -208,23 +230,28 @@ export async function updateOrderInfo({
 
     const isCod = validated.orderPaymentMethod === "CASH_ON_DELIVERY";
 
-    const updatedOrder = await prisma.order.update({
-      where: { id: orderId },
-      data: {
-        userId: validated.userId ?? null,
-        customerName: validated.customerName,
-        emailAddress: validated.emailAddress,
-        phoneNumber: validated.phoneNumber,
-        whatsappNumber: validated.whatsappNumber ?? null,
-        fullAddress: validated.fullAddress,
-        orderPaymentMethod: validated.orderPaymentMethod,
-        TrxNumber: isCod ? null : (validated.TrxNumber ?? null),
-        TrxID: isCod ? null : (validated.TrxID ?? null),
-      },
+    const updatedOrder = await prisma.$transaction(async (tx) => {
+      const order = await tx.order.update({
+        where: { id: orderId },
+        data: {
+          userId: validated.userId ?? null,
+          customerName: validated.customerName,
+          emailAddress: validated.emailAddress || null,
+          phoneNumber: validated.phoneNumber,
+          whatsappNumber: validated.whatsappNumber ?? null,
+          fullAddress: validated.fullAddress,
+          orderPaymentMethod: validated.orderPaymentMethod,
+          TrxNumber: isCod ? null : (validated.TrxNumber ?? null),
+          TrxID: isCod ? null : (validated.TrxID ?? null),
+        },
+      });
+
+      await syncCodPayment(tx, orderId);
+
+      return order;
     });
 
-    revalidatePath(`/admin/orders/${orderId}`);
-    revalidatePath("/admin/orders");
+    revalidateOrderPages();
 
     return {
       success: true,
@@ -247,19 +274,26 @@ export async function updateOrderSummary({
   orderId: string;
   input: EditOrderSummaryInput;
 }) {
+  await requireRole(["ADMIN", "MODERATOR"]);
+
   try {
     const validated = editOrderSummarySchema.parse(input);
 
-    const updatedOrder = await prisma.order.update({
-      where: { id: orderId },
-      data: {
-        shippingCost: validated.shippingCost,
-        discount: validated.discount,
-      },
+    const updatedOrder = await prisma.$transaction(async (tx) => {
+      const order = await tx.order.update({
+        where: { id: orderId },
+        data: {
+          shippingCost: validated.shippingCost,
+          discount: validated.discount,
+        },
+      });
+
+      await syncCodPayment(tx, orderId);
+
+      return order;
     });
 
-    revalidatePath(`/admin/orders/${orderId}`);
-    revalidatePath("/admin/orders");
+    revalidateOrderPages();
 
     return {
       success: true,
@@ -277,43 +311,6 @@ export async function updateOrderSummary({
   }
 }
 
-export async function updateOrderCosts({
-  orderId,
-  input,
-}: {
-  orderId: string;
-  input: EditOrderCostsInput;
-}) {
-  await requireRole(["ADMIN", "MODERATOR"]);
-
-  try {
-    const validated = editOrderCostsSchema.parse(input);
-
-    const updatedOrder = await prisma.order.update({
-      where: { id: orderId },
-      data: {
-        productCost: validated.productCost ?? null,
-        deliveryCost: validated.deliveryCost ?? null,
-      },
-    });
-
-    revalidatePath(`/admin/orders/${orderId}`);
-    revalidatePath("/admin/orders");
-
-    return {
-      success: true,
-      data: updatedOrder,
-    };
-  } catch (error) {
-    console.error("Failed to update order costs:", error);
-    return {
-      success: false,
-      error:
-        error instanceof Error ? error.message : "Failed to update order costs",
-    };
-  }
-}
-
 export async function updateOrderStatus({
   orderId,
   input,
@@ -326,15 +323,22 @@ export async function updateOrderStatus({
   try {
     const validated = editOrderStatusSchema.parse(input);
 
-    const updatedOrder = await prisma.order.update({
-      where: { id: orderId },
-      data: {
-        status: validated.status,
-      },
+    const updatedOrder = await prisma.$transaction(async (tx) => {
+      const order = await tx.order.update({
+        where: { id: orderId },
+        data: {
+          status: validated.status,
+        },
+      });
+
+      await syncCodPayment(tx, orderId, {
+        onDelivery: order.status === "DELIVERED",
+      });
+
+      return order;
     });
 
-    revalidatePath(`/admin/orders/${orderId}`);
-    revalidatePath("/admin/orders");
+    revalidateOrderPages();
 
     return {
       success: true,
@@ -362,8 +366,7 @@ export async function deleteOrder({ orderId }: { orderId: string }) {
       },
     });
 
-    revalidatePath(`/orders/${orderId}`);
-    revalidatePath("/orders");
+    revalidateOrderPages();
 
     return { success: true, data: deletedItem };
   } catch (error) {

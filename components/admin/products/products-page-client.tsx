@@ -1,43 +1,22 @@
 // src/components/admin/products/products-page-client.tsx
 "use client";
 
-import {
-  getAdminProducts,
-  getAdminProductStats,
-  type ProductAvailabilityFilter,
-} from "@/actions/admin/product-actions";
+import type { ProductAvailabilityFilter } from "@/actions/admin/product-actions";
+import AdminProductsSkeleton from "@/app/(admin)/admin/products/skeleton";
 import { PageHeader } from "@/components/admin/layout/page-header";
 import { ProductFiltersBar } from "@/components/admin/products/product-filters-bar";
 import { ProductStatsCards } from "@/components/admin/products/product-stats-cards";
 import { ProductsPagination } from "@/components/admin/products/products-pagination";
 import { ProductsTable } from "@/components/admin/products/products-table";
 import { buttonVariants } from "@/components/ui/button";
+import { adminFetch } from "@/lib/admin-fetch";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useMemo } from "react";
 
-type Category = { id: string; name: string; slug: string };
-type AdminProductsResult = Awaited<ReturnType<typeof getAdminProducts>>;
-type AdminProductStats = Awaited<ReturnType<typeof getAdminProductStats>>;
-
-export function ProductsPageClient({
-  initialData,
-  initialStats,
-  initialFilters,
-  categories,
-}: {
-  initialData: AdminProductsResult;
-  initialStats: AdminProductStats;
-  initialFilters: {
-    search?: string;
-    categorySlug?: string;
-    availability: ProductAvailabilityFilter;
-    page: number;
-  };
-  categories: Category[];
-}) {
+export function ProductsPageClient() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -53,25 +32,22 @@ export function ProductsPageClient({
     [searchParams],
   );
 
-  const isInitial =
-    filters.search === (initialFilters.search ?? "") &&
-    filters.categorySlug === (initialFilters.categorySlug ?? "") &&
-    filters.availability === initialFilters.availability &&
-    filters.page === initialFilters.page;
-
   const { data, isFetching } = useQuery({
     queryKey: ["admin-products", filters],
-    queryFn: () => getAdminProducts(filters),
-    initialData: isInitial ? initialData : undefined,
+    queryFn: () => adminFetch("products", filters),
     placeholderData: keepPreviousData,
   });
 
   // Stats change rarely, so a longer staleTime avoids refetching on every filter tweak
   const { data: stats, isLoading: isStatsLoading } = useQuery({
     queryKey: ["admin-product-stats"],
-    queryFn: () => getAdminProductStats(),
-    initialData: initialStats,
+    queryFn: () => adminFetch("productStats"),
     staleTime: 60_000,
+  });
+
+  const { data: categories } = useQuery({
+    queryKey: ["admin-categories"],
+    queryFn: () => adminFetch("categories"),
   });
 
   const updateParams = useCallback(
@@ -87,6 +63,8 @@ export function ProductsPageClient({
     },
     [pathname, searchParams],
   );
+
+  if (!data || !stats || !categories) return <AdminProductsSkeleton />;
 
   return (
     <>

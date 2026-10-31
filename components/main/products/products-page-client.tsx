@@ -1,5 +1,6 @@
 "use client";
 
+import { getUnitPrice } from "@/utils/calculate-order-total";
 import { ProductDTO } from "@/lib/data/catalog";
 import { useMemo, useState } from "react";
 import { ProductCard } from "../common/card/product-card";
@@ -9,6 +10,9 @@ export type FilterState = {
   priceRange: [number, number];
   discounts: string[];
 };
+const getSalePrice = (product: ProductDTO) =>
+  getUnitPrice(product.price, product.discountPercentage);
+
 export function ProductsPageClient({ products }: { products: ProductDTO[] }) {
   const [filters, setFilters] = useState<FilterState>({
     priceRange: [50, 2500],
@@ -20,7 +24,8 @@ export function ProductsPageClient({ products }: { products: ProductDTO[] }) {
   const visibleProducts = useMemo(() => {
     let list = products.filter(
       (p) =>
-        p.price >= filters.priceRange[0] && p.price <= filters.priceRange[1],
+        getSalePrice(p) >= filters.priceRange[0] &&
+        getSalePrice(p) <= filters.priceRange[1],
     );
 
     if (filters.discounts.length > 0) {
@@ -32,9 +37,9 @@ export function ProductsPageClient({ products }: { products: ProductDTO[] }) {
     }
 
     if (sortBy === "price-low")
-      list = [...list].sort((a, b) => a.price - b.price);
+      list = [...list].sort((a, b) => getSalePrice(a) - getSalePrice(b));
     else if (sortBy === "price-high")
-      list = [...list].sort((a, b) => b.price - a.price);
+      list = [...list].sort((a, b) => getSalePrice(b) - getSalePrice(a));
     else if (sortBy === "popularity")
       list = [...list].sort(
         (a, b) => Number(b.isPopular) - Number(a.isPopular),

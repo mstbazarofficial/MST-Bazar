@@ -1,6 +1,7 @@
 // src/components/admin/products/product-form-page.tsx
 "use client";
 
+import { getUnitPrice } from "@/utils/calculate-order-total";
 import {
   createProduct,
   updateProduct,
@@ -29,6 +30,7 @@ import {
 } from "@/validation/product.validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, Path, useForm, useWatch } from "react-hook-form";
@@ -58,6 +60,7 @@ export function ProductFormPage({
   initialValues,
 }: ProductFormPageProps) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [isPending, setIsPending] = useState(false);
   const [intent, setIntent] = useState<"draft" | "publish" | null>(null);
 
@@ -91,8 +94,8 @@ export function ProductFormPage({
   const price = useWatch({ control, name: "price" }) || 0;
   const discountPercentage =
     useWatch({ control, name: "discountPercentage" }) || 0;
-  const discountAmount = (price * discountPercentage) / 100;
-  const finalPrice = price - discountAmount;
+  const finalPrice = getUnitPrice(price, discountPercentage);
+  const discountAmount = price - finalPrice;
   const shortDescriptionValue =
     useWatch({ control, name: "shortDescription" }) || "";
 
@@ -124,8 +127,8 @@ export function ProductFormPage({
                 ? "Product updated successfully!"
                 : "Product created successfully!",
         });
+        void queryClient.invalidateQueries();
         router.back();
-        router.refresh();
       } else {
         if (Array.isArray(result.error)) {
           result.error.forEach((err) => {

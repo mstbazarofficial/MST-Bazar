@@ -55,6 +55,8 @@ export function CreateUserFormModal({
 }: CreateUserFormModalProps) {
   const router = useRouter();
   const [formError, setFormError] = useState<string | null>(null);
+  const { data: session } = authClient.useSession();
+  const isAdmin = session?.user?.role === Role.ADMIN;
 
   // ==========================================
   // FORM SETUP
@@ -84,7 +86,9 @@ export function CreateUserFormModal({
         email: values.email,
         password: values.password,
         name: values.name,
-        role: values.role,
+        // Only an admin may choose a role. The server rejects it from anyone
+        // else, and leaving it out creates a customer.
+        ...(isAdmin && { role: values.role }),
         data: {
           image: values.image || undefined,
           phoneNumber: values.phoneNumber || undefined,
@@ -192,29 +196,31 @@ export function CreateUserFormModal({
             )}
           />
 
-          <Controller
-            name="role"
-            control={control}
-            render={({ field, fieldState }) => (
-              <Field>
-                <FieldLabel>Role *</FieldLabel>
-                <NativeSelect {...field} className="h-9 text-sm">
-                  <NativeSelectOption value={Role.CUSTOMER}>
-                    CUSTOMER
-                  </NativeSelectOption>
-                  <NativeSelectOption value={Role.MODERATOR}>
-                    MODERATOR
-                  </NativeSelectOption>
-                  <NativeSelectOption value={Role.ADMIN}>
-                    ADMIN
-                  </NativeSelectOption>
-                </NativeSelect>
-                {fieldState.error && (
-                  <FieldError>{fieldState.error.message}</FieldError>
-                )}
-              </Field>
-            )}
-          />
+          {isAdmin && (
+            <Controller
+              name="role"
+              control={control}
+              render={({ field, fieldState }) => (
+                <Field>
+                  <FieldLabel>Role *</FieldLabel>
+                  <NativeSelect {...field} className="h-9 text-sm">
+                    <NativeSelectOption value={Role.CUSTOMER}>
+                      CUSTOMER
+                    </NativeSelectOption>
+                    <NativeSelectOption value={Role.MODERATOR}>
+                      MODERATOR
+                    </NativeSelectOption>
+                    <NativeSelectOption value={Role.ADMIN}>
+                      ADMIN
+                    </NativeSelectOption>
+                  </NativeSelect>
+                  {fieldState.error && (
+                    <FieldError>{fieldState.error.message}</FieldError>
+                  )}
+                </Field>
+              )}
+            />
+          )}
         </div>
 
         {/* Credentials (Email & Password) */}

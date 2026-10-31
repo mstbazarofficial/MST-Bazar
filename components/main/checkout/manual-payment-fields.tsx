@@ -13,9 +13,10 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { SITE_CONFIG } from "@/constants/site";
+import { formatPrice } from "@/utils/format-price";
 import type { CheckoutFormValues } from "@/validation/checkout.validation";
 
-export function ManualPaymentFields() {
+export function ManualPaymentFields({ total }: { total: number }) {
   const BKASH_NUMBER = SITE_CONFIG.bkash;
   const NAGAD_NUMBER = SITE_CONFIG.nagad;
   const METHOD_CONFIG: Record<
@@ -57,28 +58,49 @@ export function ManualPaymentFields() {
   };
   const { control } = useFormContext<CheckoutFormValues>();
   const selectedMethod = useWatch({ control, name: "paymentMethod" });
-  const [copied, setCopied] = useState(false);
+  const [copiedLabel, setCopiedLabel] = useState("");
 
   if (selectedMethod === "cod") return null;
 
   const config = METHOD_CONFIG[selectedMethod];
 
-  const handleCopyNumber = async () => {
+  const handleCopy = async (value: string, label: string) => {
     try {
-      await navigator.clipboard.writeText(config.number);
-      setCopied(true);
+      await navigator.clipboard.writeText(value);
+      setCopiedLabel(label);
       toast.add({
-        title: `${config.name} number copied to clipboard`,
+        title: `${label} copied to clipboard`,
         type: "success",
       });
-      setTimeout(() => setCopied(false), 2000);
+      setTimeout(() => setCopiedLabel(""), 2000);
     } catch {
       toast.add({
-        title: "Couldn't copy the number. Please copy it manually.",
+        title: "Couldn't copy that. Please copy it manually.",
         type: "error",
       });
     }
   };
+
+  const renderCopyButton = (value: string, label: string) => (
+    <button
+      type="button"
+      onClick={() => handleCopy(value, label)}
+      aria-label={`Copy ${label}`}
+      className="flex items-center gap-1.5 bg-white border border-primary/70 text-primary-dark hover:bg-emerald-100 text-xs font-bold px-3 py-1.5 rounded-sm transition-all cursor-pointer shrink-0 shadow-2xs"
+    >
+      {copiedLabel === label ? (
+        <>
+          <Check className="w-3.5 h-3.5 text-emerald-600" />
+          <span>Copied!</span>
+        </>
+      ) : (
+        <>
+          <Copy className="w-3.5 h-3.5" />
+          <span>Copy</span>
+        </>
+      )}
+    </button>
+  );
 
   return (
     <div className="bg-card border border-primary/60 rounded-md p-5 shadow-xs space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
@@ -113,23 +135,19 @@ export function ManualPaymentFields() {
                 {config.number}
               </p>
             </div>
-            <button
-              type="button"
-              onClick={handleCopyNumber}
-              className="flex items-center gap-1.5 bg-white border border-primary/70 text-primary-dark hover:bg-emerald-100 text-xs font-bold px-3 py-1.5 rounded-sm transition-all cursor-pointer shrink-0 shadow-2xs"
-            >
-              {copied ? (
-                <>
-                  <Check className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>Copied!</span>
-                </>
-              ) : (
-                <>
-                  <Copy className="w-3.5 h-3.5" />
-                  <span>Copy</span>
-                </>
-              )}
-            </button>
+            {renderCopyButton(config.number, `${config.name} number`)}
+          </div>
+
+          <div className="bg-primary/5 border border-primary/70 rounded-sm p-3.5 flex items-center justify-between gap-3">
+            <div>
+              <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">
+                Exact Amount To Send
+              </p>
+              <p className="text-base font-black text-emerald-800 tracking-wide">
+                {formatPrice(total)}
+              </p>
+            </div>
+            {renderCopyButton(String(Math.floor(total)), "Amount")}
           </div>
 
           <div className="space-y-1.5">
@@ -163,7 +181,6 @@ export function ManualPaymentFields() {
                     {...field}
                     id={field.name}
                     type="tel"
-                    inputMode="numeric"
                     placeholder="017XXXXXXXX"
                     aria-invalid={fieldState.invalid}
                   />

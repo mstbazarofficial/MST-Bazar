@@ -1,22 +1,40 @@
 "use client";
 
-import { useProducts } from "@/context/catalog-provider";
-import { useEffect, useMemo, useRef, useState } from "react";
+import type { ProductSearchResult } from "@/lib/data/catalog";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useEffect, useRef, useState } from "react";
+
+const DEBOUNCE_MS = 250;
+
+async function fetchSearchResults(q: string): Promise<ProductSearchResult[]> {
+  const response = await fetch(
+    `/api/products/search?q=${encodeURIComponent(q)}`,
+  );
+  if (!response.ok) throw new Error("Product search failed");
+  return response.json();
+}
 
 export function useProductSearch() {
   const [query, setQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const products = useProducts();
-  const results = useMemo(() => {
-    if (!query.trim()) return [];
+  const trimmedQuery = query.trim();
 
-    const q = query.trim().toLowerCase();
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedQuery(trimmedQuery), DEBOUNCE_MS);
+    return () => clearTimeout(timer);
+  }, [trimmedQuery]);
 
-    return products
-      .filter((p) => p.title.toLowerCase().includes(q))
-      .slice(0, 5);
-  }, [products, query]);
+  const { data: results = [], isFetching } = useQuery({
+    queryKey: ["product-search", debouncedQuery],
+    queryFn: () => fetchSearchResults(debouncedQuery),
+    enabled: debouncedQuery.length > 0,
+    placeholderData: keepPreviousData,
+    staleTime: 60 * 1000,
+  });
+
+  const isSearching = isFetching || trimmedQuery !== debouncedQuery;
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -31,5 +49,13 @@ export function useProductSearch() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  return { query, setQuery, results, isOpen, setIsOpen, containerRef };
+  return {
+    query,
+    setQuery,
+    results,
+    isSearching,
+    isOpen,
+    setIsOpen,
+    containerRef,
+  };
 }

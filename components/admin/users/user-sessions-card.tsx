@@ -1,9 +1,10 @@
 import { Badge } from "@/components/ui/badge";
-import { Clock, Globe, Monitor, Smartphone } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { formatDateTime } from "@/utils/format-date";
+import { Globe, Monitor, Smartphone, type LucideIcon } from "lucide-react";
 
 interface SessionRow {
   id: string;
-  token: string;
   ipAddress: string | null;
   userAgent: string | null;
   createdAt: Date;
@@ -12,7 +13,7 @@ interface SessionRow {
 
 function parseDevice(ua: string | null): {
   label: string;
-  icon: React.ElementType;
+  icon: LucideIcon;
 } {
   if (!ua) return { label: "Unknown device", icon: Globe };
   const u = ua.toLowerCase();
@@ -32,79 +33,64 @@ function parseBrowser(ua: string | null): string {
 }
 
 export function UserSessionsCard({ sessions }: { sessions: SessionRow[] }) {
-  const now = new Date();
-  const active = sessions.filter((s) => new Date(s.expiresAt) > now);
-
-  const fmt = (d: Date) =>
-    new Intl.DateTimeFormat("en-US", {
-      dateStyle: "medium",
-      timeStyle: "short",
-    }).format(new Date(d));
-
   return (
-    <div className="bg-card border border-border rounded-2xl shadow-xs overflow-hidden">
-      <div className="flex items-center gap-3 px-5 py-4 border-b border-border/60 bg-muted/30">
-        <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-          <Monitor className="h-4 w-4 text-primary" />
-        </div>
-        <div>
-          <h2 className="text-sm font-bold text-foreground">Active Sessions</h2>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            {active.length} active session{active.length !== 1 ? "s" : ""}
-          </p>
-        </div>
-      </div>
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex min-h-8 items-center text-base font-semibold">
+          Active sessions
+        </CardTitle>
+      </CardHeader>
 
-      {active.length === 0 ? (
-        <div className="px-5 py-10 text-center">
-          <p className="text-sm text-muted-foreground">No active sessions.</p>
-        </div>
-      ) : (
-        <div className="divide-y divide-border/60">
-          {active.map((session) => {
-            const { label, icon: DeviceIcon } = parseDevice(session.userAgent);
-            const browser = parseBrowser(session.userAgent);
+      <CardContent>
+        {sessions.length === 0 ? (
+          <div className="flex min-h-40 flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-border text-center text-muted-foreground">
+            <Monitor className="size-5" />
+            <p className="text-sm">No active sessions.</p>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {sessions.map((session) => {
+              const { label, icon: DeviceIcon } = parseDevice(
+                session.userAgent,
+              );
 
-            return (
-              <div
-                key={session.id}
-                className="flex items-start gap-4 px-5 py-4"
-              >
-                <div className="h-9 w-9 rounded-xl bg-muted flex items-center justify-center shrink-0 border border-border/60">
-                  <DeviceIcon className="h-4 w-4 text-muted-foreground" />
-                </div>
+              return (
+                <div
+                  key={session.id}
+                  className="flex items-start gap-3 rounded-xl bg-muted/50 p-3"
+                >
+                  <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <DeviceIcon className="size-3.5" />
+                  </span>
 
-                <div className="flex-1 min-w-0 space-y-1">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <p className="text-sm font-semibold text-foreground">
-                      {browser} · {label}
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <p className="text-sm font-medium text-foreground">
+                        {parseBrowser(session.userAgent)} · {label}
+                      </p>
+                      <Badge
+                        variant="outline"
+                        className="border-transparent bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
+                      >
+                        Active
+                      </Badge>
+                    </div>
+                    {session.ipAddress && (
+                      <p className="text-xs text-muted-foreground">
+                        {session.ipAddress}
+                      </p>
+                    )}
+                    <p className="mt-0.5 text-xs text-muted-foreground">
+                      Started {formatDateTime(session.createdAt)} · Expires{" "}
+                      {formatDateTime(session.expiresAt)}
                     </p>
-                    <Badge
-                      variant="outline"
-                      className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border-emerald-200"
-                    >
-                      Active
-                    </Badge>
                   </div>
-
-                  {session.ipAddress && (
-                    <p className="text-xs text-muted-foreground flex items-center gap-1">
-                      <Globe className="h-3 w-3" />
-                      {session.ipAddress}
-                    </p>
-                  )}
-
-                  <p className="text-xs text-muted-foreground flex items-center gap-1">
-                    <Clock className="h-3 w-3" />
-                    Started {fmt(session.createdAt)} · Expires{" "}
-                    {fmt(session.expiresAt)}
-                  </p>
                 </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
-    </div>
+              );
+            })}
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }

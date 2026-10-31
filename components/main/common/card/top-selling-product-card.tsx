@@ -1,3 +1,4 @@
+import { getUnitPrice } from "@/utils/calculate-order-total";
 import { Card } from "@/components/ui/card";
 import { ProductDTO } from "@/lib/data/catalog";
 import { cn } from "@/lib/utils";
@@ -19,9 +20,7 @@ export function TopSellingProductCard({
   const hasDiscount =
     product.discountPercentage != null && product.discountPercentage > 0;
 
-  const finalPrice = hasDiscount
-    ? product.price * (1 - product.discountPercentage! / 100)
-    : product.price;
+  const finalPrice = getUnitPrice(product.price, product.discountPercentage);
 
   const imageUrl = product.images?.[0]?.url;
   const productHref = `/product/${product.slug}`;

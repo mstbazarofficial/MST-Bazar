@@ -1,24 +1,29 @@
-// app/admin/products/[id]/edit/page.tsx
-import {
-  getAdminCategories,
-  getAdminProductBySlug,
-} from "@/actions/admin/product-actions";
+"use client";
+
 import { ProductFormPage } from "@/components/admin/products/product-form-page";
-import { notFound } from "next/navigation";
+import { adminFetch } from "@/lib/admin-fetch";
+import { useQuery } from "@tanstack/react-query";
+import { notFound, useParams } from "next/navigation";
+import EditProductLoading from "./loading";
 
-export default async function EditProductPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params;
+export default function EditProductPage() {
+  const params = useParams<{ slug: string }>();
+  const slug = decodeURIComponent(params.slug);
 
-  const [product, categories] = await Promise.all([
-    getAdminProductBySlug(decodeURIComponent(slug)),
-    getAdminCategories(),
-  ]);
+  const { data: product } = useQuery({
+    queryKey: ["admin-product-edit", slug],
+    queryFn: () => adminFetch("product", { slug }),
+    staleTime: 0,
+    gcTime: 0,
+  });
 
-  if (!product) notFound();
+  const { data: categories } = useQuery({
+    queryKey: ["admin-categories"],
+    queryFn: () => adminFetch("categories"),
+  });
+
+  if (product === undefined || !categories) return <EditProductLoading />;
+  if (product === null) notFound();
 
   return (
     <ProductFormPage

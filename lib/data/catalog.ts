@@ -17,6 +17,7 @@ export type ProductDTO = {
   unit: string | null;
   price: number;
   discountPercentage: number;
+  isAvailable: boolean;
   isBestDeal: boolean;
   isPopular: boolean;
   isCombo: boolean;
@@ -33,6 +34,19 @@ export type ProductDTO = {
     isFeatured: boolean;
   }[];
 };
+
+export type ProductSearchResult = Pick<
+  ProductDTO,
+  | "id"
+  | "title"
+  | "slug"
+  | "unit"
+  | "price"
+  | "discountPercentage"
+  | "isBestDeal"
+  | "isPopular"
+  | "images"
+>;
 
 export const getAllCategories = unstable_cache(
   async (): Promise<CategoryDTO[]> => {
@@ -69,6 +83,7 @@ export const getAllProducts = unstable_cache(
         unit: true,
         price: true,
         discountPercentage: true,
+        isAvailable: true,
         images: {
           select: {
             url: true,
@@ -145,6 +160,7 @@ export const getRelatedProducts = (
           unit: true,
           price: true,
           discountPercentage: true,
+          isAvailable: true,
           images: {
             select: {
               url: true,

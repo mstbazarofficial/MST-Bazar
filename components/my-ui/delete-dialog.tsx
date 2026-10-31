@@ -13,8 +13,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
+import { useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
 import * as React from "react";
 
 interface ActionResult {
@@ -35,6 +35,9 @@ interface DeleteDialogProps {
   confirmText?: string;
   loadingText?: string;
   cancelText?: string;
+  confirmVariant?: "default" | "destructive";
+  /** Turn off when the action leaves the page, so it doesn't reload what it just deleted */
+  refreshData?: boolean;
 }
 
 export function DeleteDialog({
@@ -47,10 +50,12 @@ export function DeleteDialog({
   confirmText = "Delete",
   loadingText = "Deleting...",
   cancelText = "Cancel",
+  confirmVariant = "destructive",
+  refreshData = true,
 }: DeleteDialogProps) {
   const [open, setOpen] = React.useState(false);
   const [isPending, startTransition] = React.useTransition();
-  const router = useRouter();
+  const queryClient = useQueryClient();
 
   const handleConfirm = () => {
     startTransition(async () => {
@@ -70,6 +75,7 @@ export function DeleteDialog({
             priority: "high",
           });
           setOpen(false); // Dialog remains OPEN on failure
+          return;
         }
 
         // Check if function returned explicitly false
@@ -80,12 +86,13 @@ export function DeleteDialog({
             priority: "high",
           });
           setOpen(false); // Dialog remains OPEN on failure
+          return;
         }
 
         // --- SUCCESS PATH ---
         toast.add({ type: "success", description: successMessage });
         setOpen(false); // Close dialog on success
-        router.refresh(); // Invalidate server components
+        if (refreshData) void queryClient.invalidateQueries();
       } catch (err) {
         toast.add({
           type: "error",
@@ -110,7 +117,7 @@ export function DeleteDialog({
             {cancelText}
           </AlertDialogCancel>
           <Button
-            variant="destructive"
+            variant={confirmVariant}
             onClick={handleConfirm}
             disabled={isPending}
           >

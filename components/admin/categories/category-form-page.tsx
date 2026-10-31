@@ -24,6 +24,7 @@ import {
 } from "@/validation/category.validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, Path, useForm } from "react-hook-form";
@@ -44,6 +45,7 @@ export function CategoryFormPage({
   initialValues,
 }: CategoryFormPageProps) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [isPending, setIsPending] = useState(false);
 
   const isEditing = mode === "edit" || !!categoryId;
@@ -77,8 +79,8 @@ export function CategoryFormPage({
             ? "Category updated successfully!"
             : "Category created successfully!",
         });
+        void queryClient.invalidateQueries();
         router.push("/admin/categories");
-        router.refresh();
       } else {
         if (Array.isArray(result.error)) {
           result.error.forEach((err) => {

@@ -28,10 +28,6 @@
   @apply mx-auto w-full max-w-360 px-4 sm:px-6 lg:px-10 xl:px-12;
 }
 
-@utility dashboard-container {
-  @apply mx-auto w-full max-w-360 px-4 sm:px-6 xl:px-6 py-8  space-y-6;
-}
-
 /*
  * Vertical rhythm for content sections. Stack with site-container,
  * e.g. <section class="site-container section-y">, wherever a section
@@ -91,6 +87,7 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 
   --color-dashboard-background: var(--dashboard-background);
+  --color-dashboard-skeleton: var(--dashboard-skeleton);
   --color-header: var(--header);
   --color-header-foreground: var(--header-foreground);
   --color-header-border: var(--header-border);
@@ -146,6 +143,8 @@
   --sidebar-ring: oklch(0.6347 0.1691 151.43);
 
   --dashboard-background: oklch(0.972 0.008 151.43);
+  /* Dark enough to read on both --dashboard-background and white cards */
+  --dashboard-skeleton: oklch(0.89 0.012 151.43);
 
   --header: oklch(1 0 0);
   --header-foreground: oklch(0.145 0 0);
@@ -250,4 +249,30 @@
     #55ab20 85%,
     #6abc27 100%
   );
+}
+
+/* Slim scrollbar for panes that scroll on their own */
+@utility scrollbar-slim {
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 9999px;
+  }
+
+  &:hover::-webkit-scrollbar-thumb {
+    background: var(--muted-foreground);
+  }
+
+  @supports not selector(::-webkit-scrollbar) {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
 }

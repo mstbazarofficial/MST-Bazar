@@ -7,10 +7,11 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
 import { admin } from "better-auth/plugins";
+import { SITE_CONFIG } from "@/constants/site";
 import { ac, adminRole, customerRole, moderatorRole } from "./access-control";
 
 export const auth = betterAuth({
-  baseURL: process.env.BETTER_AUTH_URL || "https://mstbazar.com",
+  baseURL: process.env.BETTER_AUTH_URL || SITE_CONFIG.url,
   trustedOrigins: ["https://mstbazar.com", "https://www.mstbazar.com"],
   database: prismaAdapter(prisma, {
     provider: "postgresql",

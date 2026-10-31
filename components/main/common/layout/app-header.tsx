@@ -19,6 +19,8 @@
 //   account/profile section.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { MAX_ITEM_QTY } from "@/constants/site";
+import { getUnitPrice } from "@/utils/calculate-order-total";
 import type { PopulatedCartItem } from "@/actions/main/cart-actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -47,7 +49,7 @@ import { useCart, useCartItemError } from "@/context/cart-provider";
 import { useCategories } from "@/context/catalog-provider";
 import { useProductSearch } from "@/hooks/use-product-search";
 import { authClient } from "@/lib/auth-client";
-import type { ProductDTO } from "@/lib/data/catalog";
+import type { ProductSearchResult } from "@/lib/data/catalog";
 import { trackEvent } from "@/lib/track-event";
 import { formatPrice } from "@/utils/format-price";
 import {
@@ -138,27 +140,28 @@ function Logo({
 
 // ─── Search Results Dropdown ──────────────────────────────────────────────────
 
-function getFeaturedImage(product: ProductDTO): string {
+function getFeaturedImage(product: ProductSearchResult): string {
   const featured = product.images.find((img) => img.isFeatured);
   return (featured ?? product.images[0])?.url ?? "/placeholder.svg";
 }
 
 function calcPrice(price: number, discountPercentage: number) {
-  if (!discountPercentage) return { final: price, original: null };
-  const final = Math.round(price - (price * discountPercentage) / 100);
-  return { final, original: price };
+  const final = getUnitPrice(price, discountPercentage);
+  return { final, original: discountPercentage ? price : null };
 }
 
 interface SearchResultsDropdownProps {
   query: string;
   onNavigate?: () => void;
-  searchResults?: ProductDTO[];
+  searchResults?: ProductSearchResult[];
+  isSearching?: boolean;
 }
 
 function SearchResultsDropdown({
   query,
   onNavigate,
   searchResults,
+  isSearching,
 }: SearchResultsDropdownProps) {
   if (!query.trim()) return null;
 
@@ -166,7 +169,11 @@ function SearchResultsDropdown({
     <div className="absolute inset-x-0 top-full z-50 mt-2 overflow-hidden rounded-xl border border-border bg-popover shadow-lg">
       {searchResults?.length === 0 ? (
         <p className="px-4 py-6 text-center text-sm text-muted-foreground">
-          No products found for &ldquo;{query}&rdquo;
+          {isSearching ? (
+            "Searching..."
+          ) : (
+            <>No products found for &ldquo;{query}&rdquo;</>
+          )}
         </p>
       ) : (
         <ul className="max-h-80 divide-y divide-border overflow-y-auto">
@@ -242,8 +249,15 @@ function SearchResultsDropdown({
 // ─── Desktop Search Bar ───────────────────────────────────────────────────────
 
 function DesktopSearchBar() {
-  const { query, setQuery, results, isOpen, setIsOpen, containerRef } =
-    useProductSearch();
+  const {
+    query,
+    setQuery,
+    results,
+    isSearching,
+    isOpen,
+    setIsOpen,
+    containerRef,
+  } = useProductSearch();
 
   return (
     <div
@@ -273,6 +287,7 @@ function DesktopSearchBar() {
           onNavigate={() => setIsOpen(false)}
           query={query}
           searchResults={results}
+          isSearching={isSearching}
         />
       )}
     </div>
@@ -286,8 +301,15 @@ interface MobileSearchOverlayProps {
 }
 
 function MobileSearchOverlay({ onClose }: MobileSearchOverlayProps) {
-  const { query, setQuery, results, isOpen, setIsOpen, containerRef } =
-    useProductSearch();
+  const {
+    query,
+    setQuery,
+    results,
+    isSearching,
+    isOpen,
+    setIsOpen,
+    containerRef,
+  } = useProductSearch();
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -332,6 +354,7 @@ function MobileSearchOverlay({ onClose }: MobileSearchOverlayProps) {
             onNavigate={handleNavigate}
             query={query}
             searchResults={results}
+            isSearching={isSearching}
           />
         )}
       </div>
@@ -557,7 +580,7 @@ function MobileMenu({
                 nativeButton={false}
                 render={
                   <Link
-                    href="/login"
+                    href={getLoginHref(pathname)}
                     className="rounded-lg bg-primary px-3.5 py-1.5 text-xs font-medium text-primary-foreground shadow-xs transition-opacity hover:opacity-90"
                   >
                     Login
@@ -687,6 +710,11 @@ function MobileMenu({
   );
 }
 
+// Customers signing in from checkout should land back on it.
+function getLoginHref(pathname: string) {
+  return pathname === "/checkout" ? "/login?redirect=/checkout" : "/login";
+}
+
 // ─── Cart Sheet ───────────────────────────────────────────────────────────────
 
 function CartRow({ item }: { item: PopulatedCartItem }) {
@@ -705,9 +733,10 @@ function CartRow({ item }: { item: PopulatedCartItem }) {
   }, [error, clearError]);
 
   const hasDiscount = item.product.discountPercentage > 0;
-  const unitPrice = hasDiscount
-    ? item.product.price * (1 - item.product.discountPercentage / 100)
-    : item.product.price;
+  const unitPrice = getUnitPrice(
+    item.product.price,
+    item.product.discountPercentage,
+  );
   const lineTotal = unitPrice * item.quantity;
 
   return (
@@ -760,6 +789,11 @@ function CartRow({ item }: { item: PopulatedCartItem }) {
               {formatPrice(unitPrice)} each
             </span>
           )}
+          {!item.product.isAvailable && (
+            <span className="text-xs font-semibold text-destructive">
+              Out of stock
+            </span>
+          )}
         </div>
 
         <div className="mt-1.5 flex items-end justify-between">
@@ -779,7 +813,7 @@ function CartRow({ item }: { item: PopulatedCartItem }) {
               type="button"
               aria-label="Increase quantity"
               onClick={() => updateQuantity(item.productId, item.quantity + 1)}
-              disabled={item.quantity >= 10}
+              disabled={item.quantity >= MAX_ITEM_QTY}
               className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-40"
             >
               <Plus className="h-3.5 w-3.5" />
@@ -929,6 +963,7 @@ function getInitials(name: string) {
 }
 
 function UserMenu() {
+  const pathname = usePathname();
   const { data: session, isPending } = authClient.useSession();
 
   const handleSignOut = async () => {
@@ -944,7 +979,7 @@ function UserMenu() {
   if (!user) {
     return (
       <Link
-        href="/login"
+        href={getLoginHref(pathname)}
         className="hidden flex-col items-center gap-0.5 px-1 text-foreground transition-colors hover:text-primary sm:flex"
       >
         <UserCheck className="h-5 w-5" />

@@ -29,7 +29,7 @@ const orderBaseSchema = z.object({
     .min(1, "Customer name is required")
     .max(100, "Customer name must be less than 100 characters"),
 
-  emailAddress: z.email("Invalid email address"),
+  emailAddress: z.union([z.literal(""), z.email("Invalid email address")]),
 
   phoneNumber: z
     .string()
@@ -72,16 +72,10 @@ export const createOrderSchema = orderBaseSchema.refine(
 
 export type CreateOrderInput = z.input<typeof createOrderSchema>;
 
-export const orderCostSchema = z.object({
-  productCost: z.number().min(0, "Product cost cannot be negative"),
-  transportCost: z.number().min(0, "Discount cannot be negative"),
-});
-export type OrderCostFormData = z.infer<typeof orderCostSchema>;
-
 export const editOrderInfoSchema = z.object({
   userId: z.string().nullable().optional(),
   customerName: z.string().min(1, "Customer name is required"),
-  emailAddress: z.email("Invalid email address"),
+  emailAddress: z.union([z.literal(""), z.email("Invalid email address")]),
   phoneNumber: z.string().min(1, "Phone number is required"),
   whatsappNumber: z.string().nullable().optional(),
   fullAddress: z.string().min(1, "Shipping address is required"),
@@ -100,21 +94,6 @@ export const editOrderSummarySchema = z.object({
 });
 
 export type EditOrderSummaryInput = z.input<typeof editOrderSummarySchema>;
-
-export const editOrderCostsSchema = z.object({
-  productCost: z
-    .number()
-    .min(0, "Product cost cannot be negative")
-    .nullable()
-    .optional(),
-  deliveryCost: z
-    .number()
-    .min(0, "Delivery cost cannot be negative")
-    .nullable()
-    .optional(),
-});
-
-export type EditOrderCostsInput = z.input<typeof editOrderCostsSchema>;
 
 export const editOrderStatusSchema = z.object({
   status: z.enum(OrderStatus, { message: "Invalid order status" }),

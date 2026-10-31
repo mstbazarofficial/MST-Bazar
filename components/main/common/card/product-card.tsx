@@ -1,3 +1,4 @@
+import { getUnitPrice } from "@/utils/calculate-order-total";
 import { Card } from "@/components/ui/card";
 import { ProductDTO } from "@/lib/data/catalog";
 import Image from "next/image";
@@ -16,9 +17,10 @@ export function ProductCard({
   href: string;
   isList?: boolean;
 }) {
-  const discountedPrice = product.discountPercentage
-    ? product.price - (product.price * product.discountPercentage) / 100
-    : product.price;
+  const discountedPrice = getUnitPrice(
+    product.price,
+    product.discountPercentage,
+  );
 
   // 1. List View Rendering
   if (isList) {

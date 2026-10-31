@@ -1,3 +1,4 @@
+import { calculateOrderTotal } from "@/utils/calculate-order-total";
 import { TrackedOrder } from "@/actions/main/track-order";
 import { BadgeCheck, ShoppingBag, Tag, Truck } from "lucide-react";
 
@@ -6,12 +7,8 @@ interface OrderSummaryProps {
 }
 
 export function OrderSummary({ order }: OrderSummaryProps) {
-  const subtotal = order.orderItems.reduce((acc, item) => {
-    const discounted = item.price * (1 - item.discountPercentage / 100);
-    return acc + discounted * item.quantity;
-  }, 0);
-
-  const total = subtotal + order.shippingCost - order.discount;
+  const { itemsSubtotal: subtotal, finalTotal: total } =
+    calculateOrderTotal(order);
 
   const rows = [
     {
@@ -22,7 +19,7 @@ export function OrderSummary({ order }: OrderSummaryProps) {
     },
     {
       icon: Tag,
-      label: "Discount",
+      label: order.promoCode ? `Discount (${order.promoCode})` : "Discount",
       value: order.discount > 0 ? `-৳${order.discount.toFixed(2)}` : "—",
       valueClass:
         order.discount > 0

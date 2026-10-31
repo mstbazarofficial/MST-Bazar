@@ -10,7 +10,7 @@ export function BrowserBreakdownCard({ data }: { data: BrowserRow[] }) {
       <CardHeader>
         <CardTitle className="text-base font-semibold">Browsers</CardTitle>
         <p className="text-sm text-muted-foreground">
-          What visitors are using to browse Edugen
+          What visitors are using to browse MST Bazar
         </p>
       </CardHeader>
       <CardContent>

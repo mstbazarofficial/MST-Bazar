@@ -18,7 +18,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
+import * as z from "zod";
+import { getErrorMessage } from "@/utils/get-error-message";
 
 const forgotPasswordSchema = z.object({
   email: z.email("Please enter a valid email address"),
@@ -55,9 +56,9 @@ export default function ForgotPasswordPageClient() {
         setSubmittedEmail(values.email);
         setIsSubmitted(true);
       }
-    } catch (err: any) {
+    } catch (err) {
       setServerError(
-        err?.message || "An unexpected error occurred. Please try again.",
+        getErrorMessage(err, "An unexpected error occurred. Please try again."),
       );
     }
   };
@@ -118,7 +119,7 @@ export default function ForgotPasswordPageClient() {
 
                 <div className="p-4 bg-muted border border-border rounded-xl text-xs text-muted-foreground text-left space-y-1">
                   <p className="font-semibold text-foreground">
-                    ⚡ Didn't receive the email?
+                    ⚡ Didn&apos;t receive the email?
                   </p>
                   <p>
                     Check your <strong>Spam</strong> or <strong>Junk</strong>{" "}

@@ -14,9 +14,14 @@ export function PurchaseConfirmTracker({
   items: { id: string; qty: number }[];
 }) {
   useEffect(() => {
-    if (typeof window === "undefined" || !(window as any).fbq) return;
+    if (typeof window === "undefined" || !window.fbq) return;
 
-    (window as any).fbq(
+    // The success page can be refreshed, but a purchase only counts once.
+    const trackedKey = `purchase_tracked_${orderId}`;
+    if (sessionStorage.getItem(trackedKey)) return;
+    sessionStorage.setItem(trackedKey, "1");
+
+    window.fbq?.(
       "track",
       "Purchase",
       {

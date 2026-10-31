@@ -1,28 +1,25 @@
 "use client";
 
+import AdminBannersSkeleton from "@/app/(admin)/admin/banners/skeleton";
+import { BannersPageHeader } from "@/components/admin/banners/banners-page-header";
 import { BannerSection } from "@/components/admin/banners/banner-section";
+import { EmptyState } from "@/components/admin/layout/empty-state";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
+import { adminFetch } from "@/lib/admin-fetch";
+import { useQuery } from "@tanstack/react-query";
+import { Images } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 
-type Banner = {
-  id: string;
-  title: string | null;
-  imageUrl: string;
-  linkUrl: string | null;
-  placement: "HERO_SLIDER" | "HERO_SIDE_BANNER" | "PROMO_BANNER";
-  order: number;
-  isActive: boolean;
-};
-
 type ActiveFilter = "all" | "active" | "inactive";
 
-export function BannerPageClient({
-  initialBanners,
-}: {
-  initialBanners: Banner[];
-}) {
+export function BannerPageClient() {
+  const { data: banners } = useQuery({
+    queryKey: ["admin-banners"],
+    queryFn: () => adminFetch("banners"),
+  });
+
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
@@ -48,7 +45,7 @@ export function BannerPageClient({
 
   // Instant in-memory filtering
   const filteredBanners = useMemo(() => {
-    let result = initialBanners;
+    let result = banners ?? [];
 
     if (activeFilter !== "all") {
       const wantActive = activeFilter === "active";
@@ -63,7 +60,7 @@ export function BannerPageClient({
     }
 
     return result;
-  }, [initialBanners, search, activeFilter]);
+  }, [banners, search, activeFilter]);
 
   const sideBanners = filteredBanners.filter(
     (b) => b.placement === "HERO_SIDE_BANNER",
@@ -71,57 +68,56 @@ export function BannerPageClient({
   const sliderBanners = filteredBanners.filter(
     (b) => b.placement === "HERO_SLIDER",
   );
-  const promoBanners = filteredBanners.filter(
-    (b) => b.placement === "PROMO_BANNER",
-  );
+
+  if (!banners) return <AdminBannersSkeleton />;
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col gap-3 sm:flex-row">
-        <Input
-          value={search}
-          onChange={(e) => handleSearch(e.target.value)}
-          placeholder="Search banners..."
-          className="w-full bg-card "
-        />
-        <NativeSelect
-          value={activeFilter}
-          onChange={(e) => setActiveFilter(e.target.value as ActiveFilter)}
-          className="w-full bg-card sm:w-40"
-        >
-          <option value="all">All Status</option>
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
-        </NativeSelect>
-      </div>
+    <>
+      <BannersPageHeader />
+      <main className="flex-1 space-y-6 overflow-y-auto bg-muted/30 p-4 md:p-6">
+        <div className="space-y-8">
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Input
+              value={search}
+              onChange={(e) => handleSearch(e.target.value)}
+              placeholder="Search banners..."
+              className="w-full bg-card "
+            />
+            <NativeSelect
+              value={activeFilter}
+              onChange={(e) => setActiveFilter(e.target.value as ActiveFilter)}
+              className="w-full bg-card sm:w-40"
+            >
+              <option value="all">All Status</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </NativeSelect>
+          </div>
 
-      <BannerSection
-        title="Hero Side Banner"
-        description="Right-side standalone image (1:1)"
-        banners={sideBanners}
-        aspectRatio="square"
-      />
+          <BannerSection
+            title="Hero Side Banner"
+            description="Right-side standalone image (1:1)"
+            banners={sideBanners}
+            aspectRatio="square"
+          />
 
-      <BannerSection
-        title="Hero Slider"
-        description="Left carousel slides (5:2)"
-        banners={sliderBanners}
-        aspectRatio="wide"
-      />
+          <BannerSection
+            title="Hero Slider"
+            description="Left carousel slides (5:2)"
+            banners={sliderBanners}
+            aspectRatio="wide"
+          />
 
-      {promoBanners.length > 0 && (
-        <BannerSection
-          title="Promo Banners"
-          banners={promoBanners}
-          aspectRatio="wide"
-        />
-      )}
 
-      {filteredBanners.length === 0 && (
-        <div className="rounded-lg border bg-card p-12 text-center text-sm text-muted-foreground">
-          No banners found.
+          {filteredBanners.length === 0 && (
+            <EmptyState
+              icon={Images}
+              title="No banners found."
+              className="rounded-lg border bg-card"
+            />
+          )}
         </div>
-      )}
-    </div>
+      </main>
+    </>
   );
 }

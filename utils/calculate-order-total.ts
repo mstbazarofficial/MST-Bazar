@@ -1,7 +1,7 @@
 type OrderItemInput = {
   price: number;
   quantity: number;
-  discountPercentage: number;
+  discountPercentage?: number;
 };
 
 type OrderTotalInput = {
@@ -10,14 +10,22 @@ type OrderTotalInput = {
   shippingCost: number;
 };
 
+/**
+ * The price a customer pays for one unit, rounded to a whole taka.
+ * Every total is built from this value, so the cart, checkout, emails and
+ * admin always agree with the price shown on the product page.
+ */
+export function getUnitPrice(price: number, discountPercentage = 0) {
+  return Math.round(price * (1 - discountPercentage / 100));
+}
+
 export function calculateOrderTotal(order: OrderTotalInput) {
   const itemsSubtotal = order.orderItems.reduce((sum, item) => {
-    const itemPrice = item.price * (1 - item.discountPercentage / 100);
-    return sum + itemPrice * item.quantity;
+    return sum + getUnitPrice(item.price, item.discountPercentage) * item.quantity;
   }, 0);
 
   const discountedSubtotal = itemsSubtotal - order.discount;
-  const finalTotal = discountedSubtotal + order.shippingCost;
+  const finalTotal = Math.max(0, discountedSubtotal + order.shippingCost);
 
   return {
     itemsSubtotal,

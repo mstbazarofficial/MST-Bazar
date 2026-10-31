@@ -1,30 +1,9 @@
-import {
-  AnalyticsDashboard,
-  AnalyticsDashboardSkeleton,
-} from "@/components/admin/analytics/analytics-dashboard";
-import { PageHeader } from "@/components/admin/layout/page-header";
-import { getAnalyticsDashboard } from "@/lib/analytics/actions";
-import { Suspense } from "react";
+import { AnalyticsDashboard } from "@/components/admin/analytics/analytics-dashboard";
 
 export const metadata = {
-  title: "Analytics — Edugen Global",
+  title: "Analytics",
 };
 
-async function AnalyticsData() {
-  const initialData = await getAnalyticsDashboard("30d");
-  return <AnalyticsDashboard initialData={initialData} />;
-}
-
-export default function AnalyticsPage() {
-  return (
-    <>
-      <PageHeader title={"Analytics"} />
-
-      <section className="dashboard-container">
-        <Suspense fallback={<AnalyticsDashboardSkeleton />}>
-          <AnalyticsData />
-        </Suspense>
-      </section>
-    </>
-  );
+export default function AdminPage() {
+  return <AnalyticsDashboard />;
 }

@@ -29,7 +29,7 @@ export function DeviceBreakdownCard({ data }: { data: DeviceRow[] }) {
       <CardHeader>
         <CardTitle className="text-base font-semibold">Devices</CardTitle>
         <p className="text-sm text-muted-foreground">
-          How visitors access Edugen
+          How visitors access MST Bazar
         </p>
       </CardHeader>
       <CardContent className="flex flex-col items-center gap-4 ">

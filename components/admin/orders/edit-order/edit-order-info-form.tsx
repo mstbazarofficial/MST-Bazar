@@ -38,6 +38,14 @@ const paymentMethodOptions: { value: PaymentMethod; label: string }[] = [
   { value: "OTHER", label: "Other" },
 ];
 
+function FormSectionTitle({ children }: { children: string }) {
+  return (
+    <h3 className="border-b border-border pb-2 text-xs font-semibold tracking-wide text-muted-foreground uppercase sm:col-span-2">
+      {children}
+    </h3>
+  );
+}
+
 interface EditOrderInfoModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -127,7 +135,7 @@ export function EditOrderInfoModal({
     <FormModal
       open={open}
       onOpenChange={handleModalClose}
-      title="Edit Order & Customer Information"
+      title="Edit Customer & Payment Details"
       maxWidth="38rem"
       footer={
         <div className="flex items-center justify-end gap-2">
@@ -207,6 +215,8 @@ export function EditOrderInfoModal({
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <FormSectionTitle>Customer</FormSectionTitle>
+
           {/* Customer Name */}
           <div className="sm:col-span-2">
             <Controller
@@ -230,7 +240,7 @@ export function EditOrderInfoModal({
             control={control}
             render={({ field, fieldState }) => (
               <Field>
-                <FieldLabel>Email Address *</FieldLabel>
+                <FieldLabel>Email Address</FieldLabel>
                 <Input type="email" placeholder="john@example.com" {...field} />
                 {fieldState.error && (
                   <FieldError>{fieldState.error.message}</FieldError>
@@ -295,6 +305,8 @@ export function EditOrderInfoModal({
               )}
             />
           </div>
+
+          <FormSectionTitle>Payment</FormSectionTitle>
 
           {/* Payment Method Selector */}
           <div className="sm:col-span-2">

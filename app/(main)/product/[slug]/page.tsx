@@ -1,4 +1,5 @@
 // app/product/[slug]/page.tsx
+import { getUnitPrice } from "@/utils/calculate-order-total";
 import { ProductBreadcrumb } from "@/components/main/product/product-breadcrumb";
 import { ProductDetails } from "@/components/main/product/product-details";
 import { ProductGallery } from "@/components/main/product/product-gallery";
@@ -11,8 +12,69 @@ import {
   getProductBySlug,
   getRelatedProducts,
 } from "@/lib/data/catalog";
+import { getFeaturedImageUrl } from "@/utils/get-featured-image";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+
+type CatalogProduct = NonNullable<Awaited<ReturnType<typeof getProductBySlug>>>;
+
+// Generate dynamic SEO description fallback
+function getProductDescription(product: CatalogProduct) {
+  const rawDescription =
+    product.shortDescription ||
+    `Buy ${product.title} at ${SITE_CONFIG.name}. ${
+      product.category?.name ? `Category: ${product.category.name}.` : ""
+    } High quality products with fast delivery across Bangladesh.`;
+
+  return rawDescription.slice(0, 160).trim();
+}
+
+function getStructuredData(
+  product: CatalogProduct,
+  breadcrumbItems: { label: string; href: string }[],
+) {
+  const siteUrl = SITE_CONFIG.url;
+  const productUrl = `${siteUrl}/product/${product.slug}`;
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Product",
+        name: product.title,
+        description: getProductDescription(product),
+        url: productUrl,
+        image: product.images.map((image) => image.url),
+        sku: product.sku ?? undefined,
+        brand: {
+          "@type": "Brand",
+          name: product.brand ?? SITE_CONFIG.name,
+        },
+        category: product.category.name,
+        offers: {
+          "@type": "Offer",
+          url: productUrl,
+          priceCurrency: "BDT",
+          price: getUnitPrice(product.price, product.discountPercentage),
+          availability: product.isAvailable
+            ? "https://schema.org/InStock"
+            : "https://schema.org/OutOfStock",
+          itemCondition: "https://schema.org/NewCondition",
+          seller: { "@id": `${siteUrl}/#organization` },
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: breadcrumbItems.map((item, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          name: item.label,
+          item: item.href === "#" ? productUrl : `${siteUrl}${item.href}`,
+        })),
+      },
+    ],
+  };
+}
 
 export async function generateStaticParams() {
   const slugs = await getAllProductSlugs();
@@ -37,17 +99,9 @@ export async function generateMetadata({
   const siteUrl = SITE_CONFIG.url;
 
   // Determine primary featured image
-  const imageUrl =
-    product.images.find((img) => img.isFeatured)?.url || product.images[0]?.url;
+  const imageUrl = getFeaturedImageUrl(product.images) ?? SITE_CONFIG.ogImage;
 
-  // Generate dynamic SEO description fallback
-  const rawDescription =
-    product.shortDescription ||
-    `Buy ${product.title} at MST Shop. ${
-      product.category?.name ? `Category: ${product.category.name}.` : ""
-    } High quality products with fast delivery across Bangladesh.`;
-
-  const description = rawDescription.slice(0, 160).trim();
+  const description = getProductDescription(product);
 
   const title = `${product.title}`;
 
@@ -60,7 +114,7 @@ export async function generateMetadata({
       product.brand,
       "online shop Bangladesh",
       "buy online BD",
-      "MST Shop",
+      SITE_CONFIG.name,
     ].filter(Boolean) as string[],
     alternates: {
       canonical: `${siteUrl}/product/${product.slug}`,
@@ -69,14 +123,12 @@ export async function generateMetadata({
       title,
       description,
       url: `${siteUrl}/product/${product.slug}`,
-      siteName: "MST Shop",
-      locale: "en_US",
+      siteName: SITE_CONFIG.name,
+      locale: "en_BD",
       type: "website",
       images: [
         {
           url: imageUrl,
-          width: 800,
-          height: 800,
           alt: product.title,
         },
       ],
@@ -116,6 +168,14 @@ export default async function ProductPage({
   );
   return (
     <main className="bg-muted">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            getStructuredData(product, breadcrumbItems),
+          ).replace(/</g, "\\u003c"),
+        }}
+      />
       <div className="site-container">
         <ProductBreadcrumb items={breadcrumbItems} />
         <div className="grid grid-cols-1 gap-8 rounded-md border border-border/50 bg-card p-4 shadow-xs sm:p-6 lg:grid-cols-2 lg:gap-10">
@@ -132,7 +192,11 @@ export default async function ProductPage({
       </div>
       <RelatedProductsSection products={relatedProducts} />
       <ProductViewTracker
-        product={{ id: product.id, name: product.title, price: product.price }}
+        product={{
+          id: product.id,
+          name: product.title,
+          price: getUnitPrice(product.price, product.discountPercentage),
+        }}
       />
     </main>
   );

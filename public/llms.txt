@@ -47,7 +47,7 @@ Important notes:
 - [Admin Dashboard](https://www.mstbazar.com/admin): Admin-only area (role-based access: ADMIN or MODERATOR required).
 - [Product Management](https://www.mstbazar.com/admin/products): Full CRUD for products including title, slug, SKU, brand, unit, price, discount percentage, short description, rich-text product details, category assignment, product images (Cloudinary), and flags for Best Deal / Popular / Combo / Top Selling / Available.
 - [Category Management](https://www.mstbazar.com/admin/categories): Create, edit, delete categories with name, slug, image, and sort priority.
-- [Order Management](https://www.mstbazar.com/admin/orders): View all orders, update order status (Pending → Confirmed → Processing → Shipped → Delivered / Cancelled / Returned), add payments, add internal notes, manage shipping and product costs.
+- [Order Management](https://www.mstbazar.com/admin/orders): View all orders, update order status (Pending → Confirmed → Processing → Shipped → Delivered / Cancelled / Returned), add payments, add internal notes, and manage shipping charges.
 - [User Management](https://www.mstbazar.com/admin/users): View registered users, manage roles, ban/unban users.
 - [Contact Submissions](https://www.mstbazar.com/admin/contacts): View and manage customer contact form submissions with status tracking (Pending → In Progress → Resolved → Closed).
 
@@ -96,7 +96,7 @@ The cart system uses a dual-storage strategy:
 ## SEO & Discoverability
 
 - [Sitemap](https://www.mstbazar.com/sitemap.xml): Dynamic XML sitemap generated from all products, categories, special filter pages, and static pages.
-- [Robots](https://www.mstbazar.com/robots.txt): Allows all crawlers on public pages. Disallows `/admin*`, `/api*`, `/cart`, `/checkout`, `/dashboard*`, `/login`, `/signup`, `/forgot-password`, `/reset-password`.
+- [Robots](https://www.mstbazar.com/robots.txt): Allows all crawlers on public pages. Disallows `/admin`, `/api/`, `/checkout`, `/dashboard`, `/login`, `/sign-up`, `/forgot-password`, `/reset-password`.
 - Structured Data: JSON-LD Organization and WebSite schema on all pages.
 - OpenGraph and Twitter Card meta tags on all pages with dynamic product images.
 - Canonical URLs and hreflang (en-BD) on all pages.

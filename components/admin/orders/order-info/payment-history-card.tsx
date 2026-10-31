@@ -8,8 +8,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import type { PaymentMethod } from "@/generated/prisma/enums";
+import type { OrderStatus, PaymentMethod } from "@/generated/prisma/enums";
+import { formatDate } from "@/utils/format-date";
 import { formatPrice } from "@/utils/format-price";
+import { canMarkOrderPaid } from "@/utils/order-status";
 import {
   Banknote,
   CircleDollarSign,
@@ -21,6 +23,7 @@ import {
   Trash2,
 } from "lucide-react";
 import type { ElementType } from "react";
+import { MarkPaidButton } from "./mark-paid-button";
 
 const methodConfig: Record<
   PaymentMethod,
@@ -46,12 +49,18 @@ type Payment = {
 export function PaymentHistoryCard({
   payments,
   finalTotal,
+  orderStatus,
+  orderPaymentMethod,
+  onMarkPaid,
   onAdd,
   onEdit,
   onDelete,
 }: {
   payments: Payment[];
   finalTotal: number;
+  orderStatus: OrderStatus;
+  orderPaymentMethod: PaymentMethod;
+  onMarkPaid: () => DeleteDialogActionType;
   onAdd: () => void;
   onEdit: (id: string) => void;
   onDelete: (id: string) => DeleteDialogActionType;
@@ -59,6 +68,11 @@ export function PaymentHistoryCard({
   const paidAmount = payments.reduce((sum, p) => sum + p.amount, 0);
   const remainingAmount = finalTotal - paidAmount;
   const progressPercent = finalTotal > 0 ? (paidAmount / finalTotal) * 100 : 0;
+  const canMarkPaid = canMarkOrderPaid({
+    status: orderStatus,
+    orderPaymentMethod,
+    due: remainingAmount,
+  });
 
   return (
     <Card>
@@ -68,10 +82,15 @@ export function PaymentHistoryCard({
             <CircleDollarSign className="size-4" />
             Payment History
           </CardTitle>
-          <Button size="sm" variant="outline" onClick={onAdd}>
-            <Plus className="size-3.5" />
-            Add Payment
-          </Button>
+          <div className="flex items-center gap-2">
+            {canMarkPaid && (
+              <MarkPaidButton amount={remainingAmount} onMarkPaid={onMarkPaid} />
+            )}
+            <Button size="sm" variant="outline" onClick={onAdd}>
+              <Plus className="size-3.5" />
+              Add Payment
+            </Button>
+          </div>
         </div>
       </CardHeader>
 
@@ -96,14 +115,14 @@ export function PaymentHistoryCard({
         </div>
 
         {/* Payment Items List */}
-        <div className="space-y-3">
+        <div className="divide-y divide-border">
           {payments.map((payment) => {
             const config = methodConfig[payment.method];
             const Icon = config.icon;
             return (
               <div
                 key={payment.id}
-                className="flex items-start gap-3 rounded-lg border border-border p-3.5 transition-colors hover:border-border/80"
+                className="flex items-start gap-3 py-3.5 first:pt-0 last:pb-0"
               >
                 {/* Method Icon */}
                 <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400">
@@ -125,11 +144,7 @@ export function PaymentHistoryCard({
                   </div>
 
                   <p className="text-xs text-muted-foreground">
-                    {new Date(payment.date).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
+                    {formatDate(payment.date)}
                   </p>
 
                   {/* Note displayed on new line if present */}

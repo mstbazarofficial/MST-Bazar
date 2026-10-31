@@ -177,7 +177,7 @@ export async function updateProduct(
 
     // 3. Admin path revalidations
     revalidatePath("/admin/products");
-    revalidatePath(`/admin/products/${productId}`);
+    revalidatePath("/(admin)/admin/products/[slug]", "page");
 
     // 4. Update tags dynamically based on what changed
     updateTag("products"); // Global products list

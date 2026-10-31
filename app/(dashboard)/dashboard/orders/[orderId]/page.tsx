@@ -1,8 +1,13 @@
 export const dynamic = "force-dynamic";
 
+import {
+  PageHeading,
+  Panel,
+} from "@/components/dashboard/layout/dashboard-panel";
 import { OrderDeliveryCard } from "@/components/dashboard/orders/order-delivery-card";
 import { OrderHelpCard } from "@/components/dashboard/orders/order-help-card";
 import { OrderItemsCard } from "@/components/dashboard/orders/order-items-card";
+import { formatOrderDate } from "@/components/dashboard/orders/order-meta";
 import { OrderStatusTracker } from "@/components/dashboard/orders/order-status-tracker";
 import { OrderSummaryCard } from "@/components/dashboard/orders/order-summary-card";
 import { auth } from "@/lib/auth";
@@ -40,6 +45,7 @@ export default async function OrderDetailPage({
       TrxID: true,
       shippingCost: true,
       discount: true,
+      promoCode: true,
       customerName: true,
       phoneNumber: true,
       whatsappNumber: true,
@@ -64,56 +70,51 @@ export default async function OrderDetailPage({
     notFound();
   }
 
-  const formattedDate = new Intl.DateTimeFormat("en-US", {
-    dateStyle: "long",
-  }).format(new Date(order.orderDate));
-
   return (
     <div className="space-y-5">
-      {/* Back + header */}
-      <div className="flex items-start gap-3">
+      <div>
         <Link
           href="/dashboard/orders"
-          className="h-8 w-8 rounded-xl border border-border bg-card flex items-center justify-center hover:bg-muted transition-colors shrink-0 mt-0.5"
+          className="mb-2 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
-          <ArrowLeft className="h-4 w-4 text-muted-foreground" />
+          <ArrowLeft className="size-4" />
+          Orders
         </Link>
-        <div>
-          <h1 className="text-xl font-bold text-foreground leading-tight">
-            Order #{order.orderId}
-          </h1>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            Placed on {formattedDate}
-          </p>
+        <PageHeading
+          title={`Order #${order.orderId}`}
+          description={`Placed on ${formatOrderDate(order.orderDate, "long")}`}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 items-start gap-5 xl:grid-cols-[minmax(0,1fr)_20rem]">
+        <div className="min-w-0 space-y-5">
+          <Panel title="Order status">
+            <div className="px-5 pb-5">
+              <OrderStatusTracker status={order.status} />
+            </div>
+          </Panel>
+          <OrderItemsCard items={order.orderItems} />
+        </div>
+
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-1">
+          <OrderSummaryCard
+            orderPaymentMethod={order.orderPaymentMethod}
+            TrxNumber={order.TrxNumber}
+            TrxID={order.TrxID}
+            shippingCost={order.shippingCost}
+            discount={order.discount}
+            promoCode={order.promoCode}
+            orderItems={order.orderItems}
+          />
+          <OrderDeliveryCard
+            customerName={order.customerName}
+            phoneNumber={order.phoneNumber}
+            whatsappNumber={order.whatsappNumber}
+            fullAddress={order.fullAddress}
+          />
+          <OrderHelpCard />
         </div>
       </div>
-
-      {/* Tracker — full width, always on top */}
-      <OrderStatusTracker status={order.status} />
-
-      {/* Items */}
-      <OrderItemsCard items={order.orderItems} />
-
-      {/* Two-column on larger screens */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <OrderSummaryCard
-          orderPaymentMethod={order.orderPaymentMethod}
-          TrxNumber={order.TrxNumber}
-          TrxID={order.TrxID}
-          shippingCost={order.shippingCost}
-          discount={order.discount}
-          orderItems={order.orderItems}
-        />
-        <OrderDeliveryCard
-          customerName={order.customerName}
-          phoneNumber={order.phoneNumber}
-          whatsappNumber={order.whatsappNumber}
-          fullAddress={order.fullAddress}
-        />
-      </div>
-
-      {/* Help */}
-      <OrderHelpCard />
     </div>
   );
 }

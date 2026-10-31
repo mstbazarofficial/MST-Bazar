@@ -1,6 +1,7 @@
 // components/admin/orders/product-search-select.tsx
 "use client";
 
+import { getUnitPrice } from "@/utils/calculate-order-total";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -130,8 +131,8 @@ export function ProductSearchSelect({
         <div className="absolute z-50 mt-1 max-h-72 w-full overflow-y-auto rounded-md border bg-popover p-1 text-popover-foreground shadow-md transition-all">
           {isLoading ? (
             <div className="space-y-2 p-2">
-              <Skeleton className="h-12 w-full rounded-md" />
-              <Skeleton className="h-12 w-full rounded-md" />
+              <Skeleton className="h-12 w-full rounded-md bg-dashboard-skeleton" />
+              <Skeleton className="h-12 w-full rounded-md bg-dashboard-skeleton" />
             </div>
           ) : results.length === 0 ? (
             <div className="p-4 text-center text-sm text-muted-foreground">
@@ -139,10 +140,10 @@ export function ProductSearchSelect({
             </div>
           ) : (
             results.map((product) => {
-              const discountedPrice =
-                product.discountPercentage > 0
-                  ? product.price * (1 - product.discountPercentage / 100)
-                  : product.price;
+              const discountedPrice = getUnitPrice(
+                product.price,
+                product.discountPercentage,
+              );
 
               return (
                 <div

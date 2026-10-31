@@ -1,4 +1,5 @@
 export const dynamic = "force-dynamic";
+import { ORDER_LIST_SELECT } from "@/components/dashboard/orders/order-meta";
 import { OrdersSection } from "@/components/dashboard/orders/orders-section";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -17,30 +18,8 @@ export default async function OrdersPage() {
   const orders = await prisma.order.findMany({
     where: { userId: session.user.id },
     orderBy: { orderDate: "desc" },
-    select: {
-      id: true,
-      orderId: true,
-      status: true,
-      orderPaymentMethod: true,
-      shippingCost: true,
-      discount: true,
-      orderDate: true,
-      orderItems: {
-        select: {
-          id: true,
-          productName: true,
-          productImage: true,
-          quantity: true,
-          price: true,
-          discountPercentage: true,
-        },
-      },
-    },
+    select: ORDER_LIST_SELECT,
   });
 
-  return (
-    <div>
-      <OrdersSection orders={orders} />
-    </div>
-  );
+  return <OrdersSection orders={orders} />;
 }

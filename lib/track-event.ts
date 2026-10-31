@@ -30,8 +30,8 @@ export async function trackEvent({
   }
   const eventId = generateEventId();
 
-  if (typeof window !== "undefined" && (window as any).fbq) {
-    (window as any).fbq("track", eventName, customData, { eventID: eventId });
+  if (typeof window !== "undefined" && window.fbq) {
+    window.fbq?.("track", eventName, customData, { eventID: eventId });
   }
 
   fetch("/api/capi", {

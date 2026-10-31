@@ -8,7 +8,7 @@ export function AboutHero() {
       {/* Background Banner Image */}
       <div className="absolute inset-0 w-full h-full overflow-hidden">
         <Image
-          src="/assets/about-hero-banner.png"
+          src="/assets/about-hero-banner.webp"
           alt="MST Bazar Natural Products"
           fill
           sizes="100vw"

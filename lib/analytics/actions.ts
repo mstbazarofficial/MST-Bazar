@@ -1,5 +1,6 @@
 "use server";
 
+import { requireRole } from "@/lib/admin-auth";
 import { unstable_cache, updateTag } from "next/cache";
 import {
   GA4_PROPERTY_ID,
@@ -420,6 +421,8 @@ export async function getAnalyticsDashboard(
   rangeKey: RangeKey,
   custom?: { startDate: string; endDate: string },
 ): Promise<AnalyticsDashboardData> {
+  await requireRole(["ADMIN", "MODERATOR"]);
+
   const range = resolveDateRange(rangeKey, custom);
 
   const cached = unstable_cache(
@@ -486,6 +489,8 @@ export async function refreshAnalyticsDashboard(
   rangeKey: RangeKey,
   custom?: { startDate: string; endDate: string },
 ): Promise<AnalyticsDashboardData> {
+  await requireRole(["ADMIN", "MODERATOR"]);
+
   updateTag("analytics-dashboard");
   return getAnalyticsDashboard(rangeKey, custom);
 }

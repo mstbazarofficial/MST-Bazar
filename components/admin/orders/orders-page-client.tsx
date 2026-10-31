@@ -1,39 +1,21 @@
 // src/components/admin/orders/orders-page-client.tsx
 "use client";
 
-import {
-  getAdminOrders,
-  getAdminOrderStats,
-} from "@/actions/admin/order-actions";
+import AdminOrdersSkeleton from "@/app/(admin)/admin/orders/skeleton";
 import { PageHeader } from "@/components/admin/layout/page-header";
 import { OrderFiltersBar } from "@/components/admin/orders/order-filters-bar";
 import { OrderStatsCards } from "@/components/admin/orders/order-stats-cards";
 import { OrdersTable } from "@/components/admin/orders/orders-table";
 import { DataTablePagination } from "@/components/my-ui/data-table-pagination";
 import { buttonVariants } from "@/components/ui/button";
+import { adminFetch } from "@/lib/admin-fetch";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useMemo } from "react";
 
-type AdminOrdersResult = Awaited<ReturnType<typeof getAdminOrders>>;
-type AdminOrderStats = Awaited<ReturnType<typeof getAdminOrderStats>>;
-
-export function OrdersPageClient({
-  initialData,
-  initialStats,
-  initialFilters,
-}: {
-  initialData: AdminOrdersResult;
-  initialStats: AdminOrderStats;
-  initialFilters: {
-    search?: string;
-    status?: string;
-    month?: string;
-    page: number;
-  };
-}) {
+export function OrdersPageClient() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -47,23 +29,15 @@ export function OrdersPageClient({
     [searchParams],
   );
 
-  const isInitial =
-    filters.search === (initialFilters.search ?? "") &&
-    filters.status === (initialFilters.status ?? "") &&
-    filters.month === (initialFilters.month ?? "") &&
-    filters.page === initialFilters.page;
-
   const { data, isFetching } = useQuery({
     queryKey: ["admin-orders", filters],
-    queryFn: () => getAdminOrders(filters),
-    initialData: isInitial ? initialData : undefined,
+    queryFn: () => adminFetch("orders", filters),
     placeholderData: keepPreviousData,
   });
 
   const { data: stats, isLoading: isStatsLoading } = useQuery({
     queryKey: ["admin-order-stats"],
-    queryFn: () => getAdminOrderStats(),
-    initialData: initialStats,
+    queryFn: () => adminFetch("orderStats"),
     staleTime: 60_000,
   });
 
@@ -80,6 +54,8 @@ export function OrdersPageClient({
     },
     [pathname, searchParams],
   );
+
+  if (!data || !stats) return <AdminOrdersSkeleton />;
 
   return (
     <>

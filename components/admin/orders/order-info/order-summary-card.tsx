@@ -7,6 +7,7 @@ import { Calculator, Pencil } from "lucide-react";
 type OrderSummaryInput = {
   orderItems: { price: number; quantity: number; discountPercentage: number }[];
   discount: number;
+  promoCode: string | null;
   shippingCost: number;
 };
 
@@ -53,7 +54,9 @@ export function OrderSummaryCard({
 
         {/* 3. Order Discount */}
         <div className="flex justify-between">
-          <span className="text-muted-foreground">Discount</span>
+          <span className="text-muted-foreground">
+            Discount{order.promoCode && ` (${order.promoCode})`}
+          </span>
           <span className="text-emerald-600 font-medium dark:text-emerald-400">
             -{formatPrice(total.discountAmount)}
           </span>

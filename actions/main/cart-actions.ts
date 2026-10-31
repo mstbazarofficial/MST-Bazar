@@ -1,5 +1,6 @@
 "use server";
 
+import { MAX_ITEM_QTY } from "@/constants/site";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
@@ -14,7 +15,11 @@ function findCartWithItems(userId: string) {
     where: { userId },
     include: {
       items: {
-        include: { product: { include: { images: { take: 1 } } } },
+        include: {
+          product: {
+            include: { images: { take: 1, orderBy: { isFeatured: "desc" } } },
+          },
+        },
         orderBy: { createdAt: "asc" },
       },
     },
@@ -36,10 +41,9 @@ export type PopulatedCartItem = {
     discountPercentage: number;
     unit: string | null;
     image: string | null;
+    isAvailable: boolean;
   };
 };
-
-const MAX_QTY = 10;
 
 // --- Helper: Get Auth ---
 async function getUserId() {
@@ -60,6 +64,7 @@ function formatCartItems(items: CartItemWithProduct[]): PopulatedCartItem[] {
       discountPercentage: item.product.discountPercentage,
       unit: item.product.unit,
       image: item.product.images?.[0]?.url || null,
+      isAvailable: item.product.isAvailable,
     },
   }));
 }
@@ -93,13 +98,13 @@ export async function resolveGuestCart(
 
   const products = await prisma.product.findMany({
     where: { id: { in: localItems.map((i) => i.productId) } },
-    include: { images: { take: 1 } },
+    include: { images: { take: 1, orderBy: { isFeatured: "desc" } } },
   });
 
   const resolvedItems = products.map((product) => {
     const localItem = localItems.find((i) => i.productId === product.id);
     // Clamp quantity defensively — localStorage can be tampered with by the client
-    const safeQty = Math.min(Math.max(localItem?.quantity ?? 1, 1), MAX_QTY);
+    const safeQty = Math.min(Math.max(localItem?.quantity ?? 1, 1), MAX_ITEM_QTY);
 
     return {
       id: `guest-${product.id}`, // Fake ID for client mapping
@@ -112,6 +117,7 @@ export async function resolveGuestCart(
         discountPercentage: product.discountPercentage,
         unit: product.unit,
         image: product.images?.[0]?.url || null,
+        isAvailable: product.isAvailable,
       },
     };
   });
@@ -134,8 +140,17 @@ export async function syncGuestCartToDb(
     update: {},
   });
 
-  // Only sync items for products that actually exist, and clamp quantity
-  const validItems = localItems.filter((i) => i.productId && i.quantity > 0);
+  // A guest cart can hold products deleted since it was saved. Upserting one
+  // would break the foreign key and fail the whole merge, so drop them first.
+  const requestedItems = localItems.filter(
+    (i) => i.productId && i.quantity > 0,
+  );
+  const existingProducts = await prisma.product.findMany({
+    where: { id: { in: requestedItems.map((i) => i.productId) } },
+    select: { id: true },
+  });
+  const existingIds = new Set(existingProducts.map((p) => p.id));
+  const validItems = requestedItems.filter((i) => existingIds.has(i.productId));
 
   if (validItems.length) {
     await prisma.$transaction(
@@ -147,7 +162,7 @@ export async function syncGuestCartToDb(
           create: {
             cartId: cart.id,
             productId: item.productId,
-            quantity: Math.min(item.quantity, MAX_QTY),
+            quantity: Math.min(item.quantity, MAX_ITEM_QTY),
           },
           update: {
             quantity: { increment: item.quantity },
@@ -156,10 +171,10 @@ export async function syncGuestCartToDb(
       ),
     );
 
-    // Re-clamp anything that exceeded MAX_QTY after increment, in one query
+    // Re-clamp anything that exceeded MAX_ITEM_QTY after increment, in one query
     await prisma.cartItem.updateMany({
-      where: { cartId: cart.id, quantity: { gt: MAX_QTY } },
-      data: { quantity: MAX_QTY },
+      where: { cartId: cart.id, quantity: { gt: MAX_ITEM_QTY } },
+      data: { quantity: MAX_ITEM_QTY },
     });
   }
 
@@ -186,7 +201,7 @@ export async function mutateCartItem(productId: string, quantity: number) {
     return;
   }
 
-  const safeQty = Math.min(quantity, MAX_QTY);
+  const safeQty = Math.min(quantity, MAX_ITEM_QTY);
 
   await prisma.cartItem.upsert({
     where: { cartId_productId: { cartId: cart.id, productId } },

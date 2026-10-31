@@ -107,7 +107,7 @@ export function TestimonialsSection() {
 
                   {/* Comment Body */}
                   <p className="text-xs sm:text-sm font-medium leading-relaxed text-foreground/90">
-                    "{review.comment}"
+                    &quot;{review.comment}&quot;
                   </p>
                 </div>
 

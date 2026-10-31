@@ -1,6 +1,8 @@
 // context/cart-provider.tsx
 "use client";
 
+import { MAX_ITEM_QTY } from "@/constants/site";
+import { getUnitPrice } from "@/utils/calculate-order-total";
 import {
   clearServerCart,
   getDbCart,
@@ -46,15 +48,19 @@ interface CartContextType extends CartState {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 const GUEST_CART_KEY = "guest_cart_v1";
-const MAX_QTY = 10;
 const SYNC_DEBOUNCE_MS = 500;
 const SYNC_ERROR_MESSAGE = "Couldn't save. Try again.";
 
 type LocalCartItem = { productId: string; quantity: number };
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const { data: session } = authClient.useSession();
+  const { data: session, isPending: isSessionPending } =
+    authClient.useSession();
   const userId = session?.user?.id;
+
+  // isPending can turn true again on a refetch, so only the first load counts.
+  const [isSessionReady, setIsSessionReady] = useState(false);
+  if (!isSessionPending && !isSessionReady) setIsSessionReady(true);
 
   const [items, setItems] = useState<PopulatedCartItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -84,6 +90,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   // --- 1. Bootstrapping the Cart on Mount/Auth Change ---
   useEffect(() => {
+    // Until the session is known a signed-in customer looks like a guest with
+    // an empty cart, which is what caused the empty cart flash on refresh.
+    if (!isSessionReady) return;
+
     const initCart = async () => {
       setIsLoading(true);
       try {
@@ -117,7 +127,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     };
 
     initCart();
-  }, [userId]);
+  }, [userId, isSessionReady]);
 
   // --- 2. Persist Guest Cart safely ---
   useEffect(() => {
@@ -207,7 +217,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       clearError(productId);
       setItems((prev) => {
         const existing = prev.find((i) => i.productId === productId);
-        const newQty = Math.min((existing?.quantity || 0) + qty, MAX_QTY);
+        const newQty = Math.min((existing?.quantity || 0) + qty, MAX_ITEM_QTY);
 
         const newItems = existing
           ? prev.map((i) =>
@@ -239,7 +249,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
       clearError(productId);
       setItems((prev) => {
-        const newQty = Math.min(qty, MAX_QTY);
+        const newQty = Math.min(qty, MAX_ITEM_QTY);
         const newItems = prev.map((i) =>
           i.productId === productId ? { ...i, quantity: newQty } : i,
         );
@@ -269,9 +279,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
       const totals = items.reduce(
         (acc, item) => {
           const itemPrice = item.product.price;
-          const discountAmount =
-            itemPrice * (item.product.discountPercentage / 100);
-          const finalItemPrice = itemPrice - discountAmount;
+          const finalItemPrice = getUnitPrice(
+            itemPrice,
+            item.product.discountPercentage,
+          );
+          const discountAmount = itemPrice - finalItemPrice;
 
           acc.totalItems += item.quantity;
           acc.subTotal += itemPrice * item.quantity;

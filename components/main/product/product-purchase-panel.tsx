@@ -3,9 +3,11 @@
 
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
-import { SITE_CONFIG } from "@/constants/site";
+import { MAX_ITEM_QTY, SITE_CONFIG } from "@/constants/site";
 import { useCart, useCartItemError } from "@/context/cart-provider";
 import { trackEvent } from "@/lib/track-event";
+import { getUnitPrice } from "@/utils/calculate-order-total";
+import { getFeaturedImageUrl } from "@/utils/get-featured-image";
 import {
   Check,
   Minus,
@@ -34,6 +36,7 @@ type PurchaseProduct = {
   price: number;
   unit: string | null;
   brand: string | null;
+  isAvailable: boolean;
   category: {
     name: string;
     slug: string;
@@ -65,6 +68,8 @@ export function ProductPurchasePanel({
 
   // Use cart quantity if present, otherwise fallback to local state
   const currentQty = isInCart ? cartItem.quantity : quantity;
+  const unitPrice = getUnitPrice(product.price, product.discountPercentage);
+  const isOutOfStock = !product.isAvailable;
 
   // Show toast ONLY on background sync error
   useEffect(() => {
@@ -98,7 +103,7 @@ export function ProductPurchasePanel({
     if (isInCart) {
       updateQuantity(product.id, cartItem.quantity + 1);
     } else {
-      setQuantity((prev) => prev + 1);
+      setQuantity((prev) => Math.min(MAX_ITEM_QTY, prev + 1));
     }
   };
 
@@ -108,7 +113,8 @@ export function ProductPurchasePanel({
     price: product.price,
     discountPercentage: product.discountPercentage,
     unit: product.unit,
-    image: product.images[0]?.url ?? null,
+    image: getFeaturedImageUrl(product.images),
+    isAvailable: product.isAvailable,
   });
 
   const handleAddToCart = () => {
@@ -121,7 +127,7 @@ export function ProductPurchasePanel({
         customData: {
           content_ids: [product.id],
           content_type: "product",
-          value: product.price * currentQty,
+          value: unitPrice * currentQty,
           currency: "BDT",
         },
       });
@@ -144,7 +150,7 @@ export function ProductPurchasePanel({
       customData: {
         content_ids: [product.id],
         content_type: "product",
-        value: product.price * currentQty,
+        value: unitPrice * currentQty,
         currency: "BDT",
         num_items: currentQty,
       },
@@ -178,7 +184,9 @@ Product Link: ${SITE_CONFIG.url}/product/${product.slug}`,
           <button
             type="button"
             onClick={handleIncrease}
-            className="w-8 h-8 flex items-center justify-center text-foreground hover:bg-background rounded-lg transition-colors cursor-pointer"
+            disabled={currentQty >= MAX_ITEM_QTY}
+            aria-label={`Increase quantity, maximum ${MAX_ITEM_QTY}`}
+            className="w-8 h-8 flex items-center justify-center text-foreground hover:bg-background rounded-lg transition-colors disabled:opacity-40 cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
           </button>
@@ -191,6 +199,7 @@ Product Link: ${SITE_CONFIG.url}/product/${product.slug}`,
           <Button
             type="button"
             onClick={handleAddToCart}
+            disabled={isOutOfStock}
             className={[
               "flex-1 h-11 font-extrabold text-xs sm:text-sm rounded-md gap-2 shadow-xs transition-all active:scale-98 cursor-pointer",
               isInCart || isAdded
@@ -198,7 +207,9 @@ Product Link: ${SITE_CONFIG.url}/product/${product.slug}`,
                 : "bg-primary hover:bg-emerald-600 text-white",
             ].join(" ")}
           >
-            {isInCart ? (
+            {isOutOfStock ? (
+              <span>Out of stock</span>
+            ) : isInCart ? (
               <>
                 <Check className="w-4 h-4" />
                 <span>Added ({cartItem.quantity})</span>
@@ -219,6 +230,7 @@ Product Link: ${SITE_CONFIG.url}/product/${product.slug}`,
           <Button
             type="button"
             onClick={handleBuyNow}
+            disabled={isOutOfStock}
             className="flex-1 h-11 bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs sm:text-sm rounded-md gap-2 shadow-xs transition-all active:scale-98 cursor-pointer"
           >
             <ShoppingBag className="w-4 h-4" />

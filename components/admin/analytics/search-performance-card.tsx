@@ -49,7 +49,7 @@ export function SearchPerformanceCard({ data }: { data: SearchPerformance }) {
           Search performance
         </CardTitle>
         <p className="text-sm text-muted-foreground">
-          How Edugen appears in Google Search results
+          How MST Bazar appears in Google Search results
         </p>
       </CardHeader>
       <CardContent className="space-y-6">

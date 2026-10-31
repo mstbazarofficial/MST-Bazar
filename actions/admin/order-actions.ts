@@ -1,10 +1,15 @@
 // src/actions/admin/order-actions.ts
 "use server";
 
+import { Prisma } from "@/generated/prisma/client";
 import { OrderStatus } from "@/generated/prisma/enums";
 import { OrderWhereInput } from "@/generated/prisma/models";
 import { requireRole } from "@/lib/admin-auth";
+import { getDhakaMonthRange } from "@/lib/dhaka-time";
+import { findDuplicateTrxIds } from "@/lib/duplicate-trx-ids";
+import { CLOSED_ORDER_STATUSES, getOrderDue } from "@/lib/order-payments";
 import { prisma } from "@/lib/prisma";
+import { calculateOrderTotal } from "@/utils/calculate-order-total";
 
 const PAGE_SIZE = 20;
 
@@ -21,42 +26,25 @@ export async function getAdminOrders(filters: AdminOrderFilters) {
   const page = filters.page && filters.page > 0 ? filters.page : 1;
 
   // 1. Calculate Date Range if month filter is provided
-  let startDate: Date | undefined;
-  let endDate: Date | undefined;
-
-  if (filters.month) {
-    const [yearStr, monthStr] = filters.month.split("-");
-    const year = parseInt(yearStr, 10);
-    const month = parseInt(monthStr, 10);
-
-    if (!isNaN(year) && !isNaN(month)) {
-      // First day of the month 00:00:00
-      startDate = new Date(year, month - 1, 1);
-      // Last day of the month 23:59:59
-      endDate = new Date(year, month, 0, 23, 59, 59, 999);
-    }
-  }
+  const monthRange = getDhakaMonthRange(filters.month);
 
   // 2. Build Where Clauses
   const where: OrderWhereInput = {
     ...(filters.search && {
       OR: [
-        { id: { contains: filters.search, mode: "insensitive" } },
+        { orderId: { contains: filters.search, mode: "insensitive" } },
         { customerName: { contains: filters.search, mode: "insensitive" } },
+        { emailAddress: { contains: filters.search, mode: "insensitive" } },
         { phoneNumber: { contains: filters.search, mode: "insensitive" } },
+        { TrxID: { contains: filters.search, mode: "insensitive" } },
+        { promoCode: { contains: filters.search, mode: "insensitive" } },
       ],
     }),
     ...(filters.status &&
       filters.status !== "all" && {
         status: filters.status as OrderStatus,
       }),
-    ...(startDate &&
-      endDate && {
-        orderDate: {
-          gte: startDate,
-          lte: endDate,
-        },
-      }),
+    ...(monthRange && { orderDate: monthRange }),
   };
 
   // 3. Query Prisma Transaction
@@ -68,10 +56,13 @@ export async function getAdminOrders(filters: AdminOrderFilters) {
         orderId: true,
         customerName: true,
         emailAddress: true,
+        phoneNumber: true,
         status: true,
         shippingCost: true,
         discount: true,
-        productCost: true,
+        promoCode: true,
+        orderPaymentMethod: true,
+        TrxID: true,
         orderDate: true,
         user: {
           select: {
@@ -85,13 +76,7 @@ export async function getAdminOrders(filters: AdminOrderFilters) {
             discountPercentage: true,
           },
         },
-        payments: {
-          take: 1,
-          orderBy: { date: "desc" },
-          select: {
-            method: true,
-          },
-        },
+        payments: { select: { amount: true } },
       },
       orderBy: { orderDate: "desc" },
       skip: (page - 1) * PAGE_SIZE,
@@ -100,33 +85,30 @@ export async function getAdminOrders(filters: AdminOrderFilters) {
     prisma.order.count({ where }),
   ]);
 
+  const duplicateTrxIds = await findDuplicateTrxIds(
+    orders.flatMap((order) => (order.TrxID ? [order.TrxID] : [])),
+  );
+
   // 4. Map Results to Match OrdersTable props
   const formattedOrders = orders.map((order) => {
-    // Calculate total amount from items if productCost is null
-    const itemsTotal = order.orderItems.reduce((acc, item) => {
-      const itemPriceAfterDiscount =
-        item.discountPercentage > 0
-          ? item.price * (1 - item.discountPercentage / 100)
-          : item.price;
-      return acc + itemPriceAfterDiscount * item.quantity;
-    }, 0);
-
-    const baseProductCost = order.productCost ?? itemsTotal;
-    const totalAmount = Math.max(
-      0,
-      baseProductCost + order.shippingCost - order.discount,
-    );
-
     return {
       id: order.id,
       orderId: order.orderId,
       customerName: order.customerName,
       emailAddress: order.emailAddress,
+      phoneNumber: order.phoneNumber,
       userAvatar: order.user?.image ?? null,
       orderDate: order.orderDate,
-      totalAmount,
+      totalAmount: calculateOrderTotal(order).finalTotal,
+      due: CLOSED_ORDER_STATUSES.includes(order.status)
+        ? 0
+        : getOrderDue(order),
+      promoCode: order.promoCode,
       status: order.status,
-      paymentMethod: order.payments[0]?.method ?? "COD",
+      paymentMethod: order.orderPaymentMethod,
+      TrxID: order.TrxID,
+      hasDuplicateTrxId:
+        !!order.TrxID && duplicateTrxIds.has(order.TrxID.toUpperCase()),
     };
   });
 
@@ -136,6 +118,45 @@ export async function getAdminOrders(filters: AdminOrderFilters) {
     page,
     pageSize: PAGE_SIZE,
   };
+}
+
+const orderDetailInclude = {
+  orderItems: { orderBy: { createdAt: "asc" } },
+  payments: { orderBy: { date: "desc" } },
+  notes: { orderBy: { createdAt: "desc" } },
+  user: {
+    select: {
+      id: true,
+      name: true,
+      image: true,
+    },
+  },
+} satisfies Prisma.OrderInclude;
+
+export type OrderWithDetails = Prisma.OrderGetPayload<{
+  include: typeof orderDetailInclude;
+}>;
+
+export async function getAdminOrderDetail(orderId: string) {
+  await requireRole(["ADMIN", "MODERATOR"]);
+
+  const order = await prisma.order.findUnique({
+    where: { orderId },
+    include: orderDetailInclude,
+  });
+
+  if (!order) return null;
+
+  const duplicateTrxCount = order.TrxID
+    ? await prisma.order.count({
+        where: {
+          id: { not: order.id },
+          TrxID: { equals: order.TrxID, mode: "insensitive" },
+        },
+      })
+    : 0;
+
+  return { order, duplicateTrxCount };
 }
 
 export async function getAdminOrderStats() {

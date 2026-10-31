@@ -1,6 +1,6 @@
 import { AppSidebar } from "@/components/admin/layout/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { QueryProvider } from "@/context/query-provider";
+import { AdminQueryProvider } from "@/context/admin-query-provider";
 import { requireRole } from "@/lib/admin-auth";
 import type { Metadata } from "next";
 
@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     template: "%s | MST Bazar Admin",
     default: "Dashboard | MST Bazar Admin",
   },
-  description: "MST Shop administration panel",
+  description: "MST Bazar administration panel",
   robots: {
     index: false,
     follow: false,
@@ -24,17 +24,17 @@ export default async function AdminLayout({
   await requireRole(["ADMIN", "MODERATOR"]);
 
   return (
-    <QueryProvider>
+    <AdminQueryProvider>
       <SidebarProvider defaultOpen>
         <AppSidebar />
         {/* Lock height and hide overflow on the inset container */}
         <SidebarInset className="flex flex-col h-svh overflow-hidden">
-          {/* Main becomes the actual scroll container */}
-          <main className="flex-1 overflow-y-auto bg-dashboard-background">
+          {/* The actual scroll container; each page renders its own <main> */}
+          <div className="flex-1 overflow-y-auto bg-dashboard-background **:data-[slot=skeleton]:bg-dashboard-skeleton">
             {children}
-          </main>
+          </div>
         </SidebarInset>
       </SidebarProvider>
-    </QueryProvider>
+    </AdminQueryProvider>
   );
 }

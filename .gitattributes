@@ -1,0 +1,2 @@
+# Prisma checksums migration files, so line endings must not change
+prisma/migrations/**/*.sql text eol=lf

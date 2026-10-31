@@ -1,6 +1,8 @@
 // components/add-to-cart-button.tsx
 "use client";
 
+import { getUnitPrice } from "@/utils/calculate-order-total";
+import { getFeaturedImageUrl } from "@/utils/get-featured-image";
 import { Button } from "@/components/ui/button";
 import { useCart, useCartItemError } from "@/context/cart-provider";
 import { ProductDTO } from "@/lib/data/catalog";
@@ -41,6 +43,7 @@ export function AddToCartButton({
   // A background sync failure can arrive after we've already shown "Added".
   useEffect(() => {
     if (!error) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- the error arrives from a background sync
     setStatus("error");
     scheduleRevert(ERROR_DURATION_MS);
     return () => {
@@ -70,7 +73,8 @@ export function AddToCartButton({
       price: product.price,
       discountPercentage: product.discountPercentage,
       unit: product.unit,
-      image: product.images[0]?.url ?? null,
+      image: getFeaturedImageUrl(product.images),
+      isAvailable: product.isAvailable,
     };
 
     addItem(cartItem, productId, qty);
@@ -80,7 +84,7 @@ export function AddToCartButton({
       customData: {
         content_ids: [product.id],
         content_type: "product",
-        value: product.price * qty,
+        value: getUnitPrice(product.price, product.discountPercentage) * qty,
         currency: "BDT",
       },
     });
@@ -93,6 +97,7 @@ export function AddToCartButton({
   return (
     <Button
       onClick={handleAddToCart}
+      disabled={!product.isAvailable}
       aria-live="polite"
       className={cn(
         [
@@ -106,7 +111,9 @@ export function AddToCartButton({
         className,
       )}
     >
-      {isError ? (
+      {!product.isAvailable ? (
+        <span className="shrink-0">Out of stock</span>
+      ) : isError ? (
         <>
           <AlertCircle className="w-3.5 h-3.5 stroke-3" />
           <span className="shrink-0 mt-1">{error}</span>

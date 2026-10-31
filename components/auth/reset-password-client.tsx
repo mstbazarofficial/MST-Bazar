@@ -26,7 +26,8 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
+import * as z from "zod";
+import { getErrorMessage } from "@/utils/get-error-message";
 
 const resetPasswordSchema = z
   .object({
@@ -85,9 +86,9 @@ function ResetPasswordForm() {
       } else {
         setIsSuccess(true);
       }
-    } catch (err: any) {
+    } catch (err) {
       setServerError(
-        err?.message || "An unexpected error occurred. Please try again.",
+        getErrorMessage(err, "An unexpected error occurred. Please try again."),
       );
     }
   };

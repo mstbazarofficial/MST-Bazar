@@ -1,9 +1,17 @@
-// app/admin/products/new/page.tsx
-import { getAdminCategories } from "@/actions/admin/product-actions";
-import { ProductFormPage } from "@/components/admin/products/product-form-page";
+"use client";
 
-export default async function NewProductPage() {
-  const categories = await getAdminCategories();
+import { ProductFormPage } from "@/components/admin/products/product-form-page";
+import { adminFetch } from "@/lib/admin-fetch";
+import { useQuery } from "@tanstack/react-query";
+import NewProductLoading from "./loading";
+
+export default function NewProductPage() {
+  const { data: categories } = useQuery({
+    queryKey: ["admin-categories"],
+    queryFn: () => adminFetch("categories"),
+  });
+
+  if (!categories) return <NewProductLoading />;
 
   return <ProductFormPage categories={categories} />;
 }

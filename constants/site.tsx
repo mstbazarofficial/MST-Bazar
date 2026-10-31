@@ -1,8 +1,11 @@
 // src/constants/site.ts
 
+export const MAX_ITEM_QTY = 10;
+
 export const SITE_CONFIG = {
   name: "MST Bazar",
   url: "https://www.mstbazar.com",
+  ogImage: "/assets/og-image.jpg",
 
   phone: "+8801581172773",
   whatsapp: "+8801581172773",

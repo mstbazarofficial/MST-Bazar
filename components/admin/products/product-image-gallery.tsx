@@ -35,7 +35,7 @@ export function ProductImageGallery({ images }: { images: ProductImage[] }) {
           alt="Product image preview"
           fill
           className="object-contain p-2"
-          sizes="(min-width: 1024px) 280px, 50vw"
+          sizes="(min-width: 1024px) 352px, 100vw"
           priority
         />
         {active.isFeatured && (

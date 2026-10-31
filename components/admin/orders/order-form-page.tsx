@@ -1,6 +1,7 @@
 // src/components/admin/orders/order-form-page.tsx
 "use client";
 
+import { calculateOrderTotal } from "@/utils/calculate-order-total";
 import { createOrder } from "@/actions/admin/order-mutations";
 import { PageHeader } from "@/components/admin/layout/page-header";
 import { NumberInput } from "@/components/my-ui/number-input";
@@ -23,6 +24,7 @@ import {
 } from "@/validation/orders.validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Plus, Trash2 } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import {
@@ -46,6 +48,7 @@ interface OrderFormPageProps {
 
 export function OrderFormPage({ searchProducts }: OrderFormPageProps) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [isPending, setIsPending] = useState(false);
 
   const { handleSubmit, control, setValue, setError } =
@@ -85,16 +88,15 @@ export function OrderFormPage({ searchProducts }: OrderFormPageProps) {
   const shippingCost = useWatch({ control, name: "shippingCost" }) || 0;
   const discount = useWatch({ control, name: "discount" }) || 0;
 
-  // Calculate Subtotal
-  const subtotal = orderItems.reduce((acc, item) => {
-    const itemPrice = item.price || 0;
-    const itemQty = item.quantity || 1;
-    const itemDiscount = item.discountPercentage || 0;
-    const finalItemPrice = itemPrice - (itemPrice * itemDiscount) / 100;
-    return acc + finalItemPrice * itemQty;
-  }, 0);
-
-  const finalTotal = subtotal + shippingCost - discount;
+  const { itemsSubtotal: subtotal, finalTotal } = calculateOrderTotal({
+    orderItems: orderItems.map((item) => ({
+      price: item.price || 0,
+      quantity: item.quantity || 1,
+      discountPercentage: item.discountPercentage || 0,
+    })),
+    shippingCost,
+    discount,
+  });
 
   // Handle selection from your ProductSearchSelect component
   const handleProductSelect = (index: number, product: ProductSearchResult) => {
@@ -130,6 +132,7 @@ export function OrderFormPage({ searchProducts }: OrderFormPageProps) {
           type: "success",
           description: "Order placed successfully!",
         });
+        void queryClient.invalidateQueries();
         router.push("/admin/orders");
       } else {
         if (Array.isArray(result.error)) {
@@ -251,7 +254,7 @@ export function OrderFormPage({ searchProducts }: OrderFormPageProps) {
                 render={({ field, fieldState }) => (
                   <Field>
                     <FieldLabel htmlFor="emailAddress">
-                      Email Address *
+                      Email Address
                     </FieldLabel>
                     <Input
                       id="emailAddress"

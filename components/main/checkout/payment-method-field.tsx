@@ -107,10 +107,10 @@ export function PaymentMethodField() {
                           )}
                         </span>
                         <div>
-                          <span className="block text-xs font-bold text-foreground">
+                          <span className="block text-sm font-bold text-foreground">
                             {copy.title}
                           </span>
-                          <span className="block text-[11px] font-medium text-muted-foreground">
+                          <span className="block text-xs font-medium text-muted-foreground">
                             {copy.subtitle}
                           </span>
                         </div>

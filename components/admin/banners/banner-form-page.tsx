@@ -27,6 +27,7 @@ import {
 } from "@/validation/banner.validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, Path, useForm, useWatch } from "react-hook-form";
@@ -39,6 +40,7 @@ const PLACEMENT_OPTIONS = bannerPlacementEnum.options;
 
 export function BannerFormPage({ initialValues }: BannerFormPageProps) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [isPending, setIsPending] = useState(false);
   const isEditing = !!initialValues?.id;
 
@@ -72,8 +74,8 @@ export function BannerFormPage({ initialValues }: BannerFormPageProps) {
             ? "Banner updated successfully!"
             : "Banner created successfully!",
         });
+        void queryClient.invalidateQueries();
         router.back();
-        router.refresh();
       } else if (Array.isArray(result.error)) {
         result.error.forEach((err) => {
           setError(err.path.join(".") as Path<UpsertBannerInput>, {

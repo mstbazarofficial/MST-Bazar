@@ -1,16 +1,23 @@
-import { getAdminCategoryById } from "@/actions/admin/category-actions";
+"use client";
+
 import { CategoryFormPage } from "@/components/admin/categories/category-form-page";
-import { notFound } from "next/navigation";
+import { adminFetch } from "@/lib/admin-fetch";
+import { useQuery } from "@tanstack/react-query";
+import { notFound, useParams } from "next/navigation";
+import EditCategoryLoading from "./loading";
 
-export default async function EditCategoryPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  const category = await getAdminCategoryById(id);
+export default function EditCategoryPage() {
+  const { id } = useParams<{ id: string }>();
 
-  if (!category) notFound();
+  const { data: category } = useQuery({
+    queryKey: ["admin-category", id],
+    queryFn: () => adminFetch("category", { id }),
+    staleTime: 0,
+    gcTime: 0,
+  });
+
+  if (category === undefined) return <EditCategoryLoading />;
+  if (category === null) notFound();
 
   return (
     <CategoryFormPage

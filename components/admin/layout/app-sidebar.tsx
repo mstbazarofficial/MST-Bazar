@@ -27,7 +27,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
-import { navGroups } from "./nav-config";
+import { isNavItemActive, navGroups } from "./nav-config";
 
 function getInitials(name?: string | null, email?: string | null) {
   if (name?.trim()) {
@@ -80,15 +80,13 @@ export function AppSidebar() {
                 render={<Link href="/" onClick={handleNavClick} />}
                 className="w-full  gap-3 rounded-lg data-[state=open]:bg-sidebar-accent"
               >
-                <div className="flex size-8 bg-card shrink-0 items-center justify-center rounded-lg border">
-                  <Image
-                    src="/assets/fav-icon.png"
-                    alt="MST BAZAR Logo"
-                    width={32}
-                    height={32}
-                    className="size-8 rounded-lg p-1 bg-card object-contain"
-                  />
-                </div>
+                <Image
+                  src="/icon.svg"
+                  alt="MST BAZAR Logo"
+                  width={32}
+                  height={32}
+                  className="size-8 shrink-0 rounded-lg"
+                />
 
                 <div className="min-w-0 flex-1 text-left">
                   <p className="truncate font-heading text-sm font-bold leading-tight text-sidebar-foreground">
@@ -113,7 +111,7 @@ export function AppSidebar() {
             <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
             <SidebarMenu>
               {group.items.map((item) => {
-                const isActive = pathname === item.href;
+                const isActive = isNavItemActive(item.href, pathname);
                 return (
                   <SidebarMenuItem key={item.href}>
                     <SidebarMenuButton

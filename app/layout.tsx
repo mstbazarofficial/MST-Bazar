@@ -1,12 +1,13 @@
 import { NavigationProgressBar } from "@/components/my-ui/navigation-progress-bar";
 import { Toaster } from "@/components/ui/toast";
+import { SITE_CONFIG } from "@/constants/site";
 import { cn } from "@/lib/utils";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import { Suspense } from "react";
 import "./globals.css";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mstbazar.com";
+const siteUrl = SITE_CONFIG.url;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -30,9 +31,9 @@ export const metadata: Metadata = {
     locale: "en_BD",
     images: [
       {
-        url: "/assets/banner2.png",
-        width: 1536,
-        height: 1024,
+        url: SITE_CONFIG.ogImage,
+        width: 1200,
+        height: 630,
         alt: "Fresh grocery products delivered by MST Bazar",
       },
     ],
@@ -42,7 +43,7 @@ export const metadata: Metadata = {
     title: "MST Bazar | Fresh Grocery Products & Honey in Bangladesh",
     description:
       "Shop fresh grocery products, honey, black seed, oils, and combo deals from MST Bazar. Quality essentials delivered across Bangladesh.",
-    images: ["/assets/banner.png"],
+    images: [SITE_CONFIG.ogImage],
     site: "@mstbazar",
     creator: "@mstbazar",
   },
@@ -57,6 +58,10 @@ export const metadata: Metadata = {
       "x-default": "./",
     },
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0ba451",
 };
 
 const structuredData = {

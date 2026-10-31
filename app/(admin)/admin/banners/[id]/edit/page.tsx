@@ -1,17 +1,23 @@
-// app/admin/banners/[id]/edit/page.tsx
-import { getAdminBannerById } from "@/actions/admin/banner-actions";
+"use client";
+
 import { BannerFormPage } from "@/components/admin/banners/banner-form-page";
-import { notFound } from "next/navigation";
+import { adminFetch } from "@/lib/admin-fetch";
+import { useQuery } from "@tanstack/react-query";
+import { notFound, useParams } from "next/navigation";
+import EditBannerLoading from "./loading";
 
-export default async function EditBannerPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  const banner = await getAdminBannerById(id);
+export default function EditBannerPage() {
+  const { id } = useParams<{ id: string }>();
 
-  if (!banner) notFound();
+  const { data: banner } = useQuery({
+    queryKey: ["admin-banner", id],
+    queryFn: () => adminFetch("banner", { id }),
+    staleTime: 0,
+    gcTime: 0,
+  });
+
+  if (banner === undefined) return <EditBannerLoading />;
+  if (banner === null) notFound();
 
   return <BannerFormPage initialValues={banner} />;
 }

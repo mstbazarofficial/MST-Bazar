@@ -1,4 +1,5 @@
 // components/main/product/product-info.tsx
+import { getUnitPrice } from "@/utils/calculate-order-total";
 import {
   Leaf,
   ShieldCheck,
@@ -21,6 +22,7 @@ type ProductInfoProduct = {
   price: number;
   unit: string | null;
   brand: string | null;
+  isAvailable: boolean;
   category: {
     name: string;
     slug: string;
@@ -55,9 +57,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
   const hasDiscount = discountPercentage > 0;
 
   // Calculate the discounted selling price from base price
-  const finalPrice = hasDiscount
-    ? Math.round(price * (1 - discountPercentage / 100))
-    : price;
+  const finalPrice = getUnitPrice(price, discountPercentage);
 
   const originalPrice = price;
 

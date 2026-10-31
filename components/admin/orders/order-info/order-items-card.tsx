@@ -1,5 +1,6 @@
 "use client";
 
+import { getUnitPrice } from "@/utils/calculate-order-total";
 import {
   DeleteDialog,
   type DeleteDialogActionType,
@@ -49,15 +50,15 @@ export function OrderItemsCard({
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-3">
+      <CardContent className="divide-y divide-border">
         {items.map((item) => {
-          const unitPrice = item.price * (1 - item.discountPercentage / 100);
+          const unitPrice = getUnitPrice(item.price, item.discountPercentage);
           const total = unitPrice * item.quantity;
 
           return (
             <div
               key={item.id}
-              className="flex items-start gap-3.5 rounded-lg border border-border p-3.5 transition-colors hover:border-border/80"
+              className="flex items-start gap-3.5 py-3.5 first:pt-0 last:pb-0"
             >
               {/* Product Image Thumbnail (64px) */}
               <div className="relative size-16 shrink-0 overflow-hidden rounded-md border border-border bg-muted/50">

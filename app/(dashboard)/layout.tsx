@@ -24,11 +24,11 @@ export default function DashboardLayout({
   return (
     <QueryProvider>
       <DashboardHeader />
-      <div className="min-h-[calc(100vh-4rem)] bg-dashboard-background">
-        <div className="max-w-360 w-full mx-auto flex gap-6 px-4 py-6 md:px-6">
+      <div className="min-h-[calc(100vh-4rem)] bg-neutral-100">
+        <div className="max-w-360 w-full mx-auto flex gap-6 px-4 py-6 sm:px-6 lg:py-8">
           {/* Desktop sidebar */}
           <aside className="hidden w-64 shrink-0 lg:block">
-            <div className="sticky top-22">
+            <div className="sticky top-24">
               <DashboardNav />
             </div>
           </aside>

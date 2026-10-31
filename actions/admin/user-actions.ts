@@ -2,6 +2,7 @@
 import { Role } from "@/generated/prisma/enums";
 import { UserWhereInput } from "@/generated/prisma/models";
 import { requireRole } from "@/lib/admin-auth";
+import { getDhakaMonthRange } from "@/lib/dhaka-time";
 import { prisma } from "@/lib/prisma";
 
 export async function searchUsersForAdmin(query: string) {
@@ -56,21 +57,7 @@ export async function getAdminUsers(filters: AdminUserFilters) {
   await requireRole(["ADMIN", "MODERATOR"]);
 
   // 1. Calculate Date Range if month filter is provided
-  let startDate: Date | undefined;
-  let endDate: Date | undefined;
-
-  if (filters.month) {
-    const [yearStr, monthStr] = filters.month.split("-");
-    const year = parseInt(yearStr, 10);
-    const month = parseInt(monthStr, 10);
-
-    if (!isNaN(year) && !isNaN(month)) {
-      // First day of the month 00:00:00
-      startDate = new Date(year, month - 1, 1);
-      // Last day of the month 23:59:59
-      endDate = new Date(year, month, 0, 23, 59, 59, 999);
-    }
-  }
+  const monthRange = getDhakaMonthRange(filters.month);
   const page = filters.page && filters.page > 0 ? filters.page : 1;
 
   // 2. Build Where Clauses
@@ -86,13 +73,7 @@ export async function getAdminUsers(filters: AdminUserFilters) {
       filters.role !== "all" && {
         role: filters.role as Role,
       }),
-    ...(startDate &&
-      endDate && {
-        createdAt: {
-          gte: startDate,
-          lte: endDate,
-        },
-      }),
+    ...(monthRange && { createdAt: monthRange }),
   };
 
   // 3. Query Prisma Transaction
@@ -114,3 +95,82 @@ export async function getAdminUsers(filters: AdminUserFilters) {
   };
 }
 export type AdminUsersResult = Awaited<ReturnType<typeof getAdminUsers>>;
+
+export async function getAdminUserDetail(id: string) {
+  await requireRole(["ADMIN", "MODERATOR"]);
+
+  const now = new Date();
+
+  return prisma.user.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      image: true,
+      role: true,
+      emailVerified: true,
+      phoneNumber: true,
+      whatsappNumber: true,
+      fullAddress: true,
+      createdAt: true,
+      updatedAt: true,
+      banned: true,
+      banReason: true,
+      banExpires: true,
+
+      orders: {
+        orderBy: { orderDate: "desc" },
+        select: {
+          id: true,
+          orderId: true,
+          status: true,
+          orderDate: true,
+          shippingCost: true,
+          discount: true,
+          orderItems: {
+            select: {
+              price: true,
+              quantity: true,
+              discountPercentage: true,
+            },
+          },
+        },
+      },
+
+      cart: {
+        select: {
+          items: {
+            select: {
+              id: true,
+              quantity: true,
+              product: {
+                select: {
+                  id: true,
+                  title: true,
+                  price: true,
+                  discountPercentage: true,
+                  images: {
+                    select: { url: true, isFeatured: true },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+
+      sessions: {
+        where: { expiresAt: { gt: now } },
+        orderBy: { createdAt: "desc" },
+        select: {
+          id: true,
+          ipAddress: true,
+          userAgent: true,
+          createdAt: true,
+          expiresAt: true,
+        },
+      },
+    },
+  });
+}

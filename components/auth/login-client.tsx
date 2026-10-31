@@ -13,6 +13,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth-client";
+import { getSafeRedirectPath } from "@/lib/safe-redirect";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   AlertCircle,
@@ -27,10 +28,11 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
+import * as z from "zod";
+import { getErrorMessage } from "@/utils/get-error-message";
 const loginSchema = z.object({
   email: z.email("Please enter a valid email address"),
   password: z.string().min(1, "Password is required"),
@@ -41,6 +43,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginPageClient() {
   const router = useRouter();
+  const redirectTo = getSafeRedirectPath(useSearchParams().get("redirect"));
   const [showPassword, setShowPassword] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const [unverifiedEmail, setUnverifiedEmail] = useState<string | null>(null);
@@ -89,12 +92,12 @@ export default function LoginPageClient() {
           setServerError(authError.message || "Invalid email or password.");
         }
       } else {
-        router.push("/");
+        router.push(redirectTo);
         router.refresh();
       }
-    } catch (err: any) {
+    } catch (err) {
       setServerError(
-        err?.message || "An unexpected error occurred. Please try again.",
+        getErrorMessage(err, "An unexpected error occurred. Please try again."),
       );
     }
   };
@@ -107,11 +110,11 @@ export default function LoginPageClient() {
     try {
       await authClient.sendVerificationEmail({
         email: unverifiedEmail,
-        callbackURL: "/",
+        callbackURL: redirectTo,
       });
       setResendSuccess(true);
-    } catch (err: any) {
-      setServerError(err?.message || "Failed to resend verification email.");
+    } catch (err) {
+      setServerError(getErrorMessage(err, "Failed to resend verification email."));
     } finally {
       setResending(false);
     }
@@ -302,9 +305,13 @@ export default function LoginPageClient() {
 
               {/* Footer Link */}
               <div className="text-center text-sm text-muted-foreground pt-1">
-                Don't have an account?{" "}
+                Don&apos;t have an account?{" "}
                 <Link
-                  href="/sign-up"
+                  href={
+                    redirectTo === "/"
+                      ? "/sign-up"
+                      : `/sign-up?redirect=${encodeURIComponent(redirectTo)}`
+                  }
                   className="text-primary font-semibold hover:underline"
                 >
                   Create Account

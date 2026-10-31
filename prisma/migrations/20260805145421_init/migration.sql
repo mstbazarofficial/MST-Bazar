@@ -1,5 +1,11 @@
+-- CreateSchema
+CREATE SCHEMA IF NOT EXISTS "public";
+
 -- CreateEnum
 CREATE TYPE "Role" AS ENUM ('ADMIN', 'CUSTOMER', 'MODERATOR');
+
+-- CreateEnum
+CREATE TYPE "BannerPlacement" AS ENUM ('HERO_SLIDER', 'HERO_SIDE_BANNER');
 
 -- CreateEnum
 CREATE TYPE "OrderStatus" AS ENUM ('PENDING', 'CONFIRMED', 'CANCELLED', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'RETURNED');
@@ -59,6 +65,7 @@ CREATE TABLE "Session" (
     "userAgent" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "impersonatedBy" TEXT,
 
     CONSTRAINT "Session_pkey" PRIMARY KEY ("id")
 );
@@ -76,6 +83,21 @@ CREATE TABLE "Verification" (
 );
 
 -- CreateTable
+CREATE TABLE "Banner" (
+    "id" TEXT NOT NULL,
+    "title" TEXT,
+    "imageUrl" TEXT NOT NULL,
+    "linkUrl" TEXT,
+    "placement" "BannerPlacement" NOT NULL,
+    "order" INTEGER NOT NULL DEFAULT 1,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Banner_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Product" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
@@ -90,30 +112,14 @@ CREATE TABLE "Product" (
     "isAvailable" BOOLEAN NOT NULL DEFAULT true,
     "isBestDeal" BOOLEAN NOT NULL DEFAULT false,
     "isPopular" BOOLEAN NOT NULL DEFAULT false,
+    "isCombo" BOOLEAN NOT NULL DEFAULT false,
+    "isTopSelling" BOOLEAN NOT NULL DEFAULT false,
     "categoryId" TEXT NOT NULL,
     "priority" INTEGER NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Product_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "Campaign" (
-    "id" TEXT NOT NULL,
-    "slug" TEXT NOT NULL,
-    "headline" TEXT NOT NULL,
-    "campaignPrice" DOUBLE PRECISION NOT NULL,
-    "deliveryCharge" DOUBLE PRECISION NOT NULL DEFAULT 0,
-    "videoUrl" TEXT,
-    "description" TEXT,
-    "isActive" BOOLEAN NOT NULL DEFAULT false,
-    "endDate" TIMESTAMP(3),
-    "productId" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "Campaign_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -227,6 +233,7 @@ CREATE TABLE "ContactSubmission" (
     "email" TEXT NOT NULL,
     "phone" TEXT NOT NULL,
     "message" TEXT NOT NULL,
+    "orderId" TEXT,
     "status" "ContactStatus" NOT NULL DEFAULT 'PENDING',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -256,13 +263,13 @@ CREATE INDEX "Session_token_idx" ON "Session"("token");
 CREATE INDEX "Verification_identifier_idx" ON "Verification"("identifier");
 
 -- CreateIndex
+CREATE INDEX "Banner_placement_isActive_idx" ON "Banner"("placement", "isActive");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Product_slug_key" ON "Product"("slug");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Product_sku_key" ON "Product"("sku");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Campaign_slug_key" ON "Campaign"("slug");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Cart_userId_key" ON "Cart"("userId");
@@ -284,9 +291,6 @@ ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId"
 
 -- AddForeignKey
 ALTER TABLE "Product" ADD CONSTRAINT "Product_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Campaign" ADD CONSTRAINT "Campaign_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Cart" ADD CONSTRAINT "Cart_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

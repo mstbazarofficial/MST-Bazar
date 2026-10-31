@@ -78,10 +78,10 @@ export function DeliveryOptionsField() {
                           )}
                         </span>
                         <div>
-                          <span className="block text-xs font-bold text-foreground">
+                          <span className="block text-sm font-bold text-foreground">
                             {OPTION_COPY[option].title}
                           </span>
-                          <span className="block text-[11px] font-medium text-muted-foreground">
+                          <span className="block text-xs font-medium text-muted-foreground">
                             {OPTION_COPY[option].description}
                           </span>
                         </div>

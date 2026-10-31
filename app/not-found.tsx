@@ -16,19 +16,19 @@ export default function NotFound() {
       icon: ShoppingBag,
       title: "Browse Products",
       desc: "Find your needs",
-      href: "/categories",
+      href: "/products",
     },
     {
       icon: Tag,
       title: "Latest Offers",
       desc: "Grab best deals",
-      href: "/offers",
+      href: "/products/best-deals",
     },
     {
       icon: Truck,
       title: "Fast Delivery",
       desc: "Across Bangladesh",
-      href: "/shipping-info",
+      href: "/track-order",
     },
   ];
 
@@ -37,7 +37,14 @@ export default function NotFound() {
       {/* ----------------- Top Header Bar ----------------- */}
       <header className="w-full max-w-7xl mx-auto px-4 sm:px-8 py-5 flex items-center justify-between z-20">
         {/* Brand Logo */}
-        <Link href="/" className="flex items-center gap-1.5 group"></Link>
+        <Link href="/" className="flex items-center gap-1.5 group">
+          <Image
+            src="/assets/logo-vertical.png"
+            alt="MST Bazar"
+            width={155}
+            height={40}
+          />
+        </Link>
 
         {/* Back to Home Link */}
         <Link
@@ -55,7 +62,7 @@ export default function NotFound() {
           {/* If using static 3D basket graphic: */}
           <div className="relative w-full h-full flex items-center justify-center">
             <Image
-              src="/assets/404.png"
+              src="/assets/404.webp"
               alt="404 Basket"
               width={600}
               height={600}
@@ -78,24 +85,23 @@ export default function NotFound() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center gap-3.5 w-full max-w-xs sm:max-w-none justify-center mb-12">
-            <Button className="w-full sm:w-auto min-w-47.5 h-11 bg-[#25732D] hover:bg-[#1E5D24] text-white font-medium shadow-sm transition-all rounded-lg">
-              <Link href="/" className="flex items-center justify-center gap-2">
-                <Home className="w-4 h-4" />
-                <span>Back to Home</span>
-              </Link>
+            <Button
+              render={<Link href="/" />}
+              nativeButton={false}
+              className="w-full sm:w-auto min-w-47.5 h-11 bg-[#25732D] hover:bg-[#1E5D24] text-white font-medium shadow-sm transition-all rounded-lg"
+            >
+              <Home className="w-4 h-4" />
+              <span>Back to Home</span>
             </Button>
 
             <Button
+              render={<Link href="/products" />}
+              nativeButton={false}
               variant="outline"
               className="w-full sm:w-auto min-w-47.5 h-11 border-[#25732D] text-[#25732D] hover:bg-[#F2F8F1] hover:text-[#1E5D24] font-medium transition-all rounded-lg"
             >
-              <Link
-                href="/shop"
-                className="flex items-center justify-center gap-2"
-              >
-                <ShoppingBag className="w-4 h-4" />
-                <span>Continue Shopping</span>
-              </Link>
+              <ShoppingBag className="w-4 h-4" />
+              <span>Continue Shopping</span>
             </Button>
           </div>
 

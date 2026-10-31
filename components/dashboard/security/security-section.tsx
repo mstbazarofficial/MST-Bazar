@@ -2,20 +2,15 @@
 
 import { authClient } from "@/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Eye,
-  EyeOff,
-  KeyRound,
-  Loader2,
-  LockKeyhole,
-  Mail,
-  RotateCcw,
-  ShieldCheck,
-} from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import {
+  PageHeading,
+  Panel,
+} from "@/components/dashboard/layout/dashboard-panel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -52,14 +47,14 @@ function PasswordInput({
         id={id}
         type={show ? "text" : "password"}
         placeholder={placeholder}
-        className="pr-10 rounded-xl"
+        className="pr-10"
         {...props}
       />
       <button
         type="button"
         onClick={() => setShow((s) => !s)}
         className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-        tabIndex={-1}
+        aria-label={show ? "Hide password" : "Show password"}
       >
         {!show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
       </button>
@@ -109,77 +104,57 @@ function ChangePasswordCard() {
   }
 
   return (
-    <div className="bg-card border border-border rounded-2xl shadow-xs overflow-hidden">
-      {/* Header */}
-      <div className="flex items-center gap-3 px-5 py-4 border-b border-border/60 bg-muted/30">
-        <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-          <LockKeyhole className="h-4 w-4 text-primary" />
-        </div>
-        <div>
-          <h2 className="text-sm font-bold text-foreground">Change Password</h2>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            Choose a strong password you haven't used before.
-          </p>
-        </div>
-      </div>
-
-      {/* Form */}
-      <form onSubmit={handleSubmit(onSubmit)} className="px-5 py-5 space-y-4">
+    <Panel
+      title="Change password"
+      description="Other devices are signed out after you change it."
+    >
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="space-y-4 border-t border-border px-5 py-5"
+      >
         <div className="space-y-1.5">
-          <Label htmlFor="currentPassword" className="text-xs font-semibold">
-            Current Password
+          <Label htmlFor="currentPassword" className="text-sm font-medium">
+            Current password
           </Label>
           <PasswordInput
             id="currentPassword"
-            placeholder="Enter your current password"
+            autoComplete="current-password"
             {...register("currentPassword")}
           />
           <FieldError message={errors.currentPassword?.message} />
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="newPassword" className="text-xs font-semibold">
-            New Password
+          <Label htmlFor="newPassword" className="text-sm font-medium">
+            New password
           </Label>
           <PasswordInput
             id="newPassword"
             placeholder="At least 8 characters"
+            autoComplete="new-password"
             {...register("newPassword")}
           />
           <FieldError message={errors.newPassword?.message} />
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="confirmPassword" className="text-xs font-semibold">
-            Confirm New Password
+          <Label htmlFor="confirmPassword" className="text-sm font-medium">
+            Confirm new password
           </Label>
           <PasswordInput
             id="confirmPassword"
-            placeholder="Repeat your new password"
+            autoComplete="new-password"
             {...register("confirmPassword")}
           />
           <FieldError message={errors.confirmPassword?.message} />
         </div>
 
-        <Button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full rounded-xl font-semibold"
-        >
-          {isSubmitting ? (
-            <>
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-              Updating…
-            </>
-          ) : (
-            <>
-              <KeyRound className="h-4 w-4 mr-2" />
-              Update Password
-            </>
-          )}
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
+          {isSubmitting ? "Updating…" : "Update password"}
         </Button>
       </form>
-    </div>
+    </Panel>
   );
 }
 
@@ -210,82 +185,26 @@ function ForgotPasswordCard({ email }: { email: string }) {
   }
 
   return (
-    <div className="bg-card border border-border rounded-2xl shadow-xs overflow-hidden">
-      {/* Header */}
-      <div className="flex items-center gap-3 px-5 py-4 border-b border-border/60 bg-muted/30">
-        <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-          <RotateCcw className="h-4 w-4 text-primary" />
-        </div>
-        <div>
-          <h2 className="text-sm font-bold text-foreground">
-            Forgot Password?
-          </h2>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            We'll send a reset link to your email address.
-          </p>
-        </div>
-      </div>
-
-      <div className="px-5 py-5 space-y-4">
-        {/* Email display */}
-        <div className="flex items-center gap-3 px-3.5 py-3 rounded-xl bg-muted/50 border border-border/60">
-          <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
-          <span className="text-sm font-medium text-foreground truncate">
-            {email}
-          </span>
-        </div>
-
-        {sent ? (
-          /* Success state */
-          <div className="rounded-xl bg-emerald-50 border border-emerald-200 px-4 py-3.5 space-y-1">
-            <div className="flex items-center gap-2">
-              <ShieldCheck className="h-4 w-4 text-emerald-600 shrink-0" />
-              <p className="text-sm font-semibold text-emerald-700">
-                Reset link sent!
-              </p>
-            </div>
-            <p className="text-xs text-emerald-600 leading-relaxed pl-6">
-              Check your inbox at <span className="font-semibold">{email}</span>
-              . If you don't see it within a few minutes, check your{" "}
-              <span className="font-semibold">spam or junk folder</span>.
-            </p>
-            <button
-              onClick={() => setSent(false)}
-              className="text-[11px] text-emerald-600 underline underline-offset-2 pl-6 mt-1 hover:text-emerald-700 transition-colors"
-            >
-              Didn't receive it? Send again
-            </button>
-          </div>
-        ) : (
-          <Button
-            onClick={handleReset}
-            disabled={loading}
-            variant="outline"
-            className="w-full rounded-xl font-semibold"
-          >
-            {loading ? (
-              <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Sending…
-              </>
-            ) : (
-              <>
-                <Mail className="h-4 w-4 mr-2" />
-                Send Reset Link
-              </>
-            )}
-          </Button>
-        )}
-
-        {!sent && (
-          <p className="text-[11px] text-muted-foreground text-center leading-relaxed">
-            The link will arrive at{" "}
-            <span className="font-semibold text-foreground">{email}</span>.
-            Check your spam folder if it doesn't appear shortly.
-          </p>
-        )}
-      </div>
-    </div>
+    <Panel
+      title="Forgot your password?"
+      description={
+        sent
+          ? `Reset link sent to ${email}. Check your spam folder if you don't see it.`
+          : `We'll send a reset link to ${email}.`
+      }
+      action={
+        <Button
+          onClick={handleReset}
+          disabled={loading}
+          variant="outline"
+          size="sm"
+          className="shrink-0"
+        >
+          {loading && <Loader2 className="h-4 w-4 animate-spin" />}
+          {sent ? "Send again" : "Send link"}
+        </Button>
+      }
+    />
   );
 }
 
@@ -298,15 +217,15 @@ interface SecuritySectionProps {
 export function SecuritySection({ email }: SecuritySectionProps) {
   return (
     <div className="space-y-5">
-      <div>
-        <h1 className="text-xl font-bold text-foreground">Security</h1>
-        <p className="text-sm text-muted-foreground mt-0.5">
-          Manage your password and account access.
-        </p>
-      </div>
+      <PageHeading
+        title="Security"
+        description="Manage your password and account access."
+      />
 
-      <ChangePasswordCard />
-      <ForgotPasswordCard email={email} />
+      <div className="grid grid-cols-1 items-start gap-5 xl:grid-cols-[minmax(0,1fr)_24rem]">
+        <ChangePasswordCard />
+        <ForgotPasswordCard email={email} />
+      </div>
     </div>
   );
 }

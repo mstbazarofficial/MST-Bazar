@@ -42,8 +42,28 @@ const passwordSchema = z.object({
 
 export type EditMode = "general" | "role" | "password" | null;
 
+type EditableUser = {
+  id: string;
+  name?: string | null;
+  image?: string | null;
+  phoneNumber?: string | null;
+  whatsappNumber?: string | null;
+  fullAddress?: string | null;
+  role?: Role | null;
+};
+
+type UserFormValues = {
+  name: string;
+  image: string;
+  phoneNumber: string;
+  whatsappNumber: string;
+  fullAddress: string;
+  role: Role;
+  password: string;
+};
+
 interface UpdateUserModalProps {
-  user: any; // Ideally use your User type here
+  user: EditableUser;
   editMode: EditMode;
   onClose: () => void;
 }
@@ -78,6 +98,12 @@ export function UpdateUserModal({
     },
   });
 
+  const [syncedEditMode, setSyncedEditMode] = useState(editMode);
+  if (editMode !== syncedEditMode) {
+    setSyncedEditMode(editMode);
+    setFormError(null);
+  }
+
   // Reset form when modal opens with new user data
   useEffect(() => {
     if (editMode) {
@@ -90,12 +116,11 @@ export function UpdateUserModal({
         role: user.role || Role.CUSTOMER,
         password: "",
       });
-      setFormError(null);
     }
   }, [editMode, user, form]);
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async (values: any) => {
+    mutationFn: async (values: UserFormValues) => {
       if (editMode === "general") {
         const { error } = await authClient.admin.updateUser({
           userId: user.id,
@@ -168,7 +193,7 @@ export function UpdateUserModal({
     >
       <form
         id="update-user-form"
-        onSubmit={form.handleSubmit((data) => mutate(data))}
+        onSubmit={form.handleSubmit((data) => mutate(data as UserFormValues))}
         className="space-y-5"
       >
         {/* GENERAL INFO RENDER */}

@@ -1,8 +1,10 @@
+import "server-only";
+
 import crypto from "crypto";
 
 const PIXEL_ID = process.env.NEXT_PUBLIC_FB_PIXEL_ID!;
-const ACCESS_TOKEN = process.env.NEXT_PUBLIC_FB_CAPI_ACCESS_TOKEN!;
-const TEST_EVENT_CODE = process.env.NEXT_PUBLIC_FB_TEST_EVENT_CODE; // set only while testing in Events Manager
+const ACCESS_TOKEN = process.env.FB_CAPI_ACCESS_TOKEN!;
+const TEST_EVENT_CODE = process.env.FB_TEST_EVENT_CODE; // set only while testing in Events Manager
 const GRAPH_API_VERSION = "v26.0";
 
 function sha256(value: string) {

@@ -1,9 +1,10 @@
+import { normalizeBdPhone } from "@/utils/phone";
 import { z } from "zod";
 
 /**
- * Bangladeshi mobile numbers: 11 digits, starting 013-019.
+ * Bangladeshi mobile numbers after normalizeBdPhone: 11 digits, starting 013-019.
  */
-const BD_PHONE_REGEX = /^(?:01[3-9]\d{8}|\+8801[3-9]\d{8})$/;
+const BD_PHONE_REGEX = /^01[3-9]\d{8}$/;
 
 export const PAYMENT_METHODS = ["cod", "bkash", "nagad", "rocket"] as const;
 export const DELIVERY_OPTIONS = ["inside", "outside"] as const;
@@ -19,22 +20,27 @@ export const checkoutFormSchema = z
       .min(3, "Full name must be at least 3 characters")
       .max(80, "Full name looks too long"),
 
-    email: z.email("Enter a valid email address"),
+    email: z.union([z.literal(""), z.email("Enter a valid email address")]),
 
     phone: z
       .string()
-      .trim()
-      .min(1, "Phone number is required")
-      .regex(BD_PHONE_REGEX, "Enter a valid Bangladeshi phone number "),
-
-    whatsapp: z
-      .union([
-        z.literal(""),
+      .transform(normalizeBdPhone)
+      .pipe(
         z
           .string()
-          .trim()
-          .regex(BD_PHONE_REGEX, "Enter a valid WhatsApp number"),
-      ])
+          .min(1, "Phone number is required")
+          .regex(BD_PHONE_REGEX, "Enter a valid Bangladeshi phone number"),
+      ),
+
+    whatsapp: z
+      .string()
+      .transform(normalizeBdPhone)
+      .pipe(
+        z.union([
+          z.literal(""),
+          z.string().regex(BD_PHONE_REGEX, "Enter a valid WhatsApp number"),
+        ]),
+      )
       .optional(),
 
     address: z
@@ -52,7 +58,7 @@ export const checkoutFormSchema = z
     }),
 
     // Optional by default in the schema object, but required during superRefine for manual payments
-    paymentPhone: z.string().trim().optional().or(z.literal("")),
+    paymentPhone: z.string().transform(normalizeBdPhone).optional(),
     transactionId: z.string().trim().optional().or(z.literal("")),
   })
   .superRefine((data, ctx) => {

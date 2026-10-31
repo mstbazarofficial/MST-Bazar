@@ -1,6 +1,7 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
+import { getDhakaMonthOptions } from "@/lib/dhaka-time";
 import { ContactStatus } from "@/generated/prisma/enums";
 import { ChevronDown, Search } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -11,31 +12,6 @@ export interface ContactFilters {
   month?: string; // e.g. "2026-06"
 }
 
-// Generates an array of past months (e.g., "June 2026")
-// Generates an array of past months (e.g., "June 2026")
-function getMonthOptions(monthsToGenerate = 12) {
-  const options = [];
-  const now = new Date();
-
-  for (let i = 0; i < monthsToGenerate; i++) {
-    // Setting day to 1 avoids end-of-month overflow bugs (e.g. Feb 31 -> Mar 3)
-    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-    const monthIndex = d.getMonth();
-    const year = d.getFullYear();
-
-    // Value format: YYYY-MM
-    const value = `${year}-${String(monthIndex + 1).padStart(2, "0")}`;
-    // Label format: Month YYYY (e.g., "June 2026")
-    const label = d.toLocaleString("default", {
-      month: "long",
-      year: "numeric",
-    });
-
-    options.push({ label, value });
-  }
-
-  return options;
-}
 export function ContactFiltersBar({
   filters,
   onChange,
@@ -49,7 +25,7 @@ export function ContactFiltersBar({
   );
 
   // Generate date options once on mount
-  const monthOptions = useMemo(() => getMonthOptions(12), []);
+  const monthOptions = useMemo(() => getDhakaMonthOptions(12), []);
 
   // Dynamically create options from Prisma's enum
   const statusOptions = useMemo(() => {

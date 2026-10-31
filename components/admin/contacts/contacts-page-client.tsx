@@ -1,38 +1,27 @@
 "use client";
 
 import {
-  AdminContactsResult,
-  getAdminContacts,
-} from "@/actions/admin/contact-actions";
-import {
   deleteContact,
   updateContactStatus,
 } from "@/actions/admin/contact-mutations";
+import AdminContactsSkeleton from "@/app/(admin)/admin/contacts/skeleton";
+import { EmptyState } from "@/components/admin/layout/empty-state";
 import { PageHeader } from "@/components/admin/layout/page-header";
 import { DataTablePagination } from "@/components/my-ui/data-table-pagination";
 import { ContactStatus } from "@/generated/prisma/enums";
+import { adminFetch } from "@/lib/admin-fetch";
 import {
   keepPreviousData,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import { ContactRound } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useMemo } from "react";
 import { ContactCard } from "./contact-card";
 import { ContactFiltersBar } from "./contact-filters-bar";
 
-export function ContactsPageClient({
-  initialData,
-  initialFilters,
-}: {
-  initialData: AdminContactsResult;
-  initialFilters: {
-    search?: string;
-    status?: string;
-    month?: string;
-    page: number;
-  };
-}) {
+export function ContactsPageClient() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
@@ -47,16 +36,9 @@ export function ContactsPageClient({
     [searchParams],
   );
 
-  const isInitial =
-    filters.search === (initialFilters.search ?? "") &&
-    filters.status === (initialFilters.status ?? "") &&
-    filters.month === (initialFilters.month ?? "") &&
-    filters.page === initialFilters.page;
-
   const { data, isFetching } = useQuery({
     queryKey: ["admin-contacts", filters],
-    queryFn: () => getAdminContacts(filters),
-    initialData: isInitial ? initialData : undefined,
+    queryFn: () => adminFetch("contacts", filters),
     placeholderData: keepPreviousData,
   });
 
@@ -85,7 +67,9 @@ export function ContactsPageClient({
     return res;
   };
 
-  const contacts = data?.contacts ?? [];
+  if (!data) return <AdminContactsSkeleton />;
+
+  const contacts = data.contacts;
 
   return (
     <>
@@ -110,9 +94,11 @@ export function ContactsPageClient({
             ))}
           </div>
         ) : (
-          <div className="flex h-48 items-center justify-center rounded-lg border border-dashed bg-background text-muted-foreground">
-            No contact submissions found.
-          </div>
+          <EmptyState
+            icon={ContactRound}
+            title="No contact submissions found."
+            className="rounded-lg border bg-card"
+          />
         )}
 
         <DataTablePagination

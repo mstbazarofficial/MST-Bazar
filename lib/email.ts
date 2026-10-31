@@ -10,7 +10,7 @@ export type SendEmailPayload = {
   subject?: string;
   htmlContent?: string;
   templateId?: number;
-  params?: Record<string, any>;
+  params?: Record<string, unknown>;
 };
 
 /**
@@ -27,7 +27,7 @@ export async function sendEmail({
   const recipients: EmailRecipient[] =
     typeof to === "string" ? [{ email: to }] : to;
 
-  const payload: Record<string, any> = {
+  const payload: Record<string, unknown> = {
     sender: {
       name: process.env.SENDER_NAME,
       email: process.env.SENDER_EMAIL,

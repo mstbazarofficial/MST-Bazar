@@ -11,6 +11,9 @@ WORKDIR /app
 
 COPY package.json package-lock.json ./
 
+# Match the npm that writes package-lock.json locally; npm 10 rejects its lockfiles
+RUN npm install -g npm@11.6.2
+
 RUN npm ci --legacy-peer-deps
 
 # -------------------------

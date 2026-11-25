@@ -37,6 +37,18 @@ npm install
 npx prisma generate
 ```
 
+# Database Connection
+
+The database is PostgreSQL on the VPS and only listens on the server itself. To reach it from your PC, keep an SSH tunnel open in a separate terminal while you work:
+
+```bash
+ssh -N -L 5433:127.0.0.1:5432 root@77.37.47.219
+```
+
+Your local `.env` points `DATABASE_URL` and `DIRECT_URL` at `127.0.0.1:5433`, which is the live database through that tunnel.
+
+Backups run daily at 03:30 (server time) via `/usr/local/bin/backup-mstbazar`: 14 days are kept in `/root/backups/daily` on the server, and every dump is also uploaded to the Cloudflare R2 bucket set in the server `.env`. To restore one: `pg_restore --clean --no-owner -d "$(cat /root/.mstbazar-db-url)" <file.dump>`.
+
 # Database Changes
 
 `.env` points at the live database, so never run `prisma db push`, `prisma migrate dev` or `prisma migrate reset` with it. They can change the schema without a migration or wipe data.

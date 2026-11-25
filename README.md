@@ -39,19 +39,20 @@ npx prisma generate
 
 # Database Connection
 
-The database is PostgreSQL on the VPS and only listens on the server itself. To reach it from your PC, keep an SSH tunnel open in a separate terminal while you work:
+- **Live site:** PostgreSQL on the VPS, which only listens on the server itself. The server `.env` points at `127.0.0.1:5432`.
+- **Local development:** your local `.env` points at Neon, a separate copy of the data taken on 2026-11-25. Changes there never reach the live site.
+
+To look at the live database from your PC, open an SSH tunnel in a separate terminal and connect to `127.0.0.1:5433` with the server's credentials:
 
 ```bash
 ssh -N -L 5433:127.0.0.1:5432 root@77.37.47.219
 ```
 
-Your local `.env` points `DATABASE_URL` and `DIRECT_URL` at `127.0.0.1:5433`, which is the live database through that tunnel.
-
 Backups run daily at 03:30 (server time) via `/usr/local/bin/backup-mstbazar`: 14 days are kept in `/root/backups/daily` on the server, and every dump is also uploaded to the Cloudflare R2 bucket set in the server `.env`. To restore one: `pg_restore --clean --no-owner -d "$(cat /root/.mstbazar-db-url)" <file.dump>`.
 
 # Database Changes
 
-`.env` points at the live database, so never run `prisma db push`, `prisma migrate dev` or `prisma migrate reset` with it. They can change the schema without a migration or wipe data.
+Never run `prisma db push`, `prisma migrate dev` or `prisma migrate reset` against a database that holds real data. They can change the schema without a migration or wipe data.
 
 ```bash
 # 1. Edit prisma/schema.prisma, then create the migration folder (use today's date and a short name)
@@ -62,11 +63,11 @@ npx prisma migrate diff --from-config-datasource --to-schema prisma/schema.prism
 
 # 3. Read the SQL. Stop if it drops a column or table you meant to keep
 
-# 4. Apply it before deploying the code that needs it
+# 4. Apply it to your local (Neon) database and test
 npm run db:deploy
-
-# 5. Confirm, then commit and deploy
 npm run db:status
+
+# 5. Commit and push, then run ./deploy.sh on the server: it applies the migration to the live database before building
 ```
 
 # Deploying (VPS)

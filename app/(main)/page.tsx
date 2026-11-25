@@ -1,39 +1,13 @@
 import { CategorySection } from "@/components/main/home/category-section";
 import { HeroSection2 } from "@/components/main/home/hero-section-2";
 import { TopSellingSection } from "@/components/main/home/top-selling-section";
-import {
-  getActiveBanners,
-  getAllCategories,
-  getAllProducts,
-} from "@/lib/data/catalog";
-import dynamic from "next/dynamic";
 
-const BestDealsSection = dynamic(() =>
-  import("@/components/main/home/best-deal-section").then(
-    (mod) => mod.BestDealsSection,
-  ),
-);
-const ComboProductsSection = dynamic(() =>
-  import("@/components/main/home/combo-products-section").then(
-    (mod) => mod.ComboProductsSection,
-  ),
-);
-const PopularProductsSection = dynamic(() =>
-  import("@/components/main/home/popular-product-section").then(
-    (mod) => mod.PopularProductsSection,
-  ),
-);
-const HomeTrustSection = dynamic(() =>
-  import("@/components/main/home/trust-section").then(
-    (mod) => mod.HomeTrustSection,
-  ),
-);
-const FaqSection = dynamic(
-  () => import("@/components/main/home/home-faq-section"),
-);
-const CtaBanner = dynamic(() =>
-  import("@/components/main/common/CtaBanner").then((mod) => mod.CtaBanner),
-);
+import { BestDealsSection } from "@/components/main/home/best-deal-section";
+import { ComboProductsSection } from "@/components/main/home/combo-products-section";
+import { PopularProductsSection } from "@/components/main/home/popular-product-section";
+import { HomeTrustSection } from "@/components/main/home/trust-section";
+import FaqSection from "@/components/main/home/home-faq-section";
+import { CtaBanner } from "@/components/main/common/CtaBanner";
 
 export default async function Home() {
   const categories = await getAllCategories();

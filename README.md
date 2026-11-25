@@ -57,4 +57,12 @@ npm run db:deploy
 npm run db:status
 ```
 
-The Docker image does not include the Prisma CLI, so migrations run from a machine with `DIRECT_URL` set, not from the container.
+# Deploying (VPS)
+
+The site runs on the VPS with PM2 behind Caddy, without Docker. On the server, inside the project folder:
+
+```bash
+./deploy.sh
+```
+
+It pulls the code, installs dependencies, generates the Prisma client, applies migrations (`prisma migrate deploy`), builds, and starts or restarts the app in PM2 on port 3000. The server's `.env` must set `DATABASE_URL` and `DIRECT_URL`.
